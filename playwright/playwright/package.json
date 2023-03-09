@@ -1,0 +1,19 @@
+{
+  "name": "Bolt_Automation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:debug": "npx playwright test --headed"
+  },
+  "keywords": [],
+  "author": "Discovery Parks",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.23.1"
+  },
+  "dependencies": {
+    "playwright": "^1.28.1"
+  }
+}

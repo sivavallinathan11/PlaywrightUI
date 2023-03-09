@@ -1,0 +1,13 @@
+node_modules/
+/test-results/
+results/
+results-rc3/
+results-rc4/
+results-rc5/
+results-temp/
+/playwright-report/
+/playwright/.cache/
+/test-results-rc3/
+/test-results-rc4/
+/test-results-rc5/
+/test-results-temp/
