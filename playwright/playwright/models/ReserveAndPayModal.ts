@@ -262,6 +262,7 @@ export class ReserveAndPayModal extends Common{
             // Check Terms and Conditions.
             await this.CheckTermsAndConditions();
 
+            await this.Sleep(5000);
             // Capture the Filled Up Reserve and Pay Modal.
             await this.ScreenShot("Filled Up Reserve and Pay Modal");
         }
@@ -343,6 +344,7 @@ export class ReserveAndPayModal extends Common{
     // Step:  This will click Reserve Now button.
     async ClickReserveNow(){
         try{
+            
             // Click Reserve Now button.
             await this.Click(this.btn_ReserveNow, "Reserve Now button");
 

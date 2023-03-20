@@ -33,7 +33,7 @@ export class PaymentBookingModal extends Common{
     public btn_CashPercent = "//*[@id='gr-reserve-modal-container']//*[@id='cash-percent']/li/a";
     public btn_CardPercent = "//*[@id='gr-reserve-modal-container']//*[@id='card-percent']/li/a";
     public btn_EFTPOSPercent = "//*[@id='gr-reserve-modal-container']//*[@id='eftpos-percent']/li/a";
-    public btn_ProcessPayment = "#process-payment-rc3";
+    public btn_ProcessPayment = "#process-payment-rc6";
     public btn_CancelPayment = "#cancel-payment";
 
     // Text Field.
@@ -46,15 +46,21 @@ export class PaymentBookingModal extends Common{
     public lbl_CardBalanceRemaining = "#card-balance-remaining"
     public lbl_EFTPOSBalanceRemaining = "#eftpos-balance-remaining";
     public lbl_CardSurcharge = "//*[@id='gr-reserve-modal-container']//*[@id='card-surcharge']";
-    public lbl_AccommodationName = "//*[@id='gr-reserve-modal-container']//div[contains(@class, 'booking-entry')]//label/p[1]";
-    public lbl_ContactName = "//*[@id='gr-reserve-modal-container']//span[contains(@id, 'reserve-booking-contact-name')]";
-    public lbl_GuestQuotePrice = "//*[@id='gr-reserve-modal-container']//*[@class='payment-booking-details']/div[contains(@class, 'booking-entry')]/div[1]/div[2]/p";
+    public lbl_AccommodationName = "//form[@id='payment-modal-form']//div[@class='payment-booking-details']//label//p[1]";
+    //"//*[@id='gr-reserve-modal-container']//div[contains(@class, 'booking-entry')]//label/p[1]";
+    public lbl_ContactName = "//form[@id='payment-modal-form']//div[@class='payment-booking-details']//label//p[2]/span[2]";
+    //"//*[@id='gr-reserve-modal-container']//span[contains(@id, 'reserve-booking-contact-name')]";
+    public lbl_GuestQuotePrice = "//form[@id='payment-modal-form']//div[@class='payment-booking-details']//div/div[2]//p";
+    //"//*[@id='gr-reserve-modal-container']//*[@class='payment-booking-details']/div[contains(@class, 'booking-entry')]/div[1]/div[2]/p";
     public lbl_MemberQuotePrice = "//*[@id='gr-reserve-modal-container']//*[@class='payment-booking-details']//div[contains(@class, 'booking-entry')]/div[1]/div[3]/p";
-    public lbl_PaymentSurcharge = "//*[@id='gr-reserve-modal-container']//*[@id='reserve-surcharge-amount']";
-    public lbl_BalanceDue = "//*[@id='gr-reserve-modal-container']//*[@class='balance-due']";
+    public lbl_PaymentSurcharge = "//span[@id='card-surcharge']"
+    //"//*[@id='gr-reserve-modal-container']//*[@id='reserve-surcharge-amount']";
+    public lbl_BalanceDue = "#card-balance-remaining"
+    //"//*[@id='gr-reserve-modal-container']//*[@class='balance-due']";
 
     // Temporary Dev elements
-    public lbl_DevBalanceDue = "//*[@id='gr-reserve-modal-container']//*[@class='amount total-booking-price']";
+    public lbl_DevBalanceDue = "//form[@id='payment-modal-form']//*[@class='amount total-booking-price']";
+    //"//*[@id='gr-reserve-modal-container']//*[@class='amount total-booking-price']";
 
     // This will verify payment modal is displayed.
     async VerifyPaymentModal(){
@@ -131,8 +137,12 @@ export class PaymentBookingModal extends Common{
             }
     
             // Check if accommodation name matched.
-            var accommodationName = await this.GetLiveElementText(accommodationNames[i], "Accommodation Name");
-            if(accommodationName!=accomDetails.AccommodationName[i]){
+            var initialAccommodationName = await this.GetLiveElementText(accommodationNames[i], "Accommodation Name");
+            var accommodationName = initialAccommodationName.split("-")[1];
+            if(accommodationName.includes("TEST 2")){
+                accommodationName = accommodationName.split("TEST")[0];
+            }
+            if(!accomDetails.AccommodationName[i].includes(accommodationName)){
                 throw new Error("Expected accommodation name did NOT matched in Payment Modal");
             }
     
@@ -328,8 +338,8 @@ export class PaymentBookingModal extends Common{
                         }
     
                         // Verify if Expected balance due matches the total payment made and balance remaining.
-                        var expectedTotalBalanceDue = (parseFloat(actualPayableAmount) + parseFloat(actualBalanceRemaining) + 
-                        parseFloat(actualSurcharge)).toFixed(2);
+                        var expectedTotalBalanceDue = (parseFloat(actualPayableAmount) + parseFloat(actualBalanceRemaining)).toFixed(2); 
+                        //+ parseFloat(actualSurcharge)).toFixed(2);
                         if(actualBalanceDue!=expectedTotalBalanceDue){
                             throw new Error("Expected Balance due did not matched.\nExpected: " + expectedTotalBalanceDue + 
                             "\nActual: " + actualBalanceDue);

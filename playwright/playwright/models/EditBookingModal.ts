@@ -40,7 +40,7 @@ export class EditBookingModal extends Common{
     public lbl_GuestCount = "//div[@id='edit-booking-container']//p[@class='title' and text()='Booking Guests']/following-sibling::p/span[2]";
     public lbl_AccommodationName = "//a[@id='select-accommodation-dropdown']//p[@class='cabin-type']";
     public lbl_GuestPrice = "//a[@id='select-accommodation-dropdown']//p[@class='available-accommodation-price']";
-    public lbl_MemberPrice = "//a[@id='select-accommodation-dropdown']//p[@class='available-accommodation-member-price']";
+    public lbl_MemberPrice = "//a[@id='select-accommodation-dropdown']//p[@class='available-accommodation-member-pricelist']";
     public lbl_AssignedRoom = "//*[@id='room-select-result']/input";
     public lbl_CustomerName = "//*[@id='gr-contact-card']//*[@class='gr-guest-name']/h3";
     public lbl_CustomerEmail = "//*[@id='gr-contact-card']//*[@class='gr-guest-email']";

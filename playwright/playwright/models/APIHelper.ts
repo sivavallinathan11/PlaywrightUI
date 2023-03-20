@@ -4,10 +4,18 @@ import { Common } from "./Common";
 import { bookingStatus, CCSurcharge, CommonAPIData, description, paymentMethod, TestingEnvironment, transactionType } from "../data/users";
 import { DataSetup } from "../data/datasetup";
 import { Sundry, Payment, CreateGroupReservationWithMember, CreateReservationWithNonMember, 
-    DEV_CreateReservationWithMember, endpoint, TransactionType } from "../data/API";
+    DEV_CreateReservationWithMember, endpoint, TransactionType,
+    DEV_CreateReservationWithVelocityMember, ReservationWithPastDatedCheckin, CreateDepartingNonMember,
+    CreateMultipleDepartingNonMember, CreateMultipleInhouseNonMember, 
+    CreateMultipleInhouseNoBalance, CreateMultipleDepartingNoBalance, expiredSingleResDate, CreateReservationUsingPoweredEnsuite, 
+    CreateReservationStandardStudioEnsuite, CreateReservationDeluxeBaliVilla,
+    CreateReservationSup2BedroomCabin,CreateReservationStudEnsuiteTwin ,CreateReservationQAIRTest,
+    MemberGroupDetails, NonMemberGroupDetails, CreateReservationWithStandardStudioCabin, CreateReservationWithVelocityMember, 
+    CreateReservationWithMember, GuestReservationMoreThan500BookingCost } from "../data/API";
 import { StayCostDetails } from "../data/managebookings";
+import { SmokeSteps } from "./SmokeSteps";
 
-export class APIHelper extends Common{
+export class APIHelper extends SmokeSteps{
     readonly page: Page;
     readonly request: APIRequestContext;
     public testDirectory: TestDirectory;
@@ -294,9 +302,12 @@ export class APIHelper extends Common{
                     var resultLength = result.length;
                     for(var i = 0; i<resultLength; i++){
                         memberDetails = await result[i];
-                        if(memberDetails["memberNumber"] != null){
-                            setMemberDetails.push(memberDetails);
-                            memberFetched = true;
+                        var memberIs = await this.CheckIfMemberExist(memberDetails['memberNumber']);
+                        if(memberIs == true){
+                            if(memberDetails["memberNumber"] != null){
+                                setMemberDetails.push(memberDetails);
+                                memberFetched = true;
+                            }
                         }
                     }
     
@@ -773,6 +784,87 @@ export class APIHelper extends Common{
                 email = await this.GenerateRandomEmail(firstName, "@gmail.com", "Alphanumeric", 4);
             }
 
+            // Set customer details based on scenario.
+            if(bookingType.toLowerCase().trim()=="velocity"){
+                await this.SetRandomSleep();
+                if(TestingEnvironment.toLowerCase()=="dev"){
+                    details = DEV_CreateReservationWithVelocityMember;
+                }
+                else{
+                    details = CreateReservationWithVelocityMember;
+                }
+            }
+            else if(bookingType.toLowerCase().trim()=="more than 500"){
+                await this.SetRandomSleep();
+                details = GuestReservationMoreThan500BookingCost;
+            }
+            else if(bookingType.toLowerCase().trim()=="past dated checkin"){
+                await this.SetRandomSleep();
+                details = ReservationWithPastDatedCheckin;
+            }
+            else if(bookingType.toLowerCase().trim()=="departing"){
+                await this.SetRandomSleep();
+                details = CreateDepartingNonMember;
+            }
+            else if(bookingType.toLowerCase().trim()=="multiple inhouse"){
+                await this.SetRandomSleep();
+                details = CreateMultipleInhouseNonMember;
+            }
+            else if(bookingType.toLowerCase().trim()=="multiple inhouse no balance"){
+                await this.SetRandomSleep();
+                details = CreateMultipleInhouseNoBalance;
+            }
+            else if(bookingType.toLowerCase().trim()=="multiple departing"){
+                await this.SetRandomSleep();
+                details = CreateMultipleDepartingNonMember;
+            }
+            else if(bookingType.toLowerCase().trim()=="multiple departing no balance"){
+                await this.SetRandomSleep();
+                details = CreateMultipleDepartingNoBalance;
+            }
+            else if(bookingType.toLowerCase().trim()=="partial"){
+                await this.SetRandomSleep();
+                details = CreateReservationUsingPoweredEnsuite;
+            }
+            else if(bookingType.toLowerCase().trim()=="cancel"){
+                await this.SetRandomSleep();
+                details = CreateReservationUsingPoweredEnsuite;
+            }
+            else if(bookingType.toLowerCase().trim()=="buy member"){
+                await this.SetRandomSleep();
+                details = CreateReservationUsingPoweredEnsuite;
+            }
+            else if(bookingType.toLowerCase().trim()=="checkin"){
+                await this.SetRandomSleep();
+                details = CreateReservationStandardStudioEnsuite;
+            }
+            else if(bookingType.toLowerCase().trim()=="change room"){
+                await this.SetRandomSleep();
+                details = CreateReservationStandardStudioEnsuite;
+            }
+            else if(bookingType.toLowerCase().trim()=="edit details"){
+                await this.SetRandomSleep();
+                details = CreateReservationDeluxeBaliVilla;
+            }
+            else if(bookingType.toLowerCase().trim()=="clean"){
+                await this.SetRandomSleep();
+                details = CreateReservationWithStandardStudioCabin;
+            }
+            else if(bookingType.toLowerCase().trim()=="not clean"){
+                await this.SetRandomSleep();
+                details = CreateReservationSup2BedroomCabin;
+            }
+            else if(bookingType.toLowerCase().trim()=="search"){
+                await this.SetRandomSleep();
+                details = CreateReservationStudEnsuiteTwin;
+            }
+            // else{
+            //     await this.SetRandomSleep();
+            //     details = CreateReservationWithNonMember;
+            // }
+
+
+
             // Get formatted reservation dates and night stay
             var checkIn = await this.SetBookingDatesForCreateReservationAPI(details.arrivalDate);
             var checkOut = await this.SetBookingDatesForCreateReservationAPI(details.departureDate);
@@ -822,7 +914,7 @@ export class APIHelper extends Common{
                         'Description': details.Description
                     }],
                     'rates': [{
-                        'date': details.checkIn,
+                        'date': checkIn,
                         'baseAmount': details.baseAmount,
                         'totalAmount': details.totalAmount,
                         'tariffReference': details.tariffReference
@@ -873,7 +965,7 @@ export class APIHelper extends Common{
                 throw new Error(e.stack);
             }
             else{
-                await this.SaveFailedTraceLogs(e.stack);
+                await this. SaveFailedTraceLogs(e.stack);
                 throw new Error(e.stack);
             }
         }
@@ -1198,6 +1290,48 @@ export class APIHelper extends Common{
                 }
             }
 
+        }catch(e){
+            if(e instanceof errors.TimeoutError){
+                await this.SaveFailedTraceLogs(e.stack);
+                throw new Error(e.stack);
+            }
+            else{
+                await this.SaveFailedTraceLogs(e.stack);
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // This will check if Member exist / could be found
+    async CheckIfMemberExist(memberNumber: string){
+        try{
+            var ep_getMember: any;
+            if(TestingEnvironment.toLowerCase()=="dev"){
+                ep_getMember = endpoint.DEV_API_GetMember;
+                var host = 'dev-int-dhp-api-membership.azurewebsites.net'
+            }
+            else{
+                ep_getMember = endpoint.TEST_API_GetMember;
+                var host = 'test-int-dhp-api-membership.azurewebsites.net'
+            }
+            const response_header = await this.GetAuthentication();
+            const response = await this.request.get(`${ep_getMember}`,{
+                headers:{
+                    'content-type': 'application/json',
+                    'Host': host,
+                    'Authorization': 'Bearer ' + response_header
+                },
+                params: {
+                    'MemberNumber': memberNumber
+                }
+            });
+            var statusCode = response.status();
+            if(statusCode!=200){
+                return false;
+            }
+            else{
+                return true;
+            }
         }catch(e){
             if(e instanceof errors.TimeoutError){
                 await this.SaveFailedTraceLogs(e.stack);

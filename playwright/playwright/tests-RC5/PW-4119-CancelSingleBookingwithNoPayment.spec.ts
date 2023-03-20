@@ -19,7 +19,7 @@ test('Cancel a single booking with no payment', async({page, request}) =>{
 
     // Set page objects.
     const login = new LoginPage(page, testDetails);
-    const dashboard = new BookingDashboardPage(page, testDetails);
+    const dashboard = new BookingDashboardPage(page, request, testDetails);
     const manageBooking = new ManageBookingPage(page, testDetails);
     const apiHelper = new APIHelper(page, request, testDetails);
     const reimbursement = new ReimbursementReviewModal(page, testDetails);
@@ -46,7 +46,7 @@ test('Cancel a single booking with no payment', async({page, request}) =>{
     await dashboard.VerifyArrivals();
 
     // This will search reservation from search tab.
-    await dashboard.SearchReservationFromSearchTab(bookingNumber);
+    await dashboard.SearchReservationFromSearchTab(bookingNumber, "reservation number");
 
     // Manage search booking reservation.
     var bookingDetails = await dashboard.ManageBookingOfSearchedReservation(bookingNumber);

@@ -21,7 +21,7 @@ test('Cancel a booking that has multiple payments with same type (Refund Request
 
     // Set page objects.
     const login = new LoginPage(page, testDetails);
-    const dashboard = new BookingDashboardPage(page, testDetails);
+    const dashboard = new BookingDashboardPage(page, request, testDetails);
     const manageBooking = new ManageBookingPage(page, testDetails);
     const apiHelper = new APIHelper(page, request, testDetails);
     const checkIn = new CheckInPage(page, testDetails);
@@ -54,7 +54,7 @@ test('Cancel a booking that has multiple payments with same type (Refund Request
     await dashboard.VerifyArrivals();
 
     // This will search reservation from search tab.
-    await dashboard.SearchReservationFromSearchTab(bookingNumber);
+    await dashboard.SearchReservationFromSearchTab(bookingNumber, "reservation number");
 
     // Manage search booking reservation.
     var bookingDetails = await dashboard.ManageBookingOfSearchedReservation(bookingNumber);

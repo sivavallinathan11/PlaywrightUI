@@ -1,19 +1,22 @@
 import { errors, Page } from "@playwright/test";
+import { APIRequestContext } from "playwright";
 import { DataSetup } from "../data/datasetup";
 import { TestDirectory } from "../data/directory";
-import { tbl_Arriving, tbl_Search, TestingEnvironment, URL } from "../data/users";
+import { tbl_Arriving, tbl_Departing, tbl_InHouse, tbl_Search, tbl_Upcoming, TestingEnvironment, URL } from "../data/users";
 import { Common } from "./Common";
 
 export class BookingDashboardPage extends Common{
     // Set object variable.
     readonly page: Page;
+    readonly request: APIRequestContext;
     readonly dir: TestDirectory;
     public dataSetup = new DataSetup();
 
     // Set a sub routine that will access the functions from parent and sibling class.
-    constructor(page: Page, dir: TestDirectory){
+    constructor(page: Page, request: APIRequestContext, dir: TestDirectory){
         super(page, dir);
         this.page = page;
+        this.request = request;
         this.dir = dir;
     }
 
@@ -84,6 +87,66 @@ export class BookingDashboardPage extends Common{
                 throw new Error("No reservation was displayed in the arrivals.");
             }
             await this.ScreenShot("Arrivals Table");
+        }
+        catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // Section for Arrivals Tab functions.
+    async VerifyInHouse(){
+        try{
+            var list = await this.FindElements(this.tbl_ResultsTable.replace("{TableType}", tbl_InHouse), "In House Results Table");
+            if(list.length==0){
+                throw new Error("No reservation was displayed in the In House.");
+            }
+            await this.ScreenShot("In House Table");
+        }
+        catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // Section for Arrivals Tab functions.
+    async VerifyDeparting(){
+        try{
+            var list = await this.FindElements(this.tbl_ResultsTable.replace("{TableType}", tbl_Departing), "Departing Results Table");
+            if(list.length==0){
+                throw new Error("No reservation was displayed in the departing.");
+            }
+            await this.ScreenShot("Departing Table");
+        }
+        catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // Section for Arrivals Tab functions.
+    async VerifyUpcoming(){
+        try{
+            var list = await this.FindElements(this.tbl_ResultsTable.replace("{TableType}", tbl_Upcoming), "Upcoming Results Table");
+            if(list.length==0){
+                throw new Error("No reservation was displayed in the Upcoming.");
+            }
+            await this.ScreenShot("Upcoming Table");
         }
         catch(e){
             await this.ScreenShot("Failed", false, e.stack);
@@ -186,15 +249,15 @@ export class BookingDashboardPage extends Common{
     }
 
     // This will search booking number from the search tab.
-    async SearchReservationFromSearchTab(reservationNumber: string){
+    async SearchReservationFromSearchTab(searchValue: string, searchCriteria: string){
         // Go to Search Tab.
         await this.ClickSearchTab();
 
         // Search for the reservation number.
-        await this.SelectSearchCriteria("Reservation Number");
+        await this.SelectSearchCriteria(searchCriteria);
 
         // Enter reservation number.
-        await this.EnterSearchValue(reservationNumber);
+        await this.EnterSearchValue(searchValue);
 
         // Click Search.
         await this.ClickSearchFromSearchTab();

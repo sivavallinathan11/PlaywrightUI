@@ -1011,5 +1011,46 @@ export class Common{
         }
     }
 
+    // Check if element exists
+    async elementExist(locator: string, timeout: number = 0){
+        var isExist = true;
+        try{
+            if(timeout > 0){
+                await this.page.waitForSelector(locator, {state: "visible", timeout: timeout});
+            }
+            else{
+                await this.page.waitForSelector(locator, {state: "visible", timeout: 90000});
+            }
+        }
+        catch(e){
+            if(e instanceof errors.TimeoutError){
+                isExist = false;
+            }
+            else{
+                isExist = false;
+            }
+        }
+        return isExist
+    }
     
+    // This will wait for element state to be hidden.
+    async waitForElementToBeHidden(locator: string, milliSeconds: number = 0){
+        try{
+          if(milliSeconds > 0){
+            await this.page.waitForSelector(locator, { timeout: milliSeconds, state: "hidden"});
+          }
+          else{
+            await this.page.waitForSelector(locator, { timeout: 90000, state: 'hidden'});
+          }
+        }
+        catch(e){
+          if(e instanceof errors.TimeoutError){
+            return false;
+          }
+          else{
+            return false;
+          }
+        }
+        return true;
+      }
 }

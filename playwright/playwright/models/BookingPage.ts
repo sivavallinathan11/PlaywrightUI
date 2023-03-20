@@ -5,6 +5,7 @@ import { TestDirectory } from "../data/directory";
 import { ExistingGuestSearch, MembershipDiscount, MembershipFee, TestingEnvironment, URL } from "../data/users";
 import { Common } from "./Common";
 import { EditBookingModal } from "./EditBookingModal";
+import { EditBookingPage} from "./EditBookingPage";
 
 export class BookingPage extends Common{
     // Set object variable.

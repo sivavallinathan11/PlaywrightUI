@@ -16,6 +16,7 @@ export class LoginPage extends Common{
     // Set XPaths, Element IDs and other attributes.
     public txt_Email = "#Username";
     public txt_Password = "#Password";
+    public btn_Login = "//button[@value='login']";
 
     // Navigate to parkweb login page.
     async Open(){
@@ -78,7 +79,9 @@ export class LoginPage extends Common{
     // This will click the login button.
     async ClickLogin(){
         try{
-            await this.Click("//button[@value='login']", "Login button");
+            await this.FindElement(this.btn_Login, "Login Button");
+            await this.Click(this.btn_Login, "Login button");
+            await this.Sleep(5000);
         }
         catch(e){
             await this.ScreenShot("Failed", false, e.stack);

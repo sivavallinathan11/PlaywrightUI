@@ -1,7 +1,7 @@
 export const TestScriptDirectory={
-    Path: './tests-RC5'
+    Path: './tests-RC3'
 }
-export const TestingEnvironment = "dev";
+export const TestingEnvironment = "test";
 export const Slot = "slot2";
 export const URL={
     GDayAddress: 'https://test.gdaynetwork.com.au/',
@@ -15,12 +15,14 @@ export const URL={
     DEV_BookingDashboard: "https://dev-gdaynetwork-webapp-"+Slot+".azurewebsites.net/Booking",
 }
 export const ResultsDirectory = {
+    RC2: './test-results-rc2',
     RC3: './test-results-rc3',
     RC4: './test-results-rc4',
     RC5: './test-results-rc5',
     TempRC3: './test-results-temprc3',
 }
 export const XMLResultDirectory = {
+    RC2: 'results-rc2',
     RC3: 'results-rc3',
     RC4: 'results-rc4',
     RC5: 'results-rc5',
@@ -29,9 +31,20 @@ export const XMLResultDirectory = {
 
 export const LoginType = "BDM";
 
+export const UpdateUser = {
+    state: 'SA',
+    changingState: 'ACT',
+    searchAddress: 'Roseville Bridge',
+};
+
 export const CommonAPIData = {
     parkCode: 'TEST',
     callerName: 'bolt'
+};
+
+export const OtherName = {
+    testLastName: "RCATSKoZDt",
+    devLastName: "TestDevRCOther",
 };
 
 export const BDMCredentials = {
@@ -58,7 +71,7 @@ export const GuestDataPayLater = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     isVelocity: false,
@@ -67,8 +80,8 @@ export const GuestDataPayLater = {
 }
 
 export const UpsellGuestData = {
-    arrival: 73,
-    departure: 74,
+    arrival: 87,
+    departure: 88,
     adults: 2,
     child: 1,
     infant: 1,
@@ -82,7 +95,7 @@ export const UpsellGuestData = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     isVelocity: false,
@@ -106,7 +119,7 @@ export const UpsellGuestData500 = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     isVelocity: false,
@@ -130,7 +143,7 @@ export const GuestData = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     isVelocity: false,
@@ -155,7 +168,7 @@ export const MateMember = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     velocityNumber: '',
@@ -183,7 +196,7 @@ export const GuestEmailwithExistingMember = {
     state: 'QLD',
     postcode: '4000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     velocityNumber: '',
@@ -211,7 +224,7 @@ export const DEV_GuestEmailwithExistingMember = {
     state: 'ACT',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     velocityNumber: '',
@@ -239,7 +252,7 @@ export const BestMateMember = {
     state: 'QLD',
     postcode: '4000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     velocityNumber: '',
@@ -267,7 +280,7 @@ export const DEV_BestMateMember = {
     state: 'ACT',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     velocityNumber: '',
@@ -294,7 +307,7 @@ export const GuestDatawithWhitelistedEmail = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     isVelocity: false,
@@ -319,7 +332,7 @@ export const DEV_GuestDatawithWhitelistedEmail = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     isVelocity: false,
@@ -345,7 +358,7 @@ export const TEST_VelocityMemberData = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     velocityNumber: '1201247433',
@@ -371,7 +384,7 @@ export const DEV_VelocityMemberData = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     velocityNumber: '1201247411',
@@ -396,7 +409,7 @@ export const GuestDatawithOffers = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     isVelocity: false,
@@ -420,7 +433,7 @@ export const GuestDatawithMoreThan28Days = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     isVelocity: false,
@@ -444,7 +457,7 @@ export const GuestGroupBookingData = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     isVelocity: false,
@@ -471,7 +484,7 @@ export const VelocityGroupMemberData = {
     state: 'SA|QLD',
     postcode: '5000|4000',
     country: 'Australia|Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     velocityNumber: '1201247433',
@@ -499,7 +512,7 @@ export const DEV_VelocityGroupMemberData = {
     state: 'SA|ACT',
     postcode: '5000|2312',
     country: 'Australia|Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     velocityNumber: '1201247411',
@@ -526,7 +539,7 @@ export const GroupBookingPartial = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     isVelocity: false,
@@ -552,7 +565,7 @@ export const SameAccommodationAndDatesGroupData = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     isVelocity: false,
@@ -578,7 +591,7 @@ export const DifferentAccommodationAndDatesGroupData = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     isVelocity: false,
@@ -604,7 +617,7 @@ export const GroupBookingDataAllMembership = {
     state: 'SA',
     postcode: '5000',
     country: 'Australia',
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     isVelocity: false,
@@ -620,12 +633,99 @@ export const IndividualExpiredMemberThenUpsell = {
     adults: 2,
     child: 1,
     infant: 1,
-    reserveType: '01. Tourist - Young Single',
+    reserveType: '12. Staff',
     bookingSource: '1. Walk in',
     bookingNotes: 'Test Reservation',
     isVelocity: false,
     isUpsell: true,
     isMember: false,
+}
+
+export const createGroupReservationWithMember = {
+    providerReference: '00000000-0000-0000-0000-000000000000',
+    providerGroupReference: null,
+    fieldVersion: 0,
+    parkIdentifier: 'TEST',
+    RoomtypeIdentifier: "TEST-1-41-RT",
+    source: 'Bolt',
+    bookingSourceName: '4. DHP Web',
+    bookingSourceIdentifier: 88,
+    reservationTypeName: '01. Tourist - Young Single',
+    reservationTypeIdentifier: 4,
+    brand: 'DHP',
+    paymentId: '00000000-0000-0000-0000-000000000000',
+    paymentStatus: 'unpaid',
+    arrivalDate: '-4',
+    departureDate: '4',
+    numberOfNights: '1',
+    numberOfAdults: '2',
+    numberOfChildren: '1',
+    numberOfInfants: '0',
+    accommodationPrice : 100,
+    discountType: 'Member',
+    membershipNumber: '105038275',
+    firstName: 'DoNotUseRobotAut',
+    lastName: 'TestRC2MemAut',
+    email: 'dhprobotTestRC2MemAut@gmail.com',
+    phone: '0412345678',
+    streetAddress: 'Light Square',
+    town: 'Adelaide',
+    state: 'SA',
+    postcode: '5000',
+    countryCode: 'AUS',
+    customerIP: '127.0.0.1',
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0',
+    Type: 'Base',
+    Amount: 140.0,
+    Description: 'Base',
+    date: '',
+    baseAmount: 140.0,
+    totalAmount: 140.0,
+    tariffReference: '42',
+    memberDiscount: 54,
+}
+export const createGroupReservationWithNonMember = {
+    providerReference: '00000000-0000-0000-0000-000000000000',
+    providerGroupReference: null,
+    fieldVersion: 0,
+    parkIdentifier: 'TEST',
+    RoomtypeIdentifier: "TEST-1-41-RT",
+    source: 'Bolt',
+    bookingSourceName: '4. DHP Web',
+    bookingSourceIdentifier: 88,
+    reservationTypeName: '01. Tourist - Young Single',
+    reservationTypeIdentifier: 4,
+    brand: 'DHP',
+    paymentId: '00000000-0000-0000-0000-000000000000',
+    paymentStatus: 'unpaid',
+    arrivalDate: '4',
+    departureDate: '6',
+    numberOfNights: '1',
+    numberOfAdults: '2',
+    numberOfChildren: '1',
+    numberOfInfants: '0',
+    accommodationPrice : 100,
+    discountType: 'None',
+    membershipNumber: '',
+    firstName: 'DoNotUseRobotAut',
+    lastName: 'TestRC2NonMemAut',
+    email: 'dhprobotTestRC2MemAut@gmail.com',
+    phone: '0412345678',
+    streetAddress: 'Light Square',
+    town: 'Adelaide',
+    state: 'SA',
+    postcode: '5000',
+    countryCode: 'AUS',
+    customerIP: '127.0.0.1',
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0',
+    Type: 'Base',
+    Amount: 140.0,
+    Description: 'Base',
+    date: '',
+    baseAmount: 140.0,
+    totalAmount: 140.0,
+    tariffReference: '42',
+    memberDiscount: 54,
 }
 
 export const CancellationPercentage = 0.25;
@@ -657,6 +757,9 @@ export const hundred = 100;
 
 // Table Type
 export const tbl_Arriving = "tbl-Arriving";
+export const tbl_InHouse = "tbl-InHouse";
+export const tbl_Upcoming = "tbl-Upcoming";
+export const tbl_Departing = "tbl-Departing";
 export const tbl_Search = "tbl-Search";
 
 export const bookingCancelType = {
@@ -707,3 +810,8 @@ export const sectionType = {
 export const bookingStatus = {
     cancelled: "Cancelled"
 }
+
+export const Name = {
+    testLastName: "RCATSPLMJv",
+    devLastName: "TestDevRC",
+};

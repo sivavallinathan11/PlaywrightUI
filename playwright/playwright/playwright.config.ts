@@ -6,6 +6,9 @@ import { ResultsDirectory, TestScriptDirectory, XMLResultDirectory } from './dat
 var resultPath = XMLResultDirectory.RC3;
 
 // Change result path based on assigned test script directory.
+if(TestScriptDirectory.Path.includes('RC2')){
+  resultPath = XMLResultDirectory.RC2;
+}
 if(TestScriptDirectory.Path.includes('RC4')){
   resultPath = XMLResultDirectory.RC4;
 }
@@ -20,6 +23,9 @@ else if(TestScriptDirectory.Path.toLowerCase().includes('temp-rc3')){
 var testResultPath = ResultsDirectory.RC3;
 
 // Change result path based on assigned test script directory.
+if(TestScriptDirectory.Path.includes('RC2')){
+  resultPath = ResultsDirectory.RC2;
+}
 if(TestScriptDirectory.Path.includes('RC4')){
   testResultPath = ResultsDirectory.RC4;
 }
@@ -38,7 +44,7 @@ const config: PlaywrightTestConfig = {
   testDir: TestScriptDirectory.Path,
   outputDir: testResultPath,
   workers: 2,
-  //testMatch: ["PW-4307-CancelABookingThatHasMultiplePaymentsWithDifferentTypesAndCheckIfThereAreMulitpleRefundTransactionPosted(RequestRefund).spec.ts"],
+  //testMatch: ["PW-3114-CreateIndividualBookingExpiredMemberThenRenewAndPayUsingAnyModeofPayment.spec.ts"],
   use: {
     //trace: 'on',
   },
