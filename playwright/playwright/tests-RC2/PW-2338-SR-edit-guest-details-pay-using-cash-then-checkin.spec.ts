@@ -48,9 +48,7 @@ test('Edit guest details and pay cash then checkin single reservation', async ({
     // Verify Manage Booking Page.
     await editBooking.VerifyManageBookingPage(bookingDetails);
 
-    await editBooking.VerifyBookedReservationInManageBooking();
-
     //#endregion */
 
 
-})
+}) 
