@@ -1036,21 +1036,34 @@ export class Common{
     // This will wait for element state to be hidden.
     async waitForElementToBeHidden(locator: string, milliSeconds: number = 0){
         try{
-          if(milliSeconds > 0){
+            if(milliSeconds > 0){
             await this.page.waitForSelector(locator, { timeout: milliSeconds, state: "hidden"});
-          }
-          else{
+            }
+            else{
             await this.page.waitForSelector(locator, { timeout: 90000, state: 'hidden'});
-          }
+            }
         }
         catch(e){
-          if(e instanceof errors.TimeoutError){
+            if(e instanceof errors.TimeoutError){
             return false;
-          }
-          else{
+            }
+            else{
             return false;
-          }
+            }
         }
         return true;
-      }
+    }
+
+    async PressKey(entervalue: string){
+        try{
+            await this.page.keyboard.press(entervalue);
+        }catch(e){
+            if(e instanceof errors.TimeoutError){
+            return false;
+            }
+            else{
+            return false;
+            }
+        }
+    }
 }

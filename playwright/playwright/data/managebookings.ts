@@ -19,6 +19,7 @@ export class DashboardDetails{
     public roomStatus: any[] = [];
     public resConfirmation: any[] = [];
     public dateCountFromToday: any[] = [];
+    public paymentType:any[] = [];
 
     // Getter/Setter data.
     get CustomerFirstName(){
@@ -171,6 +172,14 @@ export class DashboardDetails{
     set DateCountFromToday(data: any[]){
         for(var i = 0; i < data.length; i++){
             this.dateCountFromToday.push(data[i]);
+        }
+    }
+    get PaymentType(){
+        return this.paymentType;
+    }
+    set PaymentType(data: any[]){
+        for(var i = 0; i < data.length; i++){
+            this.paymentType.push(data[i]);
         }
     }
 }

@@ -1,8 +1,8 @@
 export const TestScriptDirectory={
     Path: './tests-RC3'
 }
-export const TestingEnvironment = "test";
-export const Slot = "slot2";
+export const TestingEnvironment = "dev";
+export const Slot = "slot4";
 export const URL={
     GDayAddress: 'https://test.gdaynetwork.com.au/',
     DEV_GDayAddress: "https://dev-gdaynetwork-webapp-"+Slot+".azurewebsites.net/",
@@ -213,12 +213,12 @@ export const DEV_GuestEmailwithExistingMember = {
     adults: 2,
     child: 1,
     infant: 0,
-    membershipNumber: '100017829',
+    membershipNumber: '100411353',
     searchText: 'xyz123',
-    firstName: 'RCATS',
-    lastName: 'RCATSTest',
-    email: 'TEST@poi.com',
-    mobile: '0499999999',
+    firstName: 'test',
+    lastName: 'test',
+    email: 'testa2sda235@gmail.com',
+    mobile: '0412345678',
     street: '60 Light Square',
     town: 'Adelaide',
     state: 'ACT',
@@ -269,12 +269,12 @@ export const DEV_BestMateMember = {
     adults: 2,
     child: 1,
     infant: 0,
-    membershipNumber: '100017829',
+    membershipNumber: '100398408',
     searchText: 'xyz123',
-    firstName: 'Test 1 Update',
-    lastName: 'Test 1 match',
-    email: 'TEST@poi.com',
-    mobile: '0499999999',
+    firstName: 'Iris Test 7',
+    lastName: '7',
+    email: 'parkhubtest+17@gmail.com',
+    mobile: '0412348541',
     street: '60 Light Square',
     town: 'Adelaide',
     state: 'ACT',
@@ -650,8 +650,8 @@ export const createGroupReservationWithMember = {
     source: 'Bolt',
     bookingSourceName: '4. DHP Web',
     bookingSourceIdentifier: 88,
-    reservationTypeName: '01. Tourist - Young Single',
-    reservationTypeIdentifier: 4,
+    reservationTypeName: '12. Staff',
+    reservationTypeIdentifier: 1,
     brand: 'DHP',
     paymentId: '00000000-0000-0000-0000-000000000000',
     paymentStatus: 'unpaid',
@@ -693,8 +693,8 @@ export const createGroupReservationWithNonMember = {
     source: 'Bolt',
     bookingSourceName: '4. DHP Web',
     bookingSourceIdentifier: 88,
-    reservationTypeName: '01. Tourist - Young Single',
-    reservationTypeIdentifier: 4,
+    reservationTypeName: '12. Staff',
+    reservationTypeIdentifier: 1,
     brand: 'DHP',
     paymentId: '00000000-0000-0000-0000-000000000000',
     paymentStatus: 'unpaid',
@@ -728,6 +728,14 @@ export const createGroupReservationWithNonMember = {
     memberDiscount: 54,
 }
 
+export const editGuestDetails = {
+    firstname: 'RC2Aut',
+    lastname: 'RC2Aut',
+    emailAddress: 'RC2Auth',
+    contactNumber: '0412',
+    address: '60 Lightfoot Street, Cessnock NSW, Australia',
+}
+
 export const CancellationPercentage = 0.25;
 export const CCSurcharge = 0.009;
 export const MembershipFee = "50.00";
@@ -737,7 +745,7 @@ export const RewardsBenefits = ["Discount on future bookings", "Everyday savings
 export const StaffName = "Robot Test";
 export const NewMemberTier = "Mate";
 export const MembershipDiscount = 0.1;
-export const ExistingGuestSearch = "RCATSMemberit";
+export const ExistingGuestSearch = "RCATSMember";
 export const MoreThan28DaysMessage = "Cannot select more than 28 nights";
 export const API_NameSearch = "RCATSMember";
 export const DiscountReason = "Test Discounts";
@@ -754,6 +762,7 @@ export const BookingStatus = "Booking cancelled.";
 export const emailNote = "An email confirmation of cancellation has been sent.";
 export const dateInput = 0;
 export const hundred = 100;
+export const successMsg = "Update Successful";
 
 // Table Type
 export const tbl_Arriving = "tbl-Arriving";
@@ -761,6 +770,19 @@ export const tbl_InHouse = "tbl-InHouse";
 export const tbl_Upcoming = "tbl-Upcoming";
 export const tbl_Departing = "tbl-Departing";
 export const tbl_Search = "tbl-Search";
+
+// Table name
+export const tblArriving = "arrivals";
+export const tblInHouse = "inhouse";
+export const tblUpcoming = "upcoming";
+export const tblDeparting = "departing";
+export const tblSearch = "search";
+
+// Payment Type
+export const typeOfPayment = {
+    paid: "paid",
+    unpaid: "unpaid"
+}
 
 export const bookingCancelType = {
     BookingCancelledRefund: "Booking #@ has been cancelled and the reimbursement has been initiated.",

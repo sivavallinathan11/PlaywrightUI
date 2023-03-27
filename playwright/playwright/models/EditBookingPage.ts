@@ -4,7 +4,7 @@ import { CustomerDetails } from "../data/bookings";
 import { DataSetup } from "../data/datasetup";
 import { TestDirectory } from "../data/directory";
 import { DashboardDetails } from "../data/managebookings";
-import { CCSurcharge, dateInput, paymentMethod, transactionType } from "../data/users";
+import { CCSurcharge, dateInput, paymentMethod, successMsg, transactionType } from "../data/users";
 import { Common } from "./Common";
 
 export class EditBookingPage extends Common{
@@ -24,19 +24,29 @@ export class EditBookingPage extends Common{
     // Button (New Manage booking page)
     //public btn_CancelBooking = "#cancel-booking-cta";
 
+    // Div
+    public div_MembershipCard = "//div[@class='booking-contacts-membership-card']";
+    public div_ToastMessage = "//div[@class='toast-message']";
+
     // Label (New manage booking page (Edit Booking Page))
-    public lbl_ManageBookingNumber = "//div[not(boolean(@hidden))]/*[@class='manage-booking-number']";
+    // Test Env public lbl_ReservationDates = "//p[1]//span[@class='placeholder']";
+    // Test Env public lbl_Nights = "//p[1]//span[@class='bold placeholder']";
+    // Test Env public lbl_Guests = "//p[2]//span[@class='placeholder']";
+    // Test Env public lbl_GuestsCount = "//p[2]//span[@class='bold placeholder']";
     public lbl_AccommodationDetails = "//div[@class='accommodation-details']//h4";
-    public lbl_ReservationDates = "//p[1]//span[@class='placeholder']";
-    public lbl_Nights = "//div[@class='booking-result-section']/div[@class='summary']//p[1]/span[2]";
-    public lbl_GuestsCount = "//p[1]//span[@class='bold placeholder']";
-    public lbl_Guests = "//p[2]//span[@class='placeholder']";
+    public lbl_ReservationDates = "//p[1]//span[@class='bold']//following-sibling::span";
+    public lbl_Nights = "//p[1]//span[@class='bold']";
+    public lbl_Guests = "//p[2]//span[@class='']";
+    public lbl_GuestsCount = "//p[2]//span[@class='bold']";
     public lbl_ReservationNumber = "//span[@class='manage-booking-number']";
+    public lbl_TotalStay = "//div[@id='Transactions']/div/div[2]/span";
+    public lbl_Balance = "//div[@class='total-section']/div[2]/div[2]//span";
 
     // Button old manage booking page
     public btn_CancelBooking = "#cancel-booking";
     public btn_ManageBookingCheckIn = "//button[text()=' Check in']";
-    public btn_SaveChanges = "#save-guest-cta-280991";
+    public btn_SaveChanges = "//div[@class='tab-content']/div[1]//input[@value='Save Changes']";
+    public btn_MakePayment = "#make-payment-cta";
 
     // Label (Old manage booking page)
     // public lbl_Firstname = "//div[@class='user-details user-firstname']";
@@ -58,11 +68,11 @@ export class EditBookingPage extends Common{
     public sec_GuestContactInfo = "//div[not(boolean(@hidden))]/*[@class='manage-booking-number']";
 
     // Text Field
-    public txt_Firstname = "#first-name-280991";
-    public txt_Lastname = "#last-name-280991";
-    public txt_Email = "#email-280991";
-    public txt_CNumber = "#mobile-280991";
-    public txt_Address = "#auto-address-280991";
+    public txt_Firstname = "//div[@class='tab-content']//div[@class='tab-pane in active']//input[@name='FirstName' and @type='text']";
+    public txt_Lastname = "//div[@class='tab-content']//div[@class='tab-pane in active']//input[@name='LastName']";
+    public txt_Email = "//div[@class='tab-content']//div[@class='tab-pane in active']//input[@name='Email']";
+    public txt_CNumber = "//div[@class='tab-content']//div[@class='tab-pane in active']//input[@name='Mobile']";
+    public txt_Address = "//div[@class='tab-content']//div[@class='tab-pane in active']//input[@name='Address']";
     public txt_Velocity = "#velocityInput";
 
     // **Function Starts Here**
@@ -85,13 +95,15 @@ export class EditBookingPage extends Common{
             var accommodationDetails = await this.GetElementText(this.lbl_AccommodationDetails, "Room Name")
             var accommodationName = accommodationDetails.split(" - ")[1];
             var assignedRoom = accommodationDetails.split(" - ")[0];
-            var nights = await this.GetElementText(this.lbl_Nights, "Nights");
+            var nights = (await this.GetElementText(this.lbl_Nights, "Nights")).split(" ")[0];
             var reservationDates = await this.GetElementText(this.lbl_ReservationDates, "Reservation Dates");
             var guestsCount = await this.GetElementText(this.lbl_GuestsCount, "Guests Count");
             var guests = await this.GetElementText(this.lbl_Guests, "Guests");
-            var adult: any;
-            var child: any;
-            var infant: any;
+            var totalStay = (await this.GetElementText(this.lbl_TotalStay, "Total Stay Cost")).replace("$","");
+            var totalBalance = (await this.GetElementText(this.lbl_Balance, "Total Balance")).replace("$ ","");
+            var adult = 0;
+            var child = 0;
+            var infant = 0;
             if(guests.includes("Adults")){
                 var actualCount = guests.split(", ")[0];
                 adult = parseInt(actualCount.split(" ")[0]);
@@ -106,32 +118,44 @@ export class EditBookingPage extends Common{
             }
 
             // Verify guest name
-            if(firstname.toLocaleLowerCase()!=bookingDetails.CustomerFirstName[0].toLocaleLowerCase()){
+            if(firstname.toLocaleLowerCase().trim()!=bookingDetails.CustomerFirstName[0].toLocaleLowerCase().trim()){
                 throw new Error("Expected firstname did not matched.\nExpected: " + bookingDetails.CustomerFirstName[0] + 
                 "\nActual: " + firstname);
             }
 
-            if(lastname.toLocaleLowerCase()!=bookingDetails.CustomerLastName[0].toLocaleLowerCase()){
+            if(lastname.toLocaleLowerCase().trim()!=bookingDetails.CustomerLastName[0].toLocaleLowerCase().trim()){
                 throw new Error("Expected lastname did not matched.\nExpected: " + bookingDetails.CustomerLastName[0] + 
                 "\nActual: " + lastname);
             }
 
             // Verify Reservation number
-            if(reservationNumber!=bookingDetails.ReservationNumber[0]){
+            if(reservationNumber.trim()!=bookingDetails.ReservationNumber[0].trim()){
                 throw new Error("Expected reservation number did NOT matched.\nExpected: " + bookingDetails.ReservationNumber[0] + 
                 "\nActual: " + reservationNumber);
             }
 
             // Verify accommodation name.
-            if(accommodationName!=bookingDetails.AccommodationName[0]){
+            if(accommodationName.toLowerCase().trim()!=bookingDetails.AccommodationName[0].toLowerCase().trim()){
                 throw new Error("Expected accommodation did not matched.\nExpected: " + bookingDetails.AccommodationName[0] + 
                 "\nActual: " + accommodationName);
             }
 
             // Verify accommodation ID.
-            if(assignedRoom!=bookingDetails.AssignedRoom[0]){
+            if(assignedRoom.toLowerCase().trim()!=bookingDetails.AssignedRoom[0].toLowerCase().trim()){
                 throw new Error("Expected accommodation ID did not matched.\nExpected: " + bookingDetails.AssignedRoom[0] + 
                 "\nActual: " + assignedRoom);
+            }
+
+            // Verify Total Stay
+            if(totalStay.trim()!=bookingDetails.totalStayCost[0].trim()){
+                throw new Error("Expected total stay cost did not matched.\nExpected: " + bookingDetails.totalStayCost[0] + 
+                "\nActual: " + totalStay);
+            }
+
+            // Verify Total Stay
+            if(totalBalance.trim()!=bookingDetails.totalBalance[0].trim()){
+                throw new Error("Expected balance did not matched.\nExpected: " + bookingDetails.totalBalance[0] + 
+                "\nActual: " + totalBalance);
             }
 
             // Verify checkin date.
@@ -147,7 +171,7 @@ export class EditBookingPage extends Common{
                 var expectedCheckinDate = await this.FormatDateToManageBookingDate(dateInput.toString());
             }
 
-            if(reservationDates.split('-')[0].trim()!=expectedCheckinDate){
+            if(reservationDates.split('-')[0].trim()!=expectedCheckinDate.trim()){
                 throw new Error("Expected check-in date did not matched.\nExpected: " + expectedCheckinDate + 
                 "\nActual: " + reservationDates.split('-')[0].trim());
             }
@@ -164,7 +188,7 @@ export class EditBookingPage extends Common{
 
             // Verify number of nights.
             var expectedNights = await this.GetTotalNights(reservationDates);
-            if(nights!=expectedNights){
+            if(nights.trim()!=expectedNights.trim()){
                 throw new Error("Expected night(s) did not matched.\nExpected: " + expectedNights + 
                 "\nActual: " + nights);
             }
@@ -186,7 +210,10 @@ export class EditBookingPage extends Common{
                 "\nActual: " + infant);
             }
 
+            var currentDetails = [firstname, lastname, email, mobile, address];
             await this.ScreenShot("Manage Booking Page");
+
+            return currentDetails;
         }
         catch(e){
             await this.ScreenShot("Failed", false, e.stack);
@@ -205,35 +232,6 @@ export class EditBookingPage extends Common{
             await this.Sleep(10000);
             await this.Click(this.btn_CancelBooking, "Cancel Booking button");
             await this.ScreenShot("Cancel Booking Modal");
-        }
-        catch(e){
-            await this.ScreenShot("Failed", false, e.stack);
-            if(e instanceof errors.TimeoutError){
-                throw new Error(e.stack);
-            }
-            else{
-                throw new Error(e.stack);
-            }
-        }
-    }
-
-    // Step: Verify Booked Reservation is displayed in Manage Booking.
-    async VerifyBookedReservationInManageBooking(bookingNumber: string){
-        try{
-            // Wait for selected reservation.
-            if(!await this.ElementExist(this.lbl_ReservationNumber)){
-                throw new Error("Check In page for selected reservation was NOT displayed.");
-            }
-
-            // get the reservation number and match values from dashboard.
-            var reservationNumber = await this.GetElementText("//span[@class='manage-booking-number']", 'Reservation Number');
-            if(reservationNumber!=bookingNumber){
-                throw new Error("Expected reservation number did NOT matched.\nExpected: " + bookingNumber + 
-                "\nActual: " + reservationNumber);
-            }
-
-            // Capture Manage Booking Page.
-            await this.ScreenShot("Manage Booking Page");
         }
         catch(e){
             await this.ScreenShot("Failed", false, e.stack);
@@ -286,47 +284,13 @@ export class EditBookingPage extends Common{
         }
     }
 
-    // This will verify the payments in manage booking page
-    async VerifyPayments(paymentDetails: any){
+    // This will check if saved changes btn is disabled/enabled
+    async VerifySaveChangesCTA(){
         try{
-            // Get and Verify payment type and amount
-            var paymentTypeElement = await this.FindElements(this.lbl_EftType, "Payment Type");
-            var paymentAmountElement = await (this.FindElements(this.lbl_PaymentAmount, "Payment Amount"));
-            var creditCardFee = 0.00;
-            var counter1 = 0;
-            var counter2 = 0;
-            do{
-                if(paymentDetails[counter1]['transactionType'] == TransactionType.receipt){
-                    var initialPaymentDate = paymentDetails[counter1]['dateOfTransaction'].split("T")[0];
-                    var expectedPaymentDate = (await this.FormatDateToManagePaymentDate(initialPaymentDate)).toString();
-                    var expectedPaymentType = paymentDetails[counter1]['paymentMethod']+" "+expectedPaymentDate;
-                    var expectedPaymentAmount = paymentDetails[counter1]['amount'].toFixed(2);
-                    var actualPaymentType = await this.GetLiveElementText(paymentTypeElement[counter1-counter2], "Payment Type");
-                    var initialPaymentAmount = await this.GetLiveElementText(paymentAmountElement[counter1-counter2], "Payment Amount");
-                    var actualPaymentAmount = initialPaymentAmount.split("$")[1];
-                    if(actualPaymentType.toLowerCase() != expectedPaymentType.toLowerCase()){
-                        throw new Error("Payment method and date did NOT matched. \nExpected: " + expectedPaymentType.toLowerCase() +
-                        "\nActual: "+actualPaymentType.toLowerCase())
-                    }
-                    if(actualPaymentAmount != expectedPaymentAmount){
-                        throw new Error("Payment amount did NOT matched. \nExpected: " + expectedPaymentAmount +
-                        "\nActual: "+actualPaymentAmount)
-                    }else{
-                        counter1++;
-                    }
-                }else{
-                    creditCardFee = creditCardFee + paymentDetails[counter1]['amount'];
-                    counter2++;
-                    counter1++;
-                }
-            }while(counter1 < paymentDetails.length)
-
-            if(creditCardFee != 0.00){
-                var actualCreditCardFee = await this.GetElementText(this.lbl_CreditCardFee, "Total Credit Card Fee");
-                if(actualCreditCardFee.replace("- $","") != creditCardFee.toFixed(2)){
-                    throw new Error("Expected Total credit card fee did NOT matched. \nExpected: " + creditCardFee +
-                        "\nActual: "+actualCreditCardFee.replace("- $",""))
-                }
+            var element = await this.FindElement(this.btn_SaveChanges, "Save Changes CTA");
+            var elementValue = await this.GetElementValueByAttribute(element,"class","Save Changes CTA");
+            if(!elementValue.includes("disabled")){
+                throw new Error("Save Changes should be disabled");
             }
         }catch(e){
             await this.ScreenShot("Failed", false, e.stack);
@@ -339,4 +303,105 @@ export class EditBookingPage extends Common{
         }
     }
 
+    // This will edit random fields in Guest Details
+    async EditGuestDetails(details: any){
+        try{
+            var randStr = await this.GenerateRandomString("alphanumeric", 3);
+            var randEmail = await this.GenerateRandomEmail(details.emailAddress, "@gmail.com","Alphanumeric", 4);
+            var randPhoneNumber = await this.GenerateRandomString("number", 6);
+            var randStAddress = await this.GenerateRandomString("number", 2);
+            var streetNumber = details.address.split(" ")[0]
+            var address = details.address.replace(streetNumber, randStAddress);
+            await this.EnterValue(this.txt_Firstname, details.firstname+randStr, "Firstname");
+            await this.EnterValue(this.txt_Lastname, details.lastname+randStr, "Lastname");
+            await this.EnterValue(this.txt_Email, randEmail, "Email");
+            await this.EnterValue(this.txt_CNumber, details.contactNumber+randPhoneNumber, "Phone Number");
+            await this.EnterValue(this.txt_Address, address, "Address");
+            await this.PressKey("ArrowDown");
+            await this.PressKey("Enter");
+            await this.Click(this.btn_SaveChanges, "Save Chanages CTA");
+        }catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // This will verify the toast message
+    async VerifyToastMessage(){
+        try{
+            if(await this.elementExist(this.div_ToastMessage)){
+                var toastMsg = await this.GetElementText(this.div_ToastMessage, "Toast Message");
+                if(toastMsg != successMsg){
+                    throw new Error("Success message is not equal");
+                }else{
+                    console.log("Update Successful!");
+                }
+            }else{
+                throw new Error("Toast Message does NOT show");
+            }
+        }catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // This will click make payment
+    async ClickMakePayment(){
+        try{
+            await this.Click(this.btn_MakePayment, "Make Payment Button");
+        }catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    async VerifyEditedGuestDetails(currentDetails: string [] = []){
+        try{
+            var actualFirstname = await this.FindElement(this.txt_Firstname, "Firstname");
+            var actualLastname = await this.FindElement(this.txt_Lastname, "Lastname");
+            var actualEmail = await this.FindElement(this.txt_Email, "Email");
+            var actualMobile = await this.FindElement(this.txt_CNumber, "Mobile Number");
+            var actualAddress = await this.FindElement(this.txt_Address, "Address")
+            var firstname = await this.GetElementValueByAttribute(actualFirstname, "value", "Firstname");
+            var lastname = await this.GetElementValueByAttribute(actualLastname, "value", "Lastname");
+            var email = await this.GetElementValueByAttribute(actualEmail, "value", "Email");
+            var mobile = await this.GetElementValueByAttribute(actualMobile, "value", "Mobile");
+            var address = await this.GetElementValueByAttribute(actualAddress, "value", "Address");
+            var editedDetails = [firstname, lastname, email, mobile, address];
+            
+            for(var i = 0; i < currentDetails.length; i++){
+                if(currentDetails[i] == editedDetails[i]){
+                    throw new Error("Guest Details did not update. \n"
+                    +"Details Before: "+currentDetails[i]+"\n"
+                    +"Details After: "+editedDetails[i]);
+                }
+                if(await this.elementExist(this.div_MembershipCard) && i==2){
+                    i++
+                }
+            }
+        }catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
 }

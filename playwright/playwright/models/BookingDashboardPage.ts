@@ -2,7 +2,8 @@ import { errors, Page } from "@playwright/test";
 import { APIRequestContext } from "playwright";
 import { DataSetup } from "../data/datasetup";
 import { TestDirectory } from "../data/directory";
-import { tbl_Arriving, tbl_Departing, tbl_InHouse, tbl_Search, tbl_Upcoming, TestingEnvironment, URL } from "../data/users";
+import { tbl_Arriving, tbl_Departing, tbl_InHouse, tbl_Search, tbl_Upcoming, TestingEnvironment, URL, typeOfPayment, tblArriving, tblSearch, tblUpcoming } from "../data/users";
+import { APIHelper } from "./APIHelper";
 import { Common } from "./Common";
 
 export class BookingDashboardPage extends Common{
@@ -19,6 +20,21 @@ export class BookingDashboardPage extends Common{
         this.request = request;
         this.dir = dir;
     }
+
+    // Set Xpath values
+    public tableXpath = "//*[@id='tblValue']//tbody/tr";
+    public reservationXpath = "xpath=child::td[@class='reservation']/b";
+    public customerFirstNameXpath = "xpath=child::td[@class='name']/span[@class='fname']";
+    public customerLastNameXpath = "xpath=child::td[@class='name']/span[@class='lname']";
+    public customerTypeXpath = "xpath=child::td[@class='gday']";
+    public customerCountXpath = "xpath=child::td[@class='guests']";
+    public accommodationXpath = "xpath=child::td[@class='accomodation']";
+    public arrowBtnXpath = "xpath=child::td/button[@class='arrow']";
+    public balanceXpath = "xpath=child::td[contains(@class, 'balance')]/b";
+    public depositXpath = "xpath=child::td[@class='paid']";
+    public roomStatusXpath = "xpath=child::td[@class='icons']/p[@class='status'][2]/span[contains(@class, 'text')]";
+    public etaXpath = "xpath=child::td[@class='eta']";
+    public bookingDateXpath = "xpath=child::td[@class='dates']";
 
     // Set XPaths, Element IDs and other attributes.
     // Label
@@ -45,13 +61,18 @@ export class BookingDashboardPage extends Common{
 
     // Dropdown
     public drp_SearchCriteria = "#search-select-dropdown";
+    public dropdownXPath = "//*[@id='search-select-dropdown']";
 
     // Textfield
     public txt_SearchText = "//*[@class='search-searchbar form-control' and not(boolean(@disabled))]";
+    public inputFieldXPath = "//input[@class='search-searchbar form-control']";
+    public txt_SearchBooking = "#find-booking-input";
 
     // Button
     public btn_SearchTabSearch = "//*[@id='search-confirm' and not(boolean(@disabled))]";
     public btn_ManageBooking = "xpath=child::td[@class='cta']/button";
+    public searchBtnXPath = "//*[@id='search-confirm']";
+    public searchBtnspinnerXPath = "//*[@id='event-search']//span[@id='searchCount']/i";
 
     // Table
     public tbl_ResultsTable = "//*[@id='{TableType}']//tbody/tr";
@@ -268,6 +289,8 @@ export class BookingDashboardPage extends Common{
     // Manage Booking for searched reservation
     async ManageBookingOfSearchedReservation(expectedResNumber: string){
         try{
+
+            
             // Set variables to get values.
             var reservationSet: any[] = [];
             var firstNameSet: any[] = [], lastNameSet: any[] = [], depositAmountSet: any[] = [], totalStayCostSet: any[] = [];
@@ -397,4 +420,415 @@ export class BookingDashboardPage extends Common{
             }
         }        
     }
+
+    // This will select specific reservation.
+    async SelectSpecificReservation(searchType: string, searchValue: string, 
+        tableType: string = "Arrivals", dateInput: string[] = []){
+        try{
+            var apiHelper = new APIHelper(this.page, this.request, this.testDirectory);
+            
+            // Set variables to get values.
+            var reservationSet: any[] = [];
+            var firstNameSet: any[] = [], lastNameSet: any[] = [], depositAmountSet: any[] = [], totalStayCostSet: any[] = [];
+            var balanceSet: any[] = [], tierSet: any[] = [], adultSet: any[] = [], childSet: any[] = [];
+            var infantSet: any[] = [], accommodationNameSet: any[] = [], assignedRoomSet: any[] = [];
+            var etaSet: any[] = [], checkInSet: any[] = [], checkOutSet: any[] = [], nightStaySet: any[] = [];
+            var arrivalFromTodaySet: any[] = [];
+            var roomStatusSet: any[] = [], resConfirmationSet: any[] = [], paymentTypeSet:any[] = [];
+            var selectedIndex = 0;
+            var reservationSelected = false;
+            var actualResNumber = "";
+            
+            // This will find the reservation based on searched value.
+            await this.FindABooking(searchType, searchValue, tableType);
+    
+            // Set variables.
+            var tableValue = tbl_Arriving;
+    
+            // Set table type.
+            switch(tableType.toLowerCase().trim()){
+                case "arrivals":
+                    var tableValue = tbl_Arriving;
+                    break;
+                case "in house":
+                    var tableValue = tbl_InHouse;
+                    break;
+                case "departing":
+                    var tableValue = tbl_Departing;
+                    break;
+                case "upcoming":
+                    var tableValue = tbl_Upcoming;
+                    break;
+                case "search":
+                    var tableValue = tbl_Search;
+                    break;
+            }
+    
+            
+    
+            // Get reservation from the result.
+            var list = await this.FindElements(this.tableXpath.replace("tblValue",tableValue), "List of " + tableType);
+            var selectedIndex = 0;
+            if(searchType.toLowerCase().trim() != "reservation number"){
+                if(list.length > 1){
+                    var reserveList = list.length - 1;
+                    selectedIndex = Math.floor(Math.random() * reserveList);
+                }
+            }
+    
+            // Get the customer firstname.
+            var firstNameElement = await this.FindSubElementOnElement(list[selectedIndex], this.customerFirstNameXpath, 
+                "Customer Firstname");
+            var customerFirstname = await this.GetLiveElementText(firstNameElement, "Customer Firstname");
+            firstNameSet.push(customerFirstname);
+    
+            // Get the customer firstname.
+            var lastNameElement = await this.FindSubElementOnElement(list[selectedIndex], this.customerLastNameXpath, 
+                "Customer Lastname");
+            var customerLastname = await this.GetLiveElementText(lastNameElement, "Customer Lastname");
+            lastNameSet.push(customerLastname);
+    
+            // Get the reservation number.
+            var reservationElement = await this.FindSubElementOnElement(list[selectedIndex], this.reservationXpath, 
+                "Reservation Number");
+            var reservationNumber = await this.GetLiveElementText(reservationElement, "Reservation Number");
+            reservationSet.push(reservationNumber);
+    
+            // Get the deposit payment.
+            var depositElement = await this.FindSubElementOnElement(list[selectedIndex], this.depositXpath, "Deposit");
+            var initialDeposits = await this.GetLiveElementText(depositElement, "Deposit");
+            var deposit = initialDeposits.split('/')[0].replace('$','').trim();
+            depositAmountSet.push(deposit);
+    
+            // Get the total Stay cost.
+            var totalStay = initialDeposits.split('/')[1].replace('$','').trim();
+            totalStayCostSet.push(totalStay);
+    
+            // Get the total balance.
+            var balanceElement = await this.FindSubElementOnElement(list[selectedIndex], this.balanceXpath, "Balance");
+            var balance = (await this.GetLiveElementText(balanceElement, "Balance")).replace('$','');
+            balanceSet.push(balance);
+    
+            // Get the guest type.
+            var customerElement = await this.FindSubElementOnElement(list[selectedIndex], this.customerTypeXpath, "Guest Type");
+            var guestType = await this.GetLiveElementText(customerElement, "Guest Type");
+            tierSet.push(guestType);
+            
+    
+            // Get the guest count.
+            var guestCountXpath = await this.FindSubElementOnElement(list[selectedIndex], this.customerCountXpath, "Guest Count");
+            var initialGuestCount = await this.GetLiveElementText(guestCountXpath, "Guest Count");
+            var adult = parseInt(initialGuestCount.split(',')[0].replace("Adults", "").trim());
+            adultSet.push(adult);
+            var child = parseInt(initialGuestCount.split(',')[1].replace("Child", "").trim());
+            childSet.push(child);
+            var infant = initialGuestCount.split(',')[2].replace("infant", "").trim();
+            infantSet.push(infant);
+
+            var nightsElement = await this.FindSubElementOnElement(list[selectedIndex], this.lbl_NightStay, 
+                "Seach tab number of nights");
+            var nightStay = await this.GetLiveElementText(nightsElement, "Search tab number of nights");
+            nightStaySet.push(nightStay);
+    
+            // Get the accommodation.
+            var accomodationElement = await this.FindSubElementOnElement(list[selectedIndex], this.accommodationXpath, "Accommodation");
+            var initialAccommodation = await this.GetLiveElementText(accomodationElement, "Accommodation");
+            var accommodationDetails = initialAccommodation.split("\n");
+            var accommodationName = accommodationDetails[0].trim();
+            accommodationNameSet.push(accommodationName);
+            var assignedRoom = accommodationDetails[accommodationDetails.length-1].trim();
+            assignedRoomSet.push(assignedRoom);
+    
+            // Get the payment type.
+            var paymentType = await this.VerifyPaymentType(balance, deposit, totalStay);
+            paymentTypeSet.push(paymentType);
+
+            var resConfirmationElement = await this.FindSubElementOnElement(list[selectedIndex], this.lbl_ResConfirmation, 
+                "Seach tab reservation confirmation");
+            var resConfirmation = await this.GetLiveElementText(resConfirmationElement, "Search tab reservation confirmation");
+            resConfirmationSet.push(resConfirmation);
+    
+            var eta = "", checkInDate = "", checkOutDate = "", roomStatus = "", bookingDates;
+            // Get the room status.
+            if(tableType.toLowerCase().trim()==tblArriving|| tableType.toLowerCase().trim()==tblSearch){
+                var elementRoomStatus = await this.FindSubElementOnElement(list[selectedIndex], this.roomStatusXpath, "Room Status");
+                roomStatus = await this.GetLiveElementText(elementRoomStatus, "Room Status");
+            }
+            else{
+                roomStatus = "";
+            }
+
+            if(tableType.toLowerCase().trim()==tblUpcoming || tableType.toLowerCase().trim()==tblSearch){
+                // Get ETA.
+                var etaElement = await this.FindSubElementOnElement(list[selectedIndex], this.etaXpath, "ETA");
+                eta = await this.GetLiveElementText(etaElement, "ETA");
+    
+                // Get Booking Dates.
+                var bookingDateElement = await this.FindSubElementOnElement(list[selectedIndex], this.bookingDateXpath, "Booking Date");
+                bookingDates = await this.GetLiveElementText(bookingDateElement, "Booking Dates");
+                checkInDate = bookingDates.split('-')[0];
+                checkOutDate = bookingDates.split('-')[1];
+                var differenceFromToday = await this.GetDateDifference(bookingDates.split('-')[0].trim());
+                arrivalFromTodaySet.push(differenceFromToday);
+            }
+            else{
+                var eta = "";
+                var checkInDate = "";
+                var checkOutDate = "";
+                if(searchType.toLowerCase().trim() == "reservation number"){
+                    var api_ReserveDates = await apiHelper.GetReservationDates(searchValue);
+                    checkInDate = api_ReserveDates[0];
+                    checkOutDate = api_ReserveDates[1];
+                }
+                else{
+                    if(dateInput!=null){
+                        checkInDate = dateInput[0];
+                        checkOutDate = dateInput[1];
+                    }
+                }
+            }
+
+            
+
+            etaSet.push(eta);
+            checkInSet.push(checkInDate);
+            checkOutSet.push(checkOutDate);
+            roomStatusSet.push(roomStatus);
+
+            // Reservation Details
+            var dashboardDetails = [firstNameSet, lastNameSet, reservationSet, depositAmountSet, totalStayCostSet, balanceSet, 
+                tierSet, adultSet, childSet, infantSet, accommodationNameSet, assignedRoomSet, etaSet, 
+                checkInSet, checkOutSet, nightStaySet, roomStatusSet, resConfirmationSet,
+                arrivalFromTodaySet, paymentTypeSet];
+            var dashboardData = await this.dataSetup.SetReservationDetailsFromDashboard(dashboardDetails);
+    
+            // Get the manage booking button.
+            var button = await this.FindSubElementOnElement(list[selectedIndex], this.arrowBtnXpath, "Arrow button");
+            await this.ClickElement(button, "Arrow button");
+    
+            return dashboardData;
+        }
+        catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // This will check what kind of payment was made.
+    async VerifyPaymentType(balance:string, deposit:string, totalStay:string){
+        try{
+            var paymentType = "";
+            if(parseFloat(balance) <= 0){
+                if(parseFloat(deposit) >= parseFloat(totalStay)){
+                    paymentType = typeOfPayment.paid;
+                }
+                else{
+                    throw new Error("Negative or lesser payment should not be included in fully paid reservation.\nDeposit: " 
+                    + deposit);
+                }
+            }
+            else if(parseFloat(balance) < parseFloat(totalStay)){
+                if(parseFloat(deposit) < parseFloat(totalStay)){
+                    paymentType = typeOfPayment.unpaid;
+                }
+                else{
+                    throw new Error("Greater or equal payment should not be included in partially paid reservation.\nDeposit: " 
+                    + deposit);
+                }
+            }
+            else if(parseFloat(balance) == parseFloat(totalStay)){
+                if(parseFloat(deposit) == 0){
+                    paymentType = typeOfPayment.unpaid;
+                }
+                else if(parseFloat(deposit) > parseFloat(totalStay)){
+                    paymentType = typeOfPayment.paid;
+                }
+                else{
+                    throw new Error("Deposit should not have value.\nDeposit: " 
+                    + deposit);
+                }
+            }
+            else{
+                throw new Error("Error in balance.\nBalance: " 
+                    + balance);
+            }
+            return paymentType;
+        }
+        catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+     // Select criteria from dropdown, input value in search field and confirm search CTA
+     async SelectCriteria(criteria: string){
+        try{
+            await this.WaitForElement(this.dropdownXPath, "Search Criteria dropdown");
+            switch(criteria.toLowerCase().trim()){
+            case "given":
+                await this.SelectFromDropdown(this.dropdownXPath, "value", criteria, "Given");
+                break;
+            case "surname":
+                await this.SelectFromDropdown(this.dropdownXPath, "value", criteria, "Lastname");
+                break;
+            case "mobile":
+                await this.SelectFromDropdown(this.dropdownXPath, "value", criteria, "Mobile");
+                break;
+            case "email":
+                await this.SelectFromDropdown(this.dropdownXPath, "value", criteria, "Email");
+                break;
+            case "reservationids":
+                await this.SelectFromDropdown(this.dropdownXPath, "value", criteria, "Reservation Number");
+                break;
+            case "membershipnumber":
+                await this.SelectFromDropdown(this.dropdownXPath, "value", criteria, "Member Number");
+                break;
+            }
+        }
+        catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // This will input in search field
+    async InputSearchField(searchValue: string){
+        try{
+            await this.enterValue(this.inputFieldXPath, searchValue, "Search Field");
+        }
+        catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // This will click the confirm button
+    async ClickConfirmSearchCTA(){
+        try{
+            
+            await this.Click(this.searchBtnXPath, "Seach CTA");
+            await this.waitForElementToBeHidden(this.searchBtnspinnerXPath);
+        }
+        catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // Find a booking.
+    async FindABooking(searchType: string, searchValue: string, tableType: string = "Arrivals", returnResult: boolean = true){
+        try{
+            // Set variables.
+            var tableValue = tbl_Arriving;
+            var criteriaType = "";
+    
+            if(tableType.toLowerCase().trim()!="search"){
+                // Enter value in the find a booking field.
+                await this.enterValue(this.txt_SearchBooking, searchValue, "Find a booking textbox");
+            }
+            else{
+                // Select criteria based on specific search type input.
+                switch(searchType.toLowerCase().trim()){
+                    case "reservation number":
+                        criteriaType = "reservationIds";
+                        break;
+                }
+                
+                // Select specific creteria from the dropdown.
+                await this.SelectCriteria(criteriaType);
+    
+                // Input the specific value based on the criteria.
+                await this.InputSearchField(searchValue);
+    
+                // this will click confirm search CTA
+                await this.ClickConfirmSearchCTA();
+            }
+    
+            // Set table type.
+            switch(tableType.toLowerCase().trim()){
+                case "arrivals":
+                    var tableValue = tbl_Arriving;
+                    break;
+                case "in house":
+                    var tableValue = tbl_InHouse;
+                    break;
+                case "departing":
+                    var tableValue = tbl_Departing;
+                    break;
+                case "upcoming":
+                    var tableValue = tbl_Upcoming;
+                    break;
+                case "search":
+                    var tableValue = tbl_Search;
+                    break;
+            }
+    
+            // Capture the search reservation.
+            await this.ScreenShot("Search Reservation Result");
+    
+            // Check the reservation number
+            switch(searchType.toLowerCase().trim()){
+                case "reservation number":
+                    var table  = await this.FindElements(this.tableXpath.replace("tblValue",tableValue), "Table");
+                    var reservation = await this.FindSubElementOnElement(table[0], this.reservationXpath,"Reservation Number");
+                        if(!returnResult){
+                            if(await this.SubElementExist(table[0], this.reservationXpath, 5000)){
+                                throw new Error("Reservation was still still displayed.");
+                            }
+                            else{
+                                console.log(searchValue + " was NOT displayed in " + tableType);
+                            }
+                        }
+                        else{
+                            if(await this.SubElementExist(table[0], this.reservationXpath, 5000)){
+                                var reservationNumber = await this.GetLiveElementText(reservation, "Reservation number");
+                                if(reservationNumber!=searchValue){
+                                    throw new Error("Expected reservation number did not matched.\nExpected: " + searchValue + 
+                                    "\nActual: " + reservationNumber);
+                                }
+                            }
+                            else{
+                                throw new Error("Reservation was not found using " + searchValue);
+                            }
+                        }
+                    break;
+            }
+        }
+        catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    
 }

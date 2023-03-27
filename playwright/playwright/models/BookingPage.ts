@@ -1247,7 +1247,7 @@ export class BookingPage extends Common{
                 var expectedMemberPrice: any;
                 if(guestDetails.IsMember[i]){
                     var initialMemberDiscount = parseFloat(accomDetails.Price[i]) * MembershipDiscount;
-                    var memberDiscount = (Math.round((initialMemberDiscount + Number.EPSILON) * 1000) / 1000);
+                    var memberDiscount = (Math.round((initialMemberDiscount + Number.EPSILON) * 20) / 20);
     
                     // Discount should be capped at 50.
                     var initialMemberPrice: any;
@@ -1654,7 +1654,7 @@ export class BookingPage extends Common{
                 // Check for expected member discount.
                 var expectedMemberPrice: any;
                 var initialMemberDiscount = parseFloat(accomDetails.Price[i]) * MembershipDiscount;
-                var memberDiscount = (Math.round((initialMemberDiscount + Number.EPSILON) * 1000) / 1000);
+                var memberDiscount = (Math.round((initialMemberDiscount + Number.EPSILON) * 20) / 20);
 
                 // Discount should be capped at 50.
                 var initialMemberPrice: any;
@@ -2161,7 +2161,7 @@ export class BookingPage extends Common{
                 var expectedMemberPrice: any;
                 if(guestDetails.IsMember[i]){
                     var initialMemberDiscount = parseFloat(accomDetails.Price[i]) * MembershipDiscount;
-                    var memberDiscount = (Math.round((initialMemberDiscount + Number.EPSILON) * 1000) / 1000);
+                    var memberDiscount = (Math.round((initialMemberDiscount + Number.EPSILON) * 20) / 20);
     
                     // Discount should be capped at 50.
                     var initialMemberPrice: any;
@@ -2383,9 +2383,9 @@ export class BookingPage extends Common{
                 // **SUBJECT FOR CHANGE**
                 // Check for expected member discount.
                 var expectedMemberPrice: any;
-                if(guestDetails.IsMember[i]){
+                if(guestDetails.    IsMember[i]){
                     var initialMemberDiscount = parseFloat(accomDetails.Price[i]) * MembershipDiscount;
-                    var memberDiscount = (Math.round((initialMemberDiscount + Number.EPSILON) * 1000) / 1000);
+                    var memberDiscount = (Math.round((initialMemberDiscount + Number.EPSILON) * 20) / 20);
     
                     // Discount should be capped at 50.
                     var initialMemberPrice: any;
@@ -2774,7 +2774,7 @@ export class BookingPage extends Common{
                 var expectedMemberPrice: any;
                 if(guestDetails.IsMember[i]){
                     var initialMemberDiscount = parseFloat(accomDetails.OriginalRate[i]) * MembershipDiscount;
-                    var memberDiscount = (Math.round((initialMemberDiscount + Number.EPSILON) * 1000) / 1000);
+                    var memberDiscount = (Math.round((initialMemberDiscount + Number.EPSILON) * 20) / 20);
     
                     // Discount should be capped at 50.
                     var initialMemberPrice: any;

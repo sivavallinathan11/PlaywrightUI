@@ -752,14 +752,12 @@ export class APIHelper extends SmokeSteps{
             var ep_CreateReservation: any;
             var host: any;
             if(TestingEnvironment.toLowerCase() == "dev"){
-                ep_CreateReservation = endpoint.DEV_API_CreateReservation+CommonAPIData.parkCode+
-                                           "?callerName="+CommonAPIData.callerName;
-                host = 'dev-int-dhp-api-jaguar.azurewebsites.net';
+                ep_CreateReservation = endpoint.DEV_API_CreateReservation+CommonAPIData.parkCode
+                host = 'dev-pms-dhp-api.azurewebsites.net';
             }
             else{
-                ep_CreateReservation = endpoint.API_CreateReservation+CommonAPIData.parkCode+
-                                        "?callerName="+CommonAPIData.callerName;
-                host = 'test-int-dhp-api-jaguar.azurewebsites.net';
+                ep_CreateReservation = endpoint.API_CreateReservation+CommonAPIData.parkCode
+                host = 'test-pms-dhp-api.azurewebsites.net';
             }
 
             // Set global variables.
@@ -872,6 +870,9 @@ export class APIHelper extends SmokeSteps{
 
             // Create request for booking reservation.
             const response = await this.request.post(`${ep_CreateReservation}`, {
+                params: {
+                    'parkcode': CommonAPIData.parkCode
+                },
                 data: {
                     'providerReference': details.providerReference,
                     'fieldVersion': details.filedVersion,
@@ -933,22 +934,22 @@ export class APIHelper extends SmokeSteps{
                 console.log(jsonResponse);
 
                 // Get booking number.
-                const bookingStatus = jsonResponse["TransactionResult.StatusIsOK"];
-                const bookingMessage = jsonResponse["TransactionResult.InformationMessage"];
-                const exceptionMessage = jsonResponse["TransactionResult.ExceptionMessage"];
+                const bookingStatus = jsonResponse["bookingCreated"];
+                const bookingMessage = jsonResponse["statusMessageText"];
+                const exceptionMessage = jsonResponse["System.Exeption"];
                 var bookingNumber: any;
                 var createdBooking: any;
                 if(bookingStatus){
                     if(TestingEnvironment.toLowerCase() == "dev"){
-                        createdBooking = jsonResponse["TransactionResult.OutputDictionary"]["CreateBooking"][0];
-                        bookingNumber = createdBooking["ReferenceNumber"];
+                        // createdBooking = jsonResponse["TransactionResult.OutputDictionary"]["CreateBooking"][0];
+                        bookingNumber = jsonResponse["referenceNumber"];
                     }
                     else{
-                        bookingNumber = jsonResponse["TransactionResult.OutputDictionary"]["CreateBooking.ReferenceNumber"];
-                        if(bookingNumber==undefined){
-                            createdBooking = jsonResponse["TransactionResult.OutputDictionary"]["CreateBooking"][0];
-                            bookingNumber = createdBooking["ReferenceNumber"];
-                        }
+                        bookingNumber = jsonResponse["referenceNumber"];
+                        // if(bookingNumber==undefined){
+                        //     createdBooking = jsonResponse["TransactionResult.OutputDictionary"]["CreateBooking"][0];
+                        //     bookingNumber = createdBooking["ReferenceNumber"];
+                        // }
                     }
                     console.log("Reservation Number: " + bookingNumber);
                 }
@@ -1333,6 +1334,32 @@ export class APIHelper extends SmokeSteps{
                 return true;
             }
         }catch(e){
+            if(e instanceof errors.TimeoutError){
+                await this.SaveFailedTraceLogs(e.stack);
+                throw new Error(e.stack);
+            }
+            else{
+                await this.SaveFailedTraceLogs(e.stack);
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // Get reservation dates.
+    async GetReservationDates(reservationNumber: string){
+        try{
+            var results = await this.GetReservationDetails(reservationNumber);
+            var initialCheckIn = results["arrivalDate"];
+            var initialCheckOut = results["departureDate"];
+    
+            var checkIn = initialCheckIn.split('T')[0];
+            console.log("Check in date: " + checkIn);
+            var checkOut = initialCheckOut.split('T')[0];
+            console.log("Check out date: " + checkOut);
+    
+            return [checkIn, checkOut];
+        }
+        catch(e){
             if(e instanceof errors.TimeoutError){
                 await this.SaveFailedTraceLogs(e.stack);
                 throw new Error(e.stack);

@@ -6,6 +6,8 @@ import { CheckInPage } from "../models/CheckInPage";
 import { APIHelper } from "../models/APIHelper";
 import { BaseSteps } from "../models/BaseSteps";
 import { SmokeSteps } from "../models/SmokeSteps";
+import { MakePaymentModal } from "../models/MakePaymentModal";
+import { editGuestDetails } from "../data/users";
 
 test('Edit guest details and pay cash then checkin single reservation', async ({page, request}) => {
     // Set basesteps object.
@@ -21,6 +23,8 @@ test('Edit guest details and pay cash then checkin single reservation', async ({
     const checkin = new CheckInPage(page, testDetails);
     const apiHelper = new APIHelper(page, request, testDetails);
     const smokeSteps = new SmokeSteps(page, testDetails);
+    const paymentModal = new MakePaymentModal(page, testDetails);
+    const editDetails = editGuestDetails;
 
     //#region Start test
     //Create a reservation for non-member.
@@ -39,16 +43,31 @@ test('Edit guest details and pay cash then checkin single reservation', async ({
     // Verify booking reservations from the arrivals pane.
     await dashboard.VerifyArrivals();
     
-    // Search the reservation
-    await dashboard.SearchReservationFromSearchTab(reservationNumber, "reservation number");
+    // Select a partial paid or unpaid single reservation for a guest with vacant clean room 
+    //(list: Vacant Clean, Occupied, Vacant Dirty).
+    var bookingDetails = await dashboard.SelectSpecificReservation("Reservation Number", reservationNumber);
 
-    // Manage search booking reservation.
-    var bookingDetails = await dashboard.ManageBookingOfSearchedReservation(reservationNumber);
+    // Verify Edit Booking Page.
+    var currentDetails = await editBooking.VerifyManageBookingPage(bookingDetails);
 
-    // Verify Manage Booking Page.
-    await editBooking.VerifyManageBookingPage(bookingDetails);
+    // Edit random guest detail
+    await editBooking.EditGuestDetails(editDetails);
 
-    //#endregion */
+    // Verify if edit successful
+    await editBooking.VerifyToastMessage();
 
+    // Verify editted details
+    //await editBooking.VerifyEditedGuestDetails(currentDetails);
+
+    // Click Make Payment CTA
+    await editBooking.ClickMakePayment();
+
+    // Verify if payment modal exist
+    await paymentModal.VerifyPaymentModal();
+
+    // Verify reservation details
+    await paymentModal.VerifyReservationDetails(bookingDetails);
+
+    await paymentModal.SelectPaymentMethod(bookingDetails, );
 
 }) 

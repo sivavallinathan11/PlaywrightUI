@@ -2,10 +2,11 @@ import { errors, Page } from "@playwright/test";
 import { AccommodationDetails, CustomerDetails } from "../data/bookings";
 import { DataSetup } from "../data/datasetup";
 import { TestDirectory } from "../data/directory";
+import { DashboardDetails } from "../data/managebookings";
 import { CCSurcharge, MembershipFee, TestingEnvironment, URL } from "../data/users";
 import { Common } from "./Common";
 
-export class PaymentBookingModal extends Common{
+export class MakePaymentModal extends Common{
     // Set page object.
     readonly page: Page;
     public dataSetup = new DataSetup();
@@ -42,21 +43,26 @@ export class PaymentBookingModal extends Common{
     public txt_EFTPOSPayableAmount = "#eftpos-payable-amount";
 
     // Label.
+    public lbl_NumberOfBooking = "//div[@id='payment-modal']//div[@class='payment-booking-details']/div";
+    public lbl_BookingGDay = "xpath=child::div";
     public lbl_CashBalanceRemaining = "#cash-balance-remaining";
     public lbl_CardBalanceRemaining = "#card-balance-remaining"
     public lbl_EFTPOSBalanceRemaining = "#eftpos-balance-remaining";
     public lbl_CardSurcharge = "//*[@id='gr-reserve-modal-container']//*[@id='card-surcharge']";
-    public lbl_AccommodationName = "//form[@id='payment-modal-form']//div[@class='payment-booking-details']//label//p[1]";
-    //"//*[@id='gr-reserve-modal-container']//div[contains(@class, 'booking-entry')]//label/p[1]";
-    public lbl_ContactName = "//form[@id='payment-modal-form']//div[@class='payment-booking-details']//label//p[2]/span[2]";
-    //"//*[@id='gr-reserve-modal-container']//span[contains(@id, 'reserve-booking-contact-name')]";
-    public lbl_GuestQuotePrice = "//form[@id='payment-modal-form']//div[@class='payment-booking-details']//div/div[2]//p";
-    //"//*[@id='gr-reserve-modal-container']//*[@class='payment-booking-details']/div[contains(@class, 'booking-entry')]/div[1]/div[2]/p";
+    public lbl_AccommodationName = "xpath=child::div/div/label//p[1]";
+    public lbl_GDayReward = "xpath=child::div[2]//p[1]";
+    public lbl_SubTotal = "#total-booking-price";
+    //"//form[@id='payment-modal-form']//div[@class='payment-booking-details']//label//p[1]";
+    public lbl_AssignedRoom = "xpath=child::div/div/label//p[2]//span[4]";
+    public lbl_ContactName = "xpath=child::div/div/label//p[2]//span[2]";
+    //"//form[@id='payment-modal-form']//div[@class='payment-booking-details']//label//p[2]/span[2]";
+    public lbl_GuestQuotePrice = "xpath=child::div/div[2]/p";
+    //"//form[@id='payment-modal-form']//div[@class='payment-booking-details']//div/div[2]//p";
     public lbl_MemberQuotePrice = "//*[@id='gr-reserve-modal-container']//*[@class='payment-booking-details']//div[contains(@class, 'booking-entry')]/div[1]/div[3]/p";
     public lbl_PaymentSurcharge = "//span[@id='card-surcharge']"
-    //"//*[@id='gr-reserve-modal-container']//*[@id='reserve-surcharge-amount']";
+    public lbl_AmountPayable = "#card-amount-payable";
+    public lbl_BalanceRemaining = "#card-balance-remaining";
     public lbl_BalanceDue = "#card-balance-remaining"
-    //"//*[@id='gr-reserve-modal-container']//*[@class='balance-due']";
 
     // Temporary Dev elements
     public lbl_DevBalanceDue = "//form[@id='payment-modal-form']//*[@class='amount total-booking-price']";
@@ -79,8 +85,8 @@ export class PaymentBookingModal extends Common{
             // Set random payment type.
             if(paymentType.toLowerCase().trim()=="random"){
                 var paymentSet = ['Cash', 'Credit Card', 'EFTPOS'];
-                var randomIndex = Math.floor(Math.random() * paymentSet.length);
-                paymentType = paymentSet[randomIndex];
+                var randomPaymentIndex = Math.floor(Math.random() * paymentSet.length);
+                paymentType = paymentSet[randomPaymentIndex];
             }
             console.log("Selected payment method: " + paymentType);
     
@@ -88,8 +94,18 @@ export class PaymentBookingModal extends Common{
             var electedPercentage = percentage;
             if(electedPercentage.toLowerCase().trim()=="random"){
                 var percentSet = ['25%', '50%', '75%'];
-                var randomIndex = Math.floor(Math.random() * percentSet.length);
-                electedPercentage = percentSet[randomIndex];
+                var percentages = [.25, .50, .75];
+                var randomPercentageIndex: any;
+                var calculatedPrice: any;
+                if(guestDetails.isUpsell){
+                    do{
+                        randomPercentageIndex = Math.floor(Math.random() * percentSet.length);
+                        calculatedPrice = accomDetails.price[0] * percentages[randomPercentageIndex];
+                    }while(calculatedPrice < 50.00)
+                }else{
+                    randomPercentageIndex = Math.floor(Math.random() * percentSet.length);
+                }
+                electedPercentage = percentSet[randomPercentageIndex];
             }
             console.log("Selected percentage: " + electedPercentage);
     
@@ -113,55 +129,58 @@ export class PaymentBookingModal extends Common{
     // Verify the selected accommodation.
     async VerifyReservationDetails(accomDetails: AccommodationDetails, guestDetails: CustomerDetails){
         // Get the reservation details.
-        var accommodationNames = await this.FindElements(this.lbl_AccommodationName, "Accommodation Name");
-        var contactNames = await this.FindElements(this.lbl_ContactName, "Contact Name");
-        var initialPrices: any;
-
+        var bookingSummary = await this.FindElements(this.lbl_NumberOfBooking, "Number of Items in Summary");
         // Verify reservation details.
-        for(var i =0; i < accomDetails.BookingCount; i++){
+        for(var i =0; i < accomDetails.bookingCount; i++){
+            var accommodationNameElement = await this.FindSubElementOnElement(bookingSummary[i], this.lbl_AccommodationName, "Accommodation Name");
+            var contactNameElement = await this.FindSubElementOnElement(bookingSummary[i], this.lbl_ContactName, "Contact Name");
+            var assignedRoomElement = await this.FindSubElementOnElement(bookingSummary[i], this.lbl_AssignedRoom, "Assigned Room");
+            var initialPriceElement = await this.FindSubElementOnElement(bookingSummary[i], this.lbl_GuestQuotePrice, "Guest Quote Price");
+            var accommodationName = (await this.GetLiveElementText(accommodationNameElement, "Accommodation Name")).replace("QAIR-","");
+            var contactName = await this.GetLiveElementText(contactNameElement, "Contact Name");
+            var assignedRoom = await this.GetLiveElementText(assignedRoomElement, "Assigned Room");
+            var initialPrice = await (await this.GetLiveElementText(initialPriceElement, "Guest Quote Price")).replace(",","");
 
-            // **SUBJECT FOR CHANGE** Get the quoted price.
-            if(guestDetails.IsMember[i]){
-                if(TestingEnvironment.toLowerCase().trim()=="test"){
-                    initialPrices = await this.FindElements(this.lbl_GuestQuotePrice, 
-                        "Reserved Booking Member Quote Price", "All");
+            if(guestDetails.isUpsell[i]){
+                var booking = await this.FindSubElementsOnElement(bookingSummary[i], this.lbl_BookingGDay, "Booking with GDay");
+                if(!await this.SubElementExist(booking[1], this.lbl_BookingGDay)){
+                    throw new Error("Member upsell but GDay Reward Membership line item did NOT exist");
+                }else{
+                    var gdayRewardElement = await this.FindSubElementOnElement(booking[1], this.lbl_GDayReward, "GDay Reward Membership");
+                    var gdayReward = (await this.GetLiveElementText(gdayRewardElement, "GDay Reward Membership Price")).replace("$", "");
+                    if(gdayReward != MembershipFee){
+                        throw new Error("GDay Membership fee did not matched"
+                        +"\n Actual: "+gdayReward
+                        +"\n Expected: "+MembershipFee);
+                    }
                 }
-                else{
-                    initialPrices = await this.FindElements(this.lbl_GuestQuotePrice, 
-                        "Reserved Booking Member Quote Price", "All");
-                }
-            }
-            else{
-                initialPrices = await this.FindElements(this.lbl_GuestQuotePrice, 
-                    "Reserved Booking Guest Quote Price", "All");
-            }
-    
-            // Check if accommodation name matched.
-            var initialAccommodationName = await this.GetLiveElementText(accommodationNames[i], "Accommodation Name");
-            var accommodationName = initialAccommodationName.split("-")[1];
-            if(accommodationName.includes("TEST 2")){
-                accommodationName = accommodationName.split("TEST")[0];
-            }
-            if(!accomDetails.AccommodationName[i].includes(accommodationName)){
-                throw new Error("Expected accommodation name did NOT matched in Payment Modal");
-            }
-    
-            // Check if contact name matched.
-            var contactName = await this.GetLiveElementText(contactNames[i], "Contact Name");
-            if(contactName!=guestDetails.FirstName[i]){
-                throw new Error("Expected contact name did NOT matched in Payment Modal");
             }
 
-            // Check if Quoted Price matched.
-            var initialPrice: any;
-            initialPrice = await this.GetLiveElementText(initialPrices[i], "Reserved Booking Quote Price");
-            var actualPrice = initialPrice.replace('$','').replace(',','').trim();
-            if(actualPrice!=accomDetails.Price[i]){
-                throw new Error("Expected Quote Price after Reservation did NOT matched.\nExpected: " + accomDetails.Price[i] + 
-                "\nActual: " + actualPrice);
+            if(accomDetails.accommodationName[i] != accommodationName){
+                throw new Error("Accommodation Name did not matched."
+                +"\n Expected Accommodation Name: "+accomDetails.accommodationName[i]
+                +"\n Actual Accommodation Name: "+accommodationName);
+            }
+            
+            if(guestDetails.firstName[i].toLowerCase().trim()!=contactName.toLowerCase().trim()){
+                throw new Error("Contact Name did not matched."
+                +"\n Expected Contact Name: "+guestDetails.firstName[i]
+                +"\n Actual Contact Name: "+contactName);
+            }
+
+            if(accomDetails.assignedRoom[i].toLowerCase().trim()!=assignedRoom.toLowerCase().trim()){
+                throw new Error("Assigned Room did not matched."
+                +"\n Expected Assigned Room: "+accomDetails.assignedRoom[i]
+                +"\n Actual Assigned Room: "+assignedRoom);
+            }
+
+            if(accomDetails.price[i].trim()!=initialPrice.trim().replace("$","")){
+                throw new Error("Reservation price did not matched."
+                +"\n Expected Reservation price: "+accomDetails.price[i]
+                +"\n Actual Reservation price: "+initialPrice.replace("$",""));
             }
         }
-    }
+    }   
 
     // This will select payment method based on inputs.
     async SelectPaymentMethod(accomDetails: AccommodationDetails, guestDetails: CustomerDetails, 

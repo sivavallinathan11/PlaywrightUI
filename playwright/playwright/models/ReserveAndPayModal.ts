@@ -6,7 +6,7 @@ import { MembershipFee, StaffName, TestingEnvironment,
     MembershipErrorOnGroupReservation, MembershipErrorOnIndividualReservation } from "../data/users";
 import { Common } from "./Common";
 import { DiscountModal } from "./DiscountModal";
-import { PaymentBookingModal } from "./PaymentBookingModal";
+import { MakePaymentModal } from "./MakePaymentModal";
 
 export class ReserveAndPayModal extends Common{
     // Set object variables.
@@ -515,7 +515,7 @@ export class ReserveAndPayModal extends Common{
         paymentType: string, percentage: string = "100%"){
         try{
             // Set payment modal object.
-            var payment = new PaymentBookingModal(this.page, this.dir);
+            var payment = new MakePaymentModal(this.page, this.dir);
             var paymentDetails: any;
             
             // Check if upsell is available.

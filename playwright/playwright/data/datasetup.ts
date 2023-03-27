@@ -192,6 +192,7 @@ export class DataSetup{
         res.RoomStatus = data[16];
         res.ReservationConfirmation = data[17];
         res.DateCountFromToday = data[18];
+        res.PaymentType = data[19];
         return res;
     }
 
