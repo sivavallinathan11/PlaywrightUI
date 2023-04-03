@@ -1,7 +1,10 @@
 import { errors, Page } from "@playwright/test";
 import { APIRequestContext } from "playwright";
+import { CreateReservationWithNonMember } from "../data/API";
+import { AccommodationDetails } from "../data/bookings";
 import { DataSetup } from "../data/datasetup";
 import { TestDirectory } from "../data/directory";
+import { DashboardDetails } from "../data/managebookings";
 import { tbl_Arriving, tbl_Departing, tbl_InHouse, tbl_Search, tbl_Upcoming, TestingEnvironment, URL, typeOfPayment, tblArriving, tblSearch, tblUpcoming } from "../data/users";
 import { APIHelper } from "./APIHelper";
 import { Common } from "./Common";
@@ -55,6 +58,7 @@ export class BookingDashboardPage extends Common{
 
     // Tab
     public tab_Search = "#event-search";
+    public tab_InHouse = "#event-inhouse";
 
     // Icon
     public icon_TabLoading = "//i[@class='fas fa-circle-notch fa-spin']";
@@ -464,8 +468,6 @@ export class BookingDashboardPage extends Common{
                     break;
             }
     
-            
-    
             // Get reservation from the result.
             var list = await this.FindElements(this.tableXpath.replace("tblValue",tableValue), "List of " + tableType);
             var selectedIndex = 0;
@@ -475,125 +477,130 @@ export class BookingDashboardPage extends Common{
                     selectedIndex = Math.floor(Math.random() * reserveList);
                 }
             }
-    
-            // Get the customer firstname.
-            var firstNameElement = await this.FindSubElementOnElement(list[selectedIndex], this.customerFirstNameXpath, 
-                "Customer Firstname");
-            var customerFirstname = await this.GetLiveElementText(firstNameElement, "Customer Firstname");
-            firstNameSet.push(customerFirstname);
-    
-            // Get the customer firstname.
-            var lastNameElement = await this.FindSubElementOnElement(list[selectedIndex], this.customerLastNameXpath, 
-                "Customer Lastname");
-            var customerLastname = await this.GetLiveElementText(lastNameElement, "Customer Lastname");
-            lastNameSet.push(customerLastname);
-    
-            // Get the reservation number.
-            var reservationElement = await this.FindSubElementOnElement(list[selectedIndex], this.reservationXpath, 
-                "Reservation Number");
-            var reservationNumber = await this.GetLiveElementText(reservationElement, "Reservation Number");
-            reservationSet.push(reservationNumber);
-    
-            // Get the deposit payment.
-            var depositElement = await this.FindSubElementOnElement(list[selectedIndex], this.depositXpath, "Deposit");
-            var initialDeposits = await this.GetLiveElementText(depositElement, "Deposit");
-            var deposit = initialDeposits.split('/')[0].replace('$','').trim();
-            depositAmountSet.push(deposit);
-    
-            // Get the total Stay cost.
-            var totalStay = initialDeposits.split('/')[1].replace('$','').trim();
-            totalStayCostSet.push(totalStay);
-    
-            // Get the total balance.
-            var balanceElement = await this.FindSubElementOnElement(list[selectedIndex], this.balanceXpath, "Balance");
-            var balance = (await this.GetLiveElementText(balanceElement, "Balance")).replace('$','');
-            balanceSet.push(balance);
-    
-            // Get the guest type.
-            var customerElement = await this.FindSubElementOnElement(list[selectedIndex], this.customerTypeXpath, "Guest Type");
-            var guestType = await this.GetLiveElementText(customerElement, "Guest Type");
-            tierSet.push(guestType);
-            
-    
-            // Get the guest count.
-            var guestCountXpath = await this.FindSubElementOnElement(list[selectedIndex], this.customerCountXpath, "Guest Count");
-            var initialGuestCount = await this.GetLiveElementText(guestCountXpath, "Guest Count");
-            var adult = parseInt(initialGuestCount.split(',')[0].replace("Adults", "").trim());
-            adultSet.push(adult);
-            var child = parseInt(initialGuestCount.split(',')[1].replace("Child", "").trim());
-            childSet.push(child);
-            var infant = initialGuestCount.split(',')[2].replace("infant", "").trim();
-            infantSet.push(infant);
 
-            var nightsElement = await this.FindSubElementOnElement(list[selectedIndex], this.lbl_NightStay, 
-                "Seach tab number of nights");
-            var nightStay = await this.GetLiveElementText(nightsElement, "Search tab number of nights");
-            nightStaySet.push(nightStay);
-    
-            // Get the accommodation.
-            var accomodationElement = await this.FindSubElementOnElement(list[selectedIndex], this.accommodationXpath, "Accommodation");
-            var initialAccommodation = await this.GetLiveElementText(accomodationElement, "Accommodation");
-            var accommodationDetails = initialAccommodation.split("\n");
-            var accommodationName = accommodationDetails[0].trim();
-            accommodationNameSet.push(accommodationName);
-            var assignedRoom = accommodationDetails[accommodationDetails.length-1].trim();
-            assignedRoomSet.push(assignedRoom);
-    
-            // Get the payment type.
-            var paymentType = await this.VerifyPaymentType(balance, deposit, totalStay);
-            paymentTypeSet.push(paymentType);
-
-            var resConfirmationElement = await this.FindSubElementOnElement(list[selectedIndex], this.lbl_ResConfirmation, 
-                "Seach tab reservation confirmation");
-            var resConfirmation = await this.GetLiveElementText(resConfirmationElement, "Search tab reservation confirmation");
-            resConfirmationSet.push(resConfirmation);
-    
-            var eta = "", checkInDate = "", checkOutDate = "", roomStatus = "", bookingDates;
-            // Get the room status.
-            if(tableType.toLowerCase().trim()==tblArriving|| tableType.toLowerCase().trim()==tblSearch){
-                var elementRoomStatus = await this.FindSubElementOnElement(list[selectedIndex], this.roomStatusXpath, "Room Status");
-                roomStatus = await this.GetLiveElementText(elementRoomStatus, "Room Status");
-            }
-            else{
-                roomStatus = "";
-            }
-
-            if(tableType.toLowerCase().trim()==tblUpcoming || tableType.toLowerCase().trim()==tblSearch){
-                // Get ETA.
-                var etaElement = await this.FindSubElementOnElement(list[selectedIndex], this.etaXpath, "ETA");
-                eta = await this.GetLiveElementText(etaElement, "ETA");
-    
-                // Get Booking Dates.
-                var bookingDateElement = await this.FindSubElementOnElement(list[selectedIndex], this.bookingDateXpath, "Booking Date");
-                bookingDates = await this.GetLiveElementText(bookingDateElement, "Booking Dates");
-                checkInDate = bookingDates.split('-')[0];
-                checkOutDate = bookingDates.split('-')[1];
-                var differenceFromToday = await this.GetDateDifference(bookingDates.split('-')[0].trim());
-                arrivalFromTodaySet.push(differenceFromToday);
-            }
-            else{
-                var eta = "";
-                var checkInDate = "";
-                var checkOutDate = "";
-                if(searchType.toLowerCase().trim() == "reservation number"){
-                    var api_ReserveDates = await apiHelper.GetReservationDates(searchValue);
-                    checkInDate = api_ReserveDates[0];
-                    checkOutDate = api_ReserveDates[1];
+            for(var i = 0; i < list.length; i++){
+                // Get the customer firstname.
+                var firstNameElement = await this.FindSubElementOnElement(list[i], this.customerFirstNameXpath, 
+                    "Customer Firstname");
+                // Get the customer firstname.
+                var lastNameElement = await this.FindSubElementOnElement(list[i], this.customerLastNameXpath, 
+                    "Customer Lastname");
+                // Get the reservation number.
+                var reservationElement = await this.FindSubElementOnElement(list[i], this.reservationXpath, 
+                    "Reservation Number");
+                // Get the deposit payment.
+                var depositElement = await this.FindSubElementOnElement(list[i], this.depositXpath, "Deposit");
+                // Get the total balance.
+                var balanceElement = await this.FindSubElementOnElement(list[i], this.balanceXpath, "Balance");
+                // Get the guest type.
+                var customerElement = await this.FindSubElementOnElement(list[i], this.customerTypeXpath, "Guest Type");
+                // Get the guest count.
+                var guestCountXpath = await this.FindSubElementOnElement(list[i], this.customerCountXpath, "Guest Count");
+                var nightsElement = await this.FindSubElementOnElement(list[i], this.lbl_NightStay, 
+                    "Seach tab number of nights");
+                // Get the accommodation.
+                var accomodationElement = await this.FindSubElementOnElement(list[i], this.accommodationXpath, "Accommodation");
+                // Get the reservation confirmation
+                var resConfirmationElement = await this.FindSubElementOnElement(list[i], this.lbl_ResConfirmation, 
+                    "Seach tab reservation confirmation");
+                
+                var customerFirstname = await this.GetLiveElementText(firstNameElement, "Customer Firstname");
+                firstNameSet.push(customerFirstname);
+        
+                
+                var customerLastname = await this.GetLiveElementText(lastNameElement, "Customer Lastname");
+                lastNameSet.push(customerLastname);
+        
+                
+                var reservationNumber = await this.GetLiveElementText(reservationElement, "Reservation Number");
+                reservationSet.push(reservationNumber);
+        
+                
+                var initialDeposits = await this.GetLiveElementText(depositElement, "Deposit");
+                var deposit = initialDeposits.split('/')[0].replace('$','').trim();
+                depositAmountSet.push(deposit);
+        
+                // Get the total Stay cost.
+                var totalStay = initialDeposits.split('/')[1].replace('$','').trim();
+                totalStayCostSet.push(totalStay);
+        
+                
+                var balance = (await this.GetLiveElementText(balanceElement, "Balance")).replace('$','');
+                balanceSet.push(balance);
+        
+                var guestType = await this.GetLiveElementText(customerElement, "Guest Type");
+                tierSet.push(guestType);
+                
+                var initialGuestCount = await this.GetLiveElementText(guestCountXpath, "Guest Count");
+                var adult = parseInt(initialGuestCount.split(',')[0].replace("Adults", "").trim());
+                adultSet.push(adult);
+                var child = parseInt(initialGuestCount.split(',')[1].replace("Child", "").trim());
+                childSet.push(child);
+                var infant = initialGuestCount.split(',')[2].replace("infant", "").trim();
+                infantSet.push(infant);
+                
+                var nightStay = await this.GetLiveElementText(nightsElement, "Search tab number of nights");
+                nightStaySet.push(nightStay);
+                
+                var initialAccommodation = await this.GetLiveElementText(accomodationElement, "Accommodation");
+                var accommodationDetails = initialAccommodation.split("\n");
+                var accommodationName = accommodationDetails[0].trim();
+                accommodationNameSet.push(accommodationName);
+                var assignedRoom = accommodationDetails[accommodationDetails.length-1].trim();
+                assignedRoomSet.push(assignedRoom);
+                
+                // Get the payment type.
+                var paymentType = await this.VerifyPaymentType(balance, deposit, totalStay);
+                paymentTypeSet.push(paymentType);
+                
+                var resConfirmation = await this.GetLiveElementText(resConfirmationElement, "Search tab reservation confirmation");
+                resConfirmationSet.push(resConfirmation);
+        
+                var eta = "", checkInDate = "", checkOutDate = "", roomStatus = "", bookingDates;
+                // Get the room status.
+                if(tableType.toLowerCase().trim()==tblArriving|| tableType.toLowerCase().trim()==tblSearch){
+                    var elementRoomStatus = await this.FindSubElementOnElement(list[selectedIndex], this.roomStatusXpath, "Room Status");
+                    roomStatus = await this.GetLiveElementText(elementRoomStatus, "Room Status");
                 }
                 else{
-                    if(dateInput!=null){
-                        checkInDate = dateInput[0];
-                        checkOutDate = dateInput[1];
+                    roomStatus = "";
+                }
+    
+                if(tableType.toLowerCase().trim()==tblUpcoming || tableType.toLowerCase().trim()==tblSearch){
+                    // Get ETA.
+                    var etaElement = await this.FindSubElementOnElement(list[selectedIndex], this.etaXpath, "ETA");
+                    eta = await this.GetLiveElementText(etaElement, "ETA");
+        
+                    // Get Booking Dates.
+                    var bookingDateElement = await this.FindSubElementOnElement(list[selectedIndex], this.bookingDateXpath, "Booking Date");
+                    bookingDates = await this.GetLiveElementText(bookingDateElement, "Booking Dates");
+                    checkInDate = bookingDates.split('-')[0];
+                    checkOutDate = bookingDates.split('-')[1];
+                    var differenceFromToday = await this.GetDateDifference(bookingDates.split('-')[0].trim());
+                    arrivalFromTodaySet.push(differenceFromToday);
+                }
+                else{
+                    var eta = "";
+                    var checkInDate = "";
+                    var checkOutDate = "";
+                    if(searchType.toLowerCase().trim() == "reservation number"){
+                        var api_ReserveDates = await apiHelper.GetReservationDates(searchValue);
+                        checkInDate = api_ReserveDates[0];
+                        checkOutDate = api_ReserveDates[1];
+                    }
+                    else{
+                        if(dateInput!=null){
+                            checkInDate = dateInput[0];
+                            checkOutDate = dateInput[1];
+                        }
                     }
                 }
+    
+                etaSet.push(eta);
+                checkInSet.push(checkInDate);
+                checkOutSet.push(checkOutDate);
+                roomStatusSet.push(roomStatus);
             }
-
-            
-
-            etaSet.push(eta);
-            checkInSet.push(checkInDate);
-            checkOutSet.push(checkOutDate);
-            roomStatusSet.push(roomStatus);
 
             // Reservation Details
             var dashboardDetails = [firstNameSet, lastNameSet, reservationSet, depositAmountSet, totalStayCostSet, balanceSet, 
@@ -830,5 +837,140 @@ export class BookingDashboardPage extends Common{
         }
     }
 
-    
+    // Set dashboard details to accommodation details
+    async SetBookingDetails(dashboardDetails: DashboardDetails){
+        try{
+            // Variables for accommodationDetails
+            var bookingCount = dashboardDetails.reservationNumber.length, reservationNumber="",  accommodationNames="", checkIn="",
+            checkOut="", adult="", child="", infant="",
+            price="", night="";
+
+            for(var i = 0; i<dashboardDetails.reservationNumber.length; i++){
+                // Save data information.
+                if(i == bookingCount - 1){
+                    reservationNumber = reservationNumber + dashboardDetails.reservationNumber[i];
+                    accommodationNames = accommodationNames + dashboardDetails.accommodationName[i] 
+                    + " - "+dashboardDetails.assignedRoom[i];
+                    checkIn = checkIn + dashboardDetails.checkInDate[i];
+                    checkOut = checkOut + dashboardDetails.checkOutDate[i];
+                    adult = adult + dashboardDetails.adult[i].toString();
+                    child = child + dashboardDetails.child[i].toString();
+                    infant = infant + dashboardDetails.infant[i].toString();
+                    price = price + dashboardDetails.totalStayCost[i];
+                    night = night + dashboardDetails.night[i];
+                }
+                else{
+                    reservationNumber = reservationNumber + dashboardDetails.reservationNumber[i] + "|";
+                    accommodationNames = accommodationNames + dashboardDetails.accommodationName[i] 
+                    + " - "+dashboardDetails.assignedRoom[i] + "|";
+                    checkIn = checkIn + dashboardDetails.checkInDate[i] + "|";
+                    checkOut = checkOut + dashboardDetails.checkOutDate[i] + "|";
+                    adult = adult + dashboardDetails.adult[i].toString() + "|";
+                    child = child + dashboardDetails.child[i].toString() + "|";
+                    infant = infant + dashboardDetails.infant[i].toString() + "|";
+                    price = price + dashboardDetails.totalStayCost[i] + "|";
+                    night = night + dashboardDetails.night[i] + "|";
+                }
+            }
+            var details = [bookingCount, reservationNumber, accommodationNames, checkIn, checkOut, adult, child, infant, price, night];
+            return await this.dataSetup.SetBookingsData(details);
+        }catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // Set guest details
+    async SetCustomerDetails(accomDetails: DashboardDetails){
+        try{
+             // Variables for guestDetails
+             var bookingCount = accomDetails.reservationNumber.length;
+             var firstName="", lastName="", memberId="", email="", searchText="", mobile="", street="";
+             var town="", state="", postcode="", country="";
+             var velocityNumber: any[] = [];
+             var isVelocity: any[] = [];
+             var isMember: any[] = [];
+             var isUpsell: any[] = [];
+             var emailExist: any[] = [];
+
+             for(var i = 0; i<bookingCount; i++){
+                // Save data information.
+                if(i == bookingCount - 1){
+                    firstName = firstName + accomDetails.CustomerFirstName[i];
+                    lastName = lastName + accomDetails.customerLastName[i];
+                    if(accomDetails.rewardsTier[i] == ""){
+                        isUpsell.push(false);
+                    }
+                }
+                else{
+                    firstName = firstName + accomDetails.CustomerFirstName[i] + "|";
+                    lastName = lastName + accomDetails.customerLastName[i] + "|";
+                    if(accomDetails.rewardsTier[i] == ""){
+                        isUpsell.push(false);
+                    }
+                }
+            }
+            var guestDetails = [bookingCount, memberId, firstName, lastName, email, mobile, street,
+                town, state, postcode, country, isMember, isUpsell, isVelocity, velocityNumber];
+            return await this.dataSetup.SetMemberData(guestDetails);
+        }catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    async ClickInHouseDashboard(){
+        try{
+            await this.Click(this.tab_InHouse, "In House Dashboard");
+            await this.VerifyInHouse();
+            await this.ScreenShot("In House Dashboard");
+        }catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // Verify if booking is in in-house dashboard
+    async VerifyBookingInhouseDashboard(accomdDetails: AccommodationDetails){
+        try{
+            await this.ClickInHouseDashboard();
+            var reservationNumber = "";
+            await this.FindABooking("reservation number", accomdDetails.reservationNumber[0], "in house");
+            var list = await this.FindElements(this.tableXpath.replace("tblValue","tbl-InHouse"), "List of In House Dashboard");
+            for(var i = 0; i<list.length; i++){
+                var reservationElement = await this.FindSubElementOnElement(list[i], this.reservationXpath, 
+                    "Reservation Number");
+                reservationNumber = await this.GetLiveElementText(reservationElement, "Reservation Number");
+            }
+
+            if(reservationNumber != accomdDetails.reservationNumber[0]){
+                throw new Error("Reservation did not matched."
+                +"\n Actual: "+reservationNumber
+                +"\n Expected: "+accomdDetails.reservationNumber[0]);
+            }
+        }catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
 }

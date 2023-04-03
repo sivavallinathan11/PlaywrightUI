@@ -7,14 +7,15 @@ export class DataSetup{
     async SetBookingsData(data: any[]){
         var bookings = new AccommodationDetails();
         bookings.BookingCount = data[0];
-        bookings.AccommodationName = data[1].split('|');
-        bookings.CheckInDate = data[2].split('|');
-        bookings.CheckOutDate = data[3].split('|');
-        bookings.Adult = data[4].split('|');
-        bookings.Child = data[5].split('|');
-        bookings.Infant = data[6].split('|');
-        bookings.Price = data[7].split('|');
-        bookings.Night = data[8].split('|');
+        bookings.ReservationNumber = data[1].split('|');
+        bookings.AccommodationName = data[2].split('|');
+        bookings.CheckInDate = data[3].split('|');
+        bookings.CheckOutDate = data[4].split('|');
+        bookings.Adult = data[5].split('|');
+        bookings.Child = data[6].split('|');
+        bookings.Infant = data[7].split('|');
+        bookings.Price = data[8].split('|');
+        bookings.Night = data[9].split('|');
         return bookings;
     }
 
@@ -107,6 +108,7 @@ export class DataSetup{
         pay.TotalBalance = data[3];
         pay.MemberDiscount = data[4];
         pay.PaymentPercentage = data[5];
+        pay.PaymentDate = data[6];
         return pay;
     }
 

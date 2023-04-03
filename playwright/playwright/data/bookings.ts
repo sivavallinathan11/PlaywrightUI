@@ -1,6 +1,7 @@
 export class AccommodationDetails{
     // Set variables.
     public bookingCount: number;
+    public reservationNumber: any[] = [];
     public accommodationName: any[] = [];
     public roomName: any[] = [];
     public checkInDate: any[] = [];
@@ -18,6 +19,12 @@ export class AccommodationDetails{
     // Getter/Setter data.
     get BookingCount(){
         return this.bookingCount;
+    }
+    set ReservationNumber(data){
+        this.reservationNumber = data;
+    }
+    get ReservationNumber(){
+        return this.reservationNumber;
     }
     set BookingCount(data){
         this.bookingCount = data;
@@ -289,6 +296,7 @@ export class PaymentDetails{
     public totalBalance = "";
     public memberDiscount = "";
     public paymentPercentage = "";
+    public paymentDate = "";
 
     // Getter/Setter data.
     get PaymentType(){
@@ -326,6 +334,12 @@ export class PaymentDetails{
     }
     set PaymentPercentage(data: any){
         this.paymentPercentage = data;
+    }
+    get PaymentDate(){
+        return this.paymentDate;
+    }
+    set PaymentDate(data: any){
+        this.paymentDate = data;
     }
 }
 
