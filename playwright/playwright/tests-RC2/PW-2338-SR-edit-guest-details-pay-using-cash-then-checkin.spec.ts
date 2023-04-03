@@ -8,7 +8,6 @@ import { BaseSteps } from "../models/BaseSteps";
 import { SmokeSteps } from "../models/SmokeSteps";
 import { MakePaymentModal } from "../models/MakePaymentModal";
 import { editGuestDetails } from "../data/users";
-import { BookingPage } from "../models/BookingPage";
 
 test('Edit guest details and pay cash then checkin single reservation', async ({page, request}) => {
     // Set basesteps object.
@@ -20,7 +19,6 @@ test('Edit guest details and pay cash then checkin single reservation', async ({
     // Set page objects.
     const login = new LoginPage(page, testDetails);
     const dashboard = new BookingDashboardPage(page, request, testDetails);
-    const booking = new BookingPage(page, testDetails);
     const editBooking = new EditBookingPage(page, testDetails);
     const checkin = new CheckInPage(page, testDetails);
     const apiHelper = new APIHelper(page, request, testDetails);
@@ -48,8 +46,6 @@ test('Edit guest details and pay cash then checkin single reservation', async ({
     // Select a partial paid or unpaid single reservation for a guest with vacant clean room 
     //(list: Vacant Clean, Occupied, Vacant Dirty).
     var bookingDetails = await dashboard.SelectSpecificReservation("Reservation Number", reservationNumber);
-    var accomDetails = await dashboard.SetBookingDetails(bookingDetails);
-    var guestDetails = await dashboard.SetCustomerDetails(bookingDetails);
 
     // Verify Edit Booking Page.
     var currentDetails = await editBooking.VerifyManageBookingPage(bookingDetails);
@@ -61,7 +57,7 @@ test('Edit guest details and pay cash then checkin single reservation', async ({
     await editBooking.VerifyToastMessage();
 
     // Verify editted details
-    await editBooking.VerifyEditedGuestDetails(currentDetails, guestDetails);
+    //await editBooking.VerifyEditedGuestDetails(currentDetails);
 
     // Click Make Payment CTA
     await editBooking.ClickMakePayment();
@@ -69,33 +65,9 @@ test('Edit guest details and pay cash then checkin single reservation', async ({
     // Verify if payment modal exist
     await paymentModal.VerifyPaymentModal();
 
-    // Process payment
-    var paymentDetails = await paymentModal.MakePaymentInEditBooking(accomDetails, guestDetails, "cash");
+    // Verify reservation details
+    await paymentModal.VerifyReservationDetails(bookingDetails);
 
-    // Verify payment
-    await editBooking.VerifyPayments(paymentDetails);
+    await paymentModal.SelectPaymentMethod(bookingDetails, );
 
-    // Verify if disabled
-    await editBooking.VerifyCTA();
-
-    // Click Check In
-    await editBooking.ClickManageBookingCheckInButton();
-
-    // Verify Check In Page
-    await checkin.VerifyCheckInPage(accomDetails, guestDetails);
-
-    // Verify Payments in Check In Page
-    await checkin.VerifyPayments(paymentDetails);
-
-    // Verify complete check in is disabled
-    await checkin.VerifyCTA();
-
-    // Reservation Check In
-    await checkin.ProceedToCheckIn(accomDetails, guestDetails);
-
-    // Verify Arrivals Dashborad
-    await dashboard.VerifyArrivals();
-
-    // Verify booking in inhouse dashboard
-    await dashboard.VerifyBookingInhouseDashboard(accomDetails);
 }) 

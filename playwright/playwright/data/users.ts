@@ -1,5 +1,5 @@
 export const TestScriptDirectory={
-    Path: './tests-RC2'
+    Path: './tests-RC3'
 }
 export const TestingEnvironment = "dev";
 export const Slot = "slot4";
@@ -734,9 +734,6 @@ export const editGuestDetails = {
     emailAddress: 'RC2Auth',
     contactNumber: '0412',
     address: '60 Lightfoot Street, Cessnock NSW, Australia',
-    isVelocity: false,
-    isUpsell: false,
-    isMember: false
 }
 
 export const CancellationPercentage = 0.25;
@@ -765,16 +762,7 @@ export const BookingStatus = "Booking cancelled.";
 export const emailNote = "An email confirmation of cancellation has been sent.";
 export const dateInput = 0;
 export const hundred = 100;
-export const buttonType = "disabled";
-export const toastMessage = 
-{
-    update: "Update Successful",
-    payment: "Payment made successfully! Your payment of ${Payment} has been successfully processed."
-}
-export const checkIn = {
-    complete: "CHECK IN COMPLETE",
-    isNowCheckIn: "is now checked in"
-}
+export const successMsg = "Update Successful";
 
 // Table Type
 export const tbl_Arriving = "tbl-Arriving";
@@ -842,10 +830,7 @@ export const sectionType = {
 }
 
 export const bookingStatus = {
-    cancelled: "Cancelled",
-    arrived: "Arrived",
-    unconfirm: "Unconfirmed",
-    confirm: "Confirmed"
+    cancelled: "Cancelled"
 }
 
 export const Name = {
