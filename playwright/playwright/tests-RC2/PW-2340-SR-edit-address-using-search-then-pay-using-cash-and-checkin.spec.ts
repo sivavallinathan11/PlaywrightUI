@@ -2,10 +2,11 @@ import { test } from "@playwright/test";
 import { LoginPage } from "../models/LoginPage";
 import { BookingDashboardPage } from "../models/BookingDashboardPage";
 import { BaseSteps } from "../models/BaseSteps";
-import { ManageBookingPage } from "../models/ManageBookingPage";
 import { CheckInPage } from "../models/CheckInPage";
 import { APIHelper } from "../models/APIHelper";
-import { SmokeSteps } from "../models/SmokeSteps";
+import { MakePaymentModal } from "../models/MakePaymentModal";
+import { EditBookingPage } from "../models/EditBookingPage";
+import { editGuestDetails } from "../data/users";
 
 test('Edit guest address using search and pay cash then checkin single reservation', async ({page, request}) => {
     // Set basesteps object.
@@ -17,14 +18,15 @@ test('Edit guest address using search and pay cash then checkin single reservati
     // Set page objects.
     const login = new LoginPage(page, testDetails);
     const dashboard = new BookingDashboardPage(page, request, testDetails);
-    const managebooking = new ManageBookingPage(page, testDetails);
+    const editBooking = new EditBookingPage(page, testDetails);
     const checkin = new CheckInPage(page, testDetails);
     const apiHelper = new APIHelper(page, request, testDetails);
-    const smokeSteps = new SmokeSteps(page, testDetails);
+    const paymentModal = new MakePaymentModal(page, testDetails);
+    const editDetails = editGuestDetails;
 
     //#region Start test
     //Create a reservation for non-member.
-    var reservationNumber = await apiHelper.CreateReservation("Non-member", "Booking Number");
+    var reservationNumber = await apiHelper.CreateReservation("Edit details");
 
     // Navigate to Parkhub login page.
     await login.Open();
@@ -39,105 +41,59 @@ test('Edit guest address using search and pay cash then checkin single reservati
     // Verify booking reservations from the arrivals pane.
     await dashboard.VerifyArrivals();
     
-    // Select a reservation based on reservation number
-    var dashboardData = await dashboard.SelectSpecificReservation("Reservation Number", reservationNumber);
+    // Select a partial paid or unpaid single reservation for a guest with vacant clean room 
+    //(list: Vacant Clean, Occupied, Vacant Dirty).
+    var bookingDetails = await dashboard.SelectSpecificReservation("Reservation Number", reservationNumber);
+    var accomDetails = await dashboard.SetBookingDetails(bookingDetails);
+    var guestDetails = await dashboard.SetCustomerDetails(bookingDetails, editDetails);
 
-    // Verify customer name and reservation number from manage booking.
-    await managebooking.VerifyCustomerNameAndReservationNumber(dashboardData.firstName, dashboardData.lastName, 
-        dashboardData.reservationNumber);
+    // Verify Edit Booking Page.
+    var currentDetails = await editBooking.VerifyManageBookingPage(bookingDetails);
 
-    // Get accommodation details.
-    var accomodationDetails = await managebooking.VerifyAccommodationDetails(dashboardData);
+    // Edit random guest detail
+    await editBooking.EditGuestDetails(editDetails, "search address");
 
-    // Get stay cost breakdown.
-    var stayCostDetails = await managebooking.VerifyTotalStayCostBreakdown(dashboardData);
+    // Verify if edit successful
+    await editBooking.VerifyToastMessage();
 
-    // Get payment details.
-    var paymentDetails = await managebooking.VerifyPaymentDetails(dashboardData);
-    
-    // Update user address using auto search.
-    var newCustomerDetails = await managebooking.EditCustomerDetails(dashboardData, "Search Address");
+    // Verify editted details
+    await editBooking.VerifyEditedGuestDetails(currentDetails, guestDetails, bookingDetails, "address");
 
-    // Set all details.
-    var mbData = await managebooking.SetManageBookingDetails(newCustomerDetails +"|"+ 
-    accomodationDetails +"|"+ stayCostDetails +"|"+ paymentDetails, dashboardData, "Updated Customer");
+    // Click Make Payment CTA
+    await editBooking.ClickMakePayment();
 
-    // Click Save Guest Details button.
-    await managebooking.ClickSaveGuestDetails();
+    // Verify if payment modal exist
+    await paymentModal.VerifyPaymentModal();
 
-    // Wait for loading icon to disappear.
-    await smokeSteps.waitForLoadingIconToDisappear();
+    // Process payment
+    var paymentDetails = await paymentModal.MakePaymentInEditBooking(accomDetails, guestDetails, "cash");
 
-    // Verify if changes were saved.
-    await managebooking.VerifiyChangesSuccessful(mbData);
+    // Verify payment
+    await editBooking.VerifyPayments(paymentDetails);
 
-    // Click make a payment button.
-    await managebooking.MakeAPayment();
+    // Verify if disabled
+    await editBooking.VerifyCTA();
 
-    // Verify guest, accommodation, stay cost, and payment details.
-    await managebooking.VerifyStayDetailsAtCapturePaymentModal(mbData);
+    // Click Check In
+    await editBooking.ClickManageBookingCheckInButton();
 
-    // Select payment method and percentage.
-    var paymentData = await managebooking.SelectPaymentMethodandPercentage("Cash", mbData.totalBalance, "100");
+    // Verify Check In Page
+    await checkin.VerifyCheckInPage(bookingDetails);
 
-    // Click process payment.
-    await managebooking.ClickProcessPayment();
+    // Verify Payments in Check In Page
+    await checkin.VerifyPayments(paymentDetails);
 
-    // Verify payment made.
-    await managebooking.VerifyPaymentMadeInManageBooking(paymentData);
+    // Verify complete check in is disabled
+    await checkin.VerifyCTA();
 
-    // Check check in.
-    await managebooking.ClickCheckInButton();
+    // Reservation Check In
+    await checkin.ProceedToCheckIn(accomDetails, guestDetails);
 
-    // Verify name and reservation number.
-    await checkin.VerifyNameAndReservationNumber(mbData);
-
-    // Check disabled Complete CheckIn button.
-    await checkin.VerifyDisabledCompleteCheckInButton();
-
-    // Verify reservation details.
-    await checkin.VerifyReservationDetails(mbData);
-
-    // Verify Stay Cost breakdown.
-    await checkin.VerifyStayCostBreakdown(mbData);
-
-    // Verify payment made.
-    await checkin.VerifyLatestPaymentMade(paymentData);
-
-    // Check Complete Covid Declaration.
-    await checkin.CompleteCovidDeclaration();
-
-    // Check terms and conditions.
-    await checkin.ClickTermsAndConditions();
-
-    // Click Complete Checkin
-    await checkin.ClickCompleteCheckIn();
-
-    // Verify checkin complete confirmation.
-    await checkin.ProceedCheckInBasedOnRoomStatus(mbData);
-
-    // Click Booking Dashboard.
-    await checkin.ClickBookingDashboard();
-
-    // Verify if Dashboard page is displayed.
+    // Verify Arrivals Dashborad
     await dashboard.VerifyArrivals();
 
-    // Click IN HOUSE tab.
-    await dashboard.ClickInHouseTab();
-
-    // Verify In House list is displayed.
-    await dashboard.VerifyInhouse();
-
-    // Search specific reservation.
-    await dashboard.FindABooking("Reservation Number", mbData.reservationNumber, "In House");
-
-    // Verify reservation details in the In House tab.
-    await dashboard.VerifyPaidReservationFromInHouse(mbData, paymentData);
-
-    // This will checkout the reservation from the in-house.
-    await apiHelper.CheckoutReservation(mbData.reservationNumber);
+    // Verify booking in inhouse dashboard
+    await dashboard.VerifyBookingInhouseDashboard(accomDetails);
     
     //#endregion
-
-
 })

@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import { LoginPage } from "../models/LoginPage";
 import { BookingDashboardPage } from "../models/BookingDashboardPage";
-import { ManageBookingPage } from "../models/ManageBookingPage";
+import { EditBookingPage } from "../models/EditBookingPage";
 import { CheckInPage } from "../models/CheckInPage";
 import { APIHelper } from "../models/APIHelper";
 import { BaseSteps } from "../models/BaseSteps";
@@ -16,17 +16,20 @@ test('Select fully paid and clean reservation then checkin', async ({page, reque
     // Set page objects.
     const login = new LoginPage(page, testDetails);
     const dashboard = new BookingDashboardPage(page, request, testDetails);
-    const managebooking = new ManageBookingPage(page, testDetails);
+    const editBooking = new EditBookingPage(page, testDetails);
     const checkin = new CheckInPage(page, testDetails);
     const apiHelper = new APIHelper(page, request, testDetails);
 
     //#region Start test
-    //Create a reservation for non-member.
-    var reservationNumber = await apiHelper.CreateReservation("Clean", "Booking Number");
+    // This will create a reservation.
+    const bookingNumber = await apiHelper.CreateReservation("Non-Member");
     
-    // Pay reservation fully using cash.
-    await apiHelper.PayReservation(reservationNumber, "Cash", "Full");
+    // This will create multiple payments for reservation created above
+    await apiHelper.CreateSingleOrMultiplePayments(bookingNumber, "eftpos", 1);
 
+    // Search Payment(s)
+    var paymentDetails = await apiHelper.SearchTransactions(bookingNumber);
+    
     // Navigate to Parkhub login page.
     await login.Open();
 
@@ -41,7 +44,8 @@ test('Select fully paid and clean reservation then checkin', async ({page, reque
     await dashboard.VerifyArrivals();
     
     // Select a reservation based on reservation number
-    var dashboardData = await dashboard.SelectSpecificReservation("Reservation Number", reservationNumber);
+    var dashboardData = await dashboard.SelectSpecificReservation("Reservation Number", bookingNumber);
+
 
     // Verify customer name and reservation number from manage booking.
     await managebooking.VerifyCustomerNameAndReservationNumber(dashboardData.firstName, dashboardData.lastName, 

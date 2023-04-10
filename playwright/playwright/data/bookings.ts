@@ -290,56 +290,79 @@ export class CustomerDetails{
 
 export class PaymentDetails{
     // Set variables.
-    public paymentType = "";
-    public totalPayment = "";
-    public surcharge = "";
-    public totalBalance = "";
-    public memberDiscount = "";
-    public paymentPercentage = "";
-    public paymentDate = "";
+    public paymentType:any [] = [];
+    public totalPayment:any [] = [];
+    public surcharge:any [] = [];
+    public totalBalance:any [] = [];
+    public memberDiscount:any [] = [];
+    public paymentPercentage:any [] = [];
+    public paymentDate:any [] = [];
+    public transactionType:any [] = [];
 
     // Getter/Setter data.
     get PaymentType(){
         return this.paymentType;
     }
-    set PaymentType(data: any){
-        this.paymentType = data;
+    set PaymentType(data: any[]){
+        for(var i = 0; i < data.length; i++){
+            this.paymentType.push(data[i]);
+        }
     }
     get TotalPayment(){
         return this.totalPayment;
     }
-    set TotalPayment(data: any){
-        this.totalPayment = data;
+    set TotalPayment(data: any[]){
+        for(var i = 0; i < data.length; i++){
+            this.totalPayment.push(data[i]);
+        }
     }
     get TotalBalance(){
         return this.totalBalance;
     }
-    set TotalBalance(data: any){
-        this.totalBalance = data;
+    set TotalBalance(data: any[]){
+        for(var i = 0; i < data.length; i++){
+            this.totalBalance.push(data[i]);
+        }
     }
     get Surcharge(){
         return this.surcharge;
     }
-    set Surcharge(data: any){
-        this.surcharge = data;
+    set Surcharge(data: any[]){
+        for(var i = 0; i < data.length; i++){
+            this.surcharge.push(data[i]);
+        }
     }
     get MemberDiscount(){
         return this.memberDiscount;
     }
-    set MemberDiscount(data: any){
-        this.memberDiscount = data;
+    set MemberDiscount(data: any[]){
+        for(var i = 0; i < data.length; i++){
+            this.memberDiscount.push(data[i]);
+        }
     }
     get PaymentPercentage(){
         return this.paymentPercentage;
     }
-    set PaymentPercentage(data: any){
-        this.paymentPercentage = data;
+    set PaymentPercentage(data: any[]){
+        for(var i = 0; i < data.length; i++){
+            this.paymentPercentage.push(data[i]);
+        }
     }
     get PaymentDate(){
         return this.paymentDate;
     }
-    set PaymentDate(data: any){
-        this.paymentDate = data;
+    set PaymentDate(data: any[]){
+        for(var i = 0; i < data.length; i++){
+            this.paymentDate.push(data[i]);
+        }
+    }
+    get TransactionType(){
+        return this.transactionType;
+    }
+    set TransactionType(data: any[]){
+        for(var i = 0; i < data.length; i++){
+            this.transactionType.push(data[i]);
+        }
     }
 }
 

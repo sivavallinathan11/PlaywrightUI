@@ -168,12 +168,11 @@ export class MakePaymentModal extends Common{
                 +"\n Actual Accommodation Name: "+accommodationName);
             }
             
-            // Temporarily comment this validation as the issue is still in development
-            // if(guestDetails.firstName[i].toLowerCase().trim()!=contactName.toLowerCase().trim()){
-            //     throw new Error("Contact Name did not matched."
-            //     +"\n Expected Contact Name: "+guestDetails.firstName[i]
-            //     +"\n Actual Contact Name: "+contactName);
-            // }
+            if(guestDetails.firstName[i].toLowerCase().trim()!=contactName.toLowerCase().trim()){
+                throw new Error("Contact Name did not matched."
+                +"\n Expected Contact Name: "+guestDetails.firstName[i]
+                +"\n Actual Contact Name: "+contactName);
+            }
 
             if(expectedAssignedRoom.toLowerCase().trim() != assignedRoom.toLowerCase().trim()){
                 throw new Error("Assigned Room did not matched."
@@ -194,7 +193,9 @@ export class MakePaymentModal extends Common{
         paymentType: string, percentage: string = "100%"){
         try{
             // Set variable.
-            var paymentDetails: any = [];
+            var paymentDetails: any = [], paymentTypeSet: any [] = [], totalPaymentSet: any [] = [],
+             surchargeSet: any [] = [], totalBalanceSet: any [] = [], memberDiscountSet: any [] = [], 
+             paymentPercentageSet: any [] = [], paymentDateSet: any [] = [], transactionTypeSet: any [] = [] ;
             var percent: any;
             var upsellAmount = "0.00";
                 
@@ -278,7 +279,14 @@ export class MakePaymentModal extends Common{
                         const dateToday = new Date().toLocaleDateString('en-GB');
 
                         // Set payment details.
-                        paymentDetails = ["Cash", actualPayableAmount, "0.00", actualBalanceRemaining, "0.00", percentage, dateToday];
+                        paymentTypeSet.push("Cash");
+                        totalPaymentSet.push(actualPayableAmount);
+                        surchargeSet.push("0.00");
+                        totalBalanceSet.push(actualBalanceRemaining);
+                        memberDiscountSet.push("0.00");
+                        paymentPercentageSet.push(percentage);
+                        paymentDateSet.push(dateToday);
+                        transactionTypeSet.push("");
                     }
                     else{
                         // Get actual payment details
@@ -294,8 +302,14 @@ export class MakePaymentModal extends Common{
                         const dateToday = new Date().toLocaleDateString('en-GB');
         
                         // Set payment details.
-                        paymentDetails = ["Cash", amount, "0.00", actualBalanceRemaining, "0.00", percentage, dateToday];
-    
+                        paymentTypeSet.push("Cash");
+                        totalPaymentSet.push(amount);
+                        surchargeSet.push("0.00");
+                        totalBalanceSet.push(actualBalanceRemaining);
+                        memberDiscountSet.push("0.00");
+                        paymentPercentageSet.push(percentage);
+                        paymentDateSet.push(dateToday);
+                        transactionTypeSet.push("");
                     }
                     break;
                 case "credit card":
@@ -381,7 +395,14 @@ export class MakePaymentModal extends Common{
                         const dateToday = new Date().toLocaleDateString('en-GB');
                         
                         // Set payment details.
-                        paymentDetails = ["Credit Card", actualPayableAmount, actualSurcharge, actualBalanceRemaining, "0.00", percentage, dateToday];
+                        paymentTypeSet.push("Credit Card");
+                        totalPaymentSet.push(actualPayableAmount);
+                        surchargeSet.push(actualSurcharge);
+                        totalBalanceSet.push(actualBalanceRemaining);
+                        memberDiscountSet.push("0.00");
+                        paymentPercentageSet.push(percentage);
+                        paymentDateSet.push(dateToday);
+                        transactionTypeSet.push("");
                     }
                     else{
     
@@ -456,7 +477,14 @@ export class MakePaymentModal extends Common{
                         const dateToday = new Date().toLocaleDateString('en-GB');
         
                         // Set payment details.
-                        paymentDetails = ["EFTPOS", actualPayableAmount, "0.00", actualBalanceRemaining, "0.00", percentage, dateToday];
+                        paymentTypeSet.push("EFTPOS");
+                        totalPaymentSet.push(actualPayableAmount);
+                        surchargeSet.push("0.00");
+                        totalBalanceSet.push(actualBalanceRemaining);
+                        memberDiscountSet.push("0.00");
+                        paymentPercentageSet.push(percentage);
+                        paymentDateSet.push(dateToday);
+                        transactionTypeSet.push("");
                     }
                     else{
                         // Get actual payment details
@@ -472,13 +500,21 @@ export class MakePaymentModal extends Common{
                         const dateToday = new Date().toLocaleDateString('en-GB');
 
                         // Set payment details.
-                        paymentDetails = ["Cash", amount, "0.00", actualBalanceRemaining, "0.00", percentage, dateToday];
-    
+                        paymentTypeSet.push("Cash");
+                        totalPaymentSet.push(amount);
+                        surchargeSet.push("0.00");
+                        totalBalanceSet.push(actualBalanceRemaining);
+                        memberDiscountSet.push("0.00");
+                        paymentPercentageSet.push(percentage);
+                        paymentDateSet.push(dateToday);
+                        transactionTypeSet.push("");
                     }
                     
                     break;
             }
             await this.ScreenShot("Payment Input");
+            paymentDetails = [paymentTypeSet, totalPaymentSet, surchargeSet, totalBalanceSet,
+                 memberDiscountSet, paymentPercentageSet, paymentDateSet, transactionTypeSet]
             return await this.dataSetup.SetPaymentDetails(paymentDetails);
         }
         catch(e){

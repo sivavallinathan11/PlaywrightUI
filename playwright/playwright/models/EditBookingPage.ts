@@ -4,8 +4,9 @@ import { AccommodationDetails, CustomerDetails, PaymentDetails } from "../data/b
 import { DataSetup } from "../data/datasetup";
 import { TestDirectory } from "../data/directory";
 import { DashboardDetails } from "../data/managebookings";
-import { buttonType, CCSurcharge, dateInput, paymentMethod, toastMessage, transactionType, typeOfPayment, bookingStatus } from "../data/users";
+import { buttonType, CCSurcharge, dateInput, paymentMethod, toastMessage, transactionType, typeOfPayment, bookingStatus, defaultValue } from "../data/users";
 import { Common } from "./Common";
+import { stat } from "fs";
 
 export class EditBookingPage extends Common{
     // Set object variable.
@@ -34,10 +35,10 @@ export class EditBookingPage extends Common{
     // Test Env public lbl_Guests = "//p[2]//span[@class='placeholder']";
     // Test Env public lbl_GuestsCount = "//p[2]//span[@class='bold placeholder']";
     public lbl_AccommodationDetails = "//div[@class='accommodation-details']//h4";
-    public lbl_ReservationDates = "//p[1]//span[@class='bold placeholder']//following-sibling::span";
-    public lbl_Nights = "//p[1]//span[@class='bold placeholder']";
-    public lbl_Guests = "//p[2]//span[@class='placeholder']";
-    public lbl_GuestsCount = "//p[2]//span[@class='bold placeholder']";
+    public lbl_ReservationDates = "//p[1]//span[@class='bold']//following-sibling::span";
+    public lbl_Nights = "//p[1]//span[@class='bold']";
+    public lbl_Guests = "//p[2]//span[@class='']";
+    public lbl_GuestsCount = "//p[2]//span[@class='bold']";
     public lbl_ReservationNumber = "//span[@class='manage-booking-number']";
     public lbl_TotalStay = "//div[@id='Transactions']/div/div[2]/span";
     public lbl_Balance = "//div[@class='total-section']/div[2]/div[2]//span";
@@ -48,6 +49,9 @@ export class EditBookingPage extends Common{
     public btn_SaveChanges = "//div[@class='tab-content']/div[1]//input[@value='Save Changes']";
     public btn_MakePayment = "#make-payment-cta";
     public btn_BookignStatus = "//button[@id='booking-status']";
+
+    // Links
+    public link_EnterManualAddress = "//div[@class='tab-content']/div[1]//a[text()='Enter manual address']";
 
     // span
     public span_NumberOfPayments = "//div[@class='payments-section']/div[2]/div";
@@ -82,6 +86,14 @@ export class EditBookingPage extends Common{
     public txt_CNumber = "//div[@class='tab-content']//div[@class='tab-pane in active']//input[@name='Mobile']";
     public txt_Address = "//div[@class='tab-content']//div[@class='tab-pane in active']//input[@name='Address']";
     public txt_Velocity = "#velocityInput";
+    public txt_Street = "//div[@class='tab-content']/div[1]//input[@name='Street']";
+    public txt_Suburb = "//div[@class='tab-content']/div[1]//input[@name='Suburb']";
+    public txt_PostCode = "//div[@class='tab-content']/div[1]//input[@name='PostCode']";
+
+    // Dropdown
+    public drp_State = "//div[@class='tab-content']/div[1]//select[@name='State']";
+    public drp_Country = "//div[@class='tab-content']/div[1]//select[@name='Country']";
+    public drp_DefaultOption = "//div[@role='tabpanel'][1]//select[@name='Country']/option[2]";
 
     // **Function Starts Here**
 
@@ -312,7 +324,7 @@ export class EditBookingPage extends Common{
     }
 
     // This will edit random fields in Guest Details
-    async EditGuestDetails(details: any){
+    async EditGuestDetails(details: any, fieldToEdit: string="All"){
         try{
             var randStr = await this.GenerateRandomString("alphanumeric", 3);
             var randEmail = await this.GenerateRandomEmail(details.emailAddress, "@gmail.com","Alphanumeric", 4);
@@ -323,17 +335,46 @@ export class EditBookingPage extends Common{
                 randStAddress = await this.GenerateRandomString("number", 2);
             }while(randStAddress == streetNumber)
             var address = details.address.replace(streetNumber, randStAddress);
-            await this.EnterValue(this.txt_Firstname, details.firstname+randStr, "Firstname");
-            await this.EnterValue(this.txt_Lastname, details.lastname+randStr, "Lastname");
-            await this.EnterValue(this.txt_Email, randEmail, "Email");
-            await this.EnterValue(this.txt_CNumber, details.contactNumber+randPhoneNumber, "Phone Number");
-            await this.Sleep(1000);
-            await this.PressKey("Enter");
-            await this.EnterValue(this.txt_Address, address, "Address");
-            await this.Sleep(2000);
-            await this.PressKey("ArrowDown");
-            await this.Sleep(1000);
-            await this.PressKey("Enter");
+            switch(fieldToEdit.toLowerCase().trim()){
+                case "all":
+                    await this.EnterValue(this.txt_Firstname, details.firstname+randStr, "Firstname");
+                    await this.EnterValue(this.txt_Lastname, details.lastname+randStr, "Lastname");
+                    await this.EnterValue(this.txt_Email, randEmail, "Email");
+                    await this.EnterValue(this.txt_CNumber, details.contactNumber+randPhoneNumber, "Phone Number");
+                    await this.Sleep(1000);
+                    await this.PressKey("Enter");
+                    await this.EnterValue(this.txt_Address, address, "Address");
+                    await this.Sleep(2000);
+                    await this.PressKey("ArrowDown");
+                    await this.Sleep(1000);
+                    await this.PressKey("Enter");
+                    break
+                case "manual address":
+                    await this.PressKey("Enter");
+                    var street = details.address.split(",")[0];
+                    var town = (details.address.split(",")[1]).trim();
+                    var state = (details.address.split(",")[2]).trim();
+                    var postcode = (details.address.split(",")[3]).trim();
+                    var country = (details.address.split(",")[4]).trim();
+                    await this.Click(this.link_EnterManualAddress, "Enter Manual Address");
+                    await this.EnterValue(this.txt_Street, street,"Street");
+                    await this.EnterValue(this.txt_Suburb, town, "Suburb");
+                    await this.SelectFromDropdown(this.drp_State, "value", state, "State");
+                    await this.EnterValue(this.txt_PostCode, postcode, "Postcode");
+                    var defaultVal = await this.GetElementText(this.drp_DefaultOption, "Default Value");
+                    if(defaultVal.toLowerCase().trim() != defaultValue){
+                        await this.SelectFromDropdown(this.drp_Country, "value", country, "Country");
+                    }
+                    break;
+                case "search address":
+                    await this.EnterValue(this.txt_Address, address, "Address");
+                    await this.Sleep(2000);
+                    await this.PressKey("ArrowDown");
+                    await this.Sleep(1000);
+                    await this.PressKey("Enter");
+                    break;
+            }
+            
             await this.Sleep(1000);
             await this.Click(this.btn_SaveChanges, "Save Chanages CTA");
         }catch(e){
@@ -387,8 +428,10 @@ export class EditBookingPage extends Common{
         }
     }
 
-    async VerifyEditedGuestDetails(currentDetails: string [] = [], guestDetails: CustomerDetails){
+    // Verify edited guest details
+    async VerifyEditedGuestDetails(currentDetails: string [] = [], guestDetails: CustomerDetails, bookingDetails: DashboardDetails, edittedDetails: string = "all"){
         try{
+            // Get data
             var actualFirstname = await this.FindElement(this.txt_Firstname, "Firstname");
             var actualLastname = await this.FindElement(this.txt_Lastname, "Lastname");
             var actualEmail = await this.FindElement(this.txt_Email, "Email");
@@ -400,26 +443,76 @@ export class EditBookingPage extends Common{
             var mobile = await this.GetElementValueByAttribute(actualMobile, "value", "Mobile");
             var address = await this.GetElementValueByAttribute(actualAddress, "value", "Address");
             var editedDetails = [firstname, lastname, email, mobile, address];
-            for(var i = 0; i < currentDetails.length; i++){
-                if(currentDetails[i] == editedDetails[i]){
-                    throw new Error("Guest Details did not update. \n"
-                    +"Details Before: "+currentDetails[i]+"\n"
-                    +"Details After: "+editedDetails[i]);
+
+            // This will verify each details
+            switch(edittedDetails.toLowerCase().trim()){
+                case "all":
+                    for(var i = 0; i < currentDetails.length; i++){
+                        if(currentDetails[i] == editedDetails[i]){
+                            throw new Error("Guest Details did not update. \n"
+                            +"Details Before: "+currentDetails[i]+"\n"
+                            +"Details After: "+editedDetails[i]);
+                        }
+                        if(await this.elementExist(this.div_MembershipCard, 3000) && (i==2)){
+                            i++
+                        }
+                    }
+                    // This will remove the current details and push the updated one to customer details.
+                    guestDetails.firstName.pop();
+                    guestDetails.lastName.pop();
+                    guestDetails.mobile.pop();
+                    guestDetails.firstName.push(firstname);
+                    guestDetails.lastName.push(lastname);
+                    guestDetails.mobile.push(mobile);
+
+                    // This will remove the current details and push the updated one to dashboard details.
+                    bookingDetails.customerFirstName.pop();
+                    bookingDetails.customerLastName.pop();
+                    bookingDetails.customerFirstName.push(firstname);
+                    bookingDetails.customerLastName.push(lastname);
+                    if(email != currentDetails[2]){
+                        guestDetails.email.pop();
+                        guestDetails.email.push(email);
+                    }
+                    break;
+                case "address":
+                    if(currentDetails[4] == editedDetails[4]){
+                        throw new Error("Address did not update."
+                        +"\n Actual: "+currentDetails[4]
+                        +"\n Expected: "+editedDetails[4]);
+                    }
+                    break;
                 }
-                if(await this.elementExist(this.div_MembershipCard, 3000) && (i==2)){
-                    i++
+        }catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // Verify Toast message
+    async VerifyPaymentToasTMsg(paymentDetails: PaymentDetails){
+        try{
+            var totalAmount = 0.00;
+            for(var i = 0;i<paymentDetails.paymentType.length; i++){
+                totalAmount = totalAmount + parseFloat(paymentDetails.totalPayment[i]);
+            }
+            if(await this.elementExist(this.div_ToastMessage)){
+                var toastMsg = await this.GetElementText(this.div_ToastMessage, "Toast Message");
+                if(toastMsg != toastMessage.payment.replace("{Payment}",totalAmount.toFixed(2))){
+                    throw new Error("Success message is not equal"
+                    +"\n Expected: "+toastMessage.payment.replace("{Payment}",totalAmount.toFixed(2))
+                    +"\n Actual: "+toastMsg);
+                }else{
+                    console.log(toastMsg);
                 }
-            }
-            guestDetails.firstName.pop();
-            guestDetails.lastName.pop();
-            guestDetails.mobile.pop();
-            guestDetails.firstName.push(firstname);
-            guestDetails.lastName.push(lastname);
-            guestDetails.mobile.push(mobile);
-            if(email != currentDetails[2]){
-                guestDetails.email.pop();
-                guestDetails.email.push(email);
-            }
+            }else{
+            throw new Error("Toast Message does NOT show");
+        }
         }catch(e){
             await this.ScreenShot("Failed", false, e.stack);
             if(e instanceof errors.TimeoutError){
@@ -435,68 +528,56 @@ export class EditBookingPage extends Common{
     async VerifyPayments(paymentDetails: PaymentDetails){
         try{
             var paymentDate: any [] = [], paymentType: any [] = [], paymentAmount: any [] = [], ccFee: any [] = [];
-
-            if(await this.elementExist(this.div_ToastMessage)){
-                var toastMsg = await this.GetElementText(this.div_ToastMessage, "Toast Message");
-                if(toastMsg != toastMessage.payment.replace("{Payment}",paymentDetails.totalPayment)){
-                    throw new Error("Success message is not equal"
-                    +"\n Expected: "+toastMessage.payment.replace("{Payment}",paymentDetails.totalPayment)
-                    +"\n Actual: "+toastMsg);
-                }else{
-                    console.log(toastMsg);
-                }
-
-                // This function will get all the payment details
-                await this.WaitForElement(this.span_NumberOfPayments, "Payments Made");
-                var payments = await this.FindElements(this.span_NumberOfPayments, "Number of payments made");
-                for(var i = 0; i<payments.length; i++){
-                    if( i % 2 == 0){
-                        var paymentDateElement = await this.FindSubElementOnElement(payments[i], this.span_PaymentDate, "Payment Date");
-                        var paymentTypeElement = await this.FindSubElementOnElement(payments[i], this.span_PaymentType, "Payment Type");
-                        var date = await this.GetLiveElementText(paymentDateElement, "Payment Date");
-                        var type = await this.GetLiveElementText(paymentTypeElement, "Payment Type");
-                        paymentDate.push(date);
-                        paymentType.push(type);
-                        if(type.toLowerCase().trim() == paymentMethod.eftpos){
-                            var cardSurchargeElement = await this.FindElement(this.span_Surcharge, "Credit Card Fee");
-                            var surcharge = await this.GetLiveElementText(cardSurchargeElement, "Credit Card Fee");
-                            ccFee.push(surcharge);
-                        }
-                    }else{
-                        var paymentAmountElement = await this.FindSubElementOnElement(payments[i], this.span_PaymentAmount, "Payment Amount");
-                        var amount = await this.GetLiveElementText(paymentAmountElement, "Payment Amount");
-                        paymentAmount.push(amount)
+            // This function will get all the payment details
+            await this.WaitForElement(this.span_NumberOfPayments, "Payments Made");
+            var payments = await this.FindElements(this.span_NumberOfPayments, "Number of payments made");
+            for(var i = 0; i<payments.length; i++){
+                if( i % 2 == 0){
+                    var paymentDateElement = await this.FindSubElementOnElement(payments[i], this.span_PaymentDate, "Payment Date");
+                    var paymentTypeElement = await this.FindSubElementOnElement(payments[i], this.span_PaymentType, "Payment Type");
+                    var date = await this.GetLiveElementText(paymentDateElement, "Payment Date");
+                    var type = await this.GetLiveElementText(paymentTypeElement, "Payment Type");
+                    paymentDate.push(date);
+                    paymentType.push(type);
+                    if(type.toLowerCase().trim() == paymentMethod.eftpos){
+                        var cardSurchargeElement = await this.FindElement(this.span_Surcharge, "Credit Card Fee");
+                        var surcharge = await this.GetLiveElementText(cardSurchargeElement, "Credit Card Fee");
+                        ccFee.push(surcharge);
                     }
+                }else{
+                    var paymentAmountElement = await this.FindSubElementOnElement(payments[i], this.span_PaymentAmount, "Payment Amount");
+                    var amount = await this.GetLiveElementText(paymentAmountElement, "Payment Amount");
+                    paymentAmount.push(amount)
                 }
+            }
 
+            for(var i = 0; i<paymentDetails.paymentType.length; i++){
                 // This function will verify each payments
-                if(paymentDetails.paymentDate != paymentDate[0].replace("Payment ", "")){
+                if(paymentDetails.paymentDate[i] != paymentDate[i].replace("Payment ", "")){
                     throw new Error ("Payment Date did not matched"
                     +"\n Actual: "+ paymentDate[0]
                     +"\n Expected: "+ paymentDetails.paymentDate);
                 }
 
-                if(paymentDetails.paymentType.toLowerCase().trim() != paymentType[0].toLowerCase().trim()){
+                if(paymentDetails.paymentType[i].toLowerCase().trim() != paymentType[i].toLowerCase().trim()){
                     throw new Error ("Payment Type did not matched"
                     +"\n Actual: "+ paymentType[0]
                     +"\n Expected: "+ paymentDetails.paymentType);
                 }
 
-                if(paymentDetails.totalPayment != paymentAmount[0].replace("$","")){
+                if(paymentDetails.totalPayment[i] != paymentAmount[i].replace("$","")){
                     throw new Error ("Payment Amount did not matched"
                     +"\n Actual: "+ paymentAmount[0]
                     +"\n Expected: "+ paymentDetails.totalPayment);
                 }
 
-                if(paymentDetails.paymentType.toLowerCase().trim() == paymentMethod.eftpos){
+                if(paymentDetails.paymentType[i].toLowerCase().trim() == paymentMethod.eftpos){
                     if(paymentDetails.Surcharge != ccFee[0]){
                         throw new Error ("Payment Amount did not matched"
                         +"\n Actual: "+ ccFee[0]
                         +"\n Expected: "+ paymentDetails.Surcharge);
                     }
                 }
-            }else{
-                throw new Error("Toast Message does NOT show");
             }
         }catch(e){
             await this.ScreenShot("Failed", false, e.stack);

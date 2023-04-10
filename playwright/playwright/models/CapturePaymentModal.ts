@@ -64,7 +64,7 @@ export class CapturePaymentModal extends Common{
         try{
             // Check active payment method.
             var totalPaid = stayCostDetails.TotalPaid[0];
-            var expectedCancellationFee = stayCostDetails.CancellatiomFee[0];
+            var expectedCancellationFee = stayCostDetails.CancellationFee[0];
             var amountDue = stayCostDetails.AmountDue[0];
             await this.CheckActivePaymentMethod();
             await this.FindElement(this.lbl_TotalPaid, "Total Paid");

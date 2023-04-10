@@ -1,9 +1,9 @@
-import test from "@playwright/test";
+import { test } from "@playwright/test";
 import { APIHelper } from "../models/APIHelper";
 import { BaseSteps } from "../models/BaseSteps";
 import { BookingDashboardPage } from "../models/BookingDashboardPage";
 import { LoginPage } from "../models/LoginPage";
-import { ManageBookingPage } from "../models/ManageBookingPage";
+import { EditBookingPage } from "../models/EditBookingPage";
 import { ReimbursementReviewModal } from "../models/ReimbursementReviewModal";
 import { CapturePaymentModal } from "../models/CapturePaymentModal";
 import { ConfirmCancellationModal } from "../models/ConfirmCancellationModal";
@@ -20,7 +20,7 @@ test('Cancel a single booking with no payment', async({page, request}) =>{
     // Set page objects.
     const login = new LoginPage(page, testDetails);
     const dashboard = new BookingDashboardPage(page, request, testDetails);
-    const manageBooking = new ManageBookingPage(page, testDetails);
+    const editBooking = new EditBookingPage(page, testDetails);
     const apiHelper = new APIHelper(page, request, testDetails);
     const reimbursement = new ReimbursementReviewModal(page, testDetails);
     const capturePayment = new CapturePaymentModal(page, testDetails);
@@ -52,10 +52,10 @@ test('Cancel a single booking with no payment', async({page, request}) =>{
     var bookingDetails = await dashboard.ManageBookingOfSearchedReservation(bookingNumber);
 
     // Verify Manage Booking Page.
-    await manageBooking.VerifyManageBookingPage(bookingDetails);
+    await editBooking.VerifyManageBookingPage(bookingDetails);
 
     // Click Cancel Booking
-    await manageBooking.ClickCancelBooking();
+    await editBooking.ClickCancelBooking();
     
     // Verify Cancel Booking Modal
     await cancelBooking.VerifyCancelBookingModal();

@@ -1,4 +1,4 @@
-import { Page, APIRequestContext, errors } from "@playwright/test";
+import { Page, APIRequestContext, errors, test } from "@playwright/test";
 import { TestDirectory } from "../data/directory";
 import { Common } from "./Common";
 import { bookingStatus, CCSurcharge, CommonAPIData, description, paymentMethod, TestingEnvironment, transactionType } from "../data/users";
@@ -1119,7 +1119,7 @@ export class APIHelper extends SmokeSteps{
     }
 
     // This will create single or multiple payment base on inputs
-    async CreateSingleOrMultiplePayments(reservationId: any, paymentType: any, numberOfPayment: any, transactionAmount: any){
+    async CreateSingleOrMultiplePayments(reservationId: any, paymentType: any, numberOfPayment: any, transactionAmount: any = ""){
         try{
             // Get result
             var result = await this.GetReservationDetails(reservationId);
@@ -1128,10 +1128,16 @@ export class APIHelper extends SmokeSteps{
             const accountId = result['accountId'];
             var balance = result['accountDetails']['totalAmount'];
 
+            if(transactionAmount == ""){
+                transactionAmount = balance;
+            }
+            
             // Calculate Credit Card Fee
-            var creditCardFee = transactionAmount * CCSurcharge;
-            var totalAmount = transactionAmount + creditCardFee;
-            var totalPayment = 0;
+            var creditCardFee = 0, totalAmount = 0, totalPayment = 0;;
+            if(paymentType == Payment.cc){
+                creditCardFee = transactionAmount * CCSurcharge;
+                totalAmount = transactionAmount + creditCardFee;
+            }
 
             for(var i = 0; i<numberOfPayment; i++){
                 var status: any;
@@ -1155,7 +1161,7 @@ export class APIHelper extends SmokeSteps{
                     console.log("Payment "+(i+1)+" has been created!");
                 }
             }
-            if(totalPayment > balance){
+            if(totalPayment > balance+creditCardFee){
                 throw new Error("Payment SHOULD not exceed the total amount of "+balance);
             }
             console.log(result);
@@ -1172,7 +1178,7 @@ export class APIHelper extends SmokeSteps{
     }
 
     // This will search a transaction via Account ID and Reservation ID
-    async SearchTransactions(reservationId: any, voidTransaction: string = "", transType:string = ""){
+    async SearchTransactions(reservationId: any, voidTransaction: any = false, transType:any = ""){
         try{
 
             // Get the authorization token.
@@ -1217,7 +1223,9 @@ export class APIHelper extends SmokeSteps{
                 throw new Error("API request was not successful.\nMessage: " + response.statusText());
             }else{
                 res = await response.json();
+                var resultLength = res.length;
                 console.log(res);
+                console.log(resultLength)
                 for(var i = 1; i<res.length; i++){
                     paymentDetails.push(res[i]);
                 }

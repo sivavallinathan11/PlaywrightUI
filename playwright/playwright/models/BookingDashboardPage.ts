@@ -5,7 +5,7 @@ import { AccommodationDetails } from "../data/bookings";
 import { DataSetup } from "../data/datasetup";
 import { TestDirectory } from "../data/directory";
 import { DashboardDetails } from "../data/managebookings";
-import { tbl_Arriving, tbl_Departing, tbl_InHouse, tbl_Search, tbl_Upcoming, TestingEnvironment, URL, typeOfPayment, tblArriving, tblSearch, tblUpcoming } from "../data/users";
+import { tbl_Arriving, tbl_Departing, tbl_InHouse, tbl_Search, tbl_Upcoming, TestingEnvironment, URL, typeOfPayment, tblArriving, tblSearch, tblUpcoming, transactionType, description } from "../data/users";
 import { APIHelper } from "./APIHelper";
 import { Common } from "./Common";
 
@@ -886,7 +886,7 @@ export class BookingDashboardPage extends Common{
     }
 
     // Set guest details
-    async SetCustomerDetails(accomDetails: DashboardDetails){
+    async SetCustomerDetails(accomDetails: DashboardDetails, editDetails: any){
         try{
              // Variables for guestDetails
              var bookingCount = accomDetails.reservationNumber.length;
@@ -897,12 +897,18 @@ export class BookingDashboardPage extends Common{
              var isMember: any[] = [];
              var isUpsell: any[] = [];
              var emailExist: any[] = [];
+             
 
              for(var i = 0; i<bookingCount; i++){
                 // Save data information.
                 if(i == bookingCount - 1){
                     firstName = firstName + accomDetails.CustomerFirstName[i];
                     lastName = lastName + accomDetails.customerLastName[i];
+                    street = editDetails.address.split(",")[0];
+                    town = (editDetails.address.split(",")[1]).trim();
+                    state = (editDetails.address.split(",")[2]).trim();
+                    postcode = (editDetails.address.split(",")[3]).trim();
+                    country = (editDetails.address.split(",")[4]).trim();
                     if(accomDetails.rewardsTier[i] == ""){
                         isUpsell.push(false);
                     }
@@ -910,6 +916,11 @@ export class BookingDashboardPage extends Common{
                 else{
                     firstName = firstName + accomDetails.CustomerFirstName[i] + "|";
                     lastName = lastName + accomDetails.customerLastName[i] + "|";
+                    street = editDetails.address.split(",")[0] + "|";
+                    town = (editDetails.address.split(",")[1]).trim() + "|";
+                    state = (editDetails.address.split(",")[2]).trim() + "|";
+                    postcode = (editDetails.address.split(",")[3]).trim() + "|";
+                    country = (editDetails.address.split(",")[4]).trim() + "|";
                     if(accomDetails.rewardsTier[i] == ""){
                         isUpsell.push(false);
                     }
@@ -962,7 +973,39 @@ export class BookingDashboardPage extends Common{
                 throw new Error("Reservation did not matched."
                 +"\n Actual: "+reservationNumber
                 +"\n Expected: "+accomdDetails.reservationNumber[0]);
+            }else{
+                console.log("Reservation foudn in In house dashboard");
             }
+        }catch(e){
+            await this.ScreenShot("Failed", false, e.stack);
+            if(e instanceof errors.TimeoutError){
+                throw new Error(e.stack);
+            }
+            else{
+                throw new Error(e.stack);
+            }
+        }
+    }
+
+    // Set Payment Details
+    async SetPaymentDetails(paymentDetails: any [] = []){
+        try{
+            var amountSet: any []=[], dateSet:any []=[], paymentMethodSet:any []=[];
+            for(var i = 0; i<paymentDetails.length; i++){
+                if(paymentDetails[i]['paymentMetod'] != null && paymentDetails[i]['sundryId'] != 0){
+                    if(paymentDetails[i]['Receipt'] == transactionType.receipt){
+                        amountSet.push(paymentDetails[i]['amount']);
+                        dateSet.push(paymentDetails[i]['dateOfTransaction']);
+                        paymentMethodSet.push(paymentDetails[i]['paymentMethod']);
+                    }else if(paymentDetails[i]['description'] == description.ccFee){
+                        amountSet.push(paymentDetails[i]['amount']);
+                        dateSet.push(paymentDetails[i]['dateOfTransaction']);
+                        paymentMethodSet.push(paymentDetails[i]['paymentMethod']);
+                    }
+                }
+            }
+            var details = [paymentMethodSet, amountSet, dateSet]
+            // await this.dataSetup.SetPaymentDetails();
         }catch(e){
             await this.ScreenShot("Failed", false, e.stack);
             if(e instanceof errors.TimeoutError){
