@@ -733,7 +733,7 @@ export const editGuestDetails = {
     lastname: 'RC2Aut',
     emailAddress: 'RC2Auth',
     contactNumber: '0412',
-    address: '60 Lightfoot Street, Cessnock NSW, Australia',
+    address: '60 Lightfoot Street, Cessnock, NSW, 2325, AUS',
     isVelocity: false,
     isUpsell: false,
     isMember: false
@@ -766,6 +766,7 @@ export const emailNote = "An email confirmation of cancellation has been sent.";
 export const dateInput = 0;
 export const hundred = 100;
 export const buttonType = "disabled";
+export const defaultValue = "australia";
 export const toastMessage = 
 {
     update: "Update Successful",

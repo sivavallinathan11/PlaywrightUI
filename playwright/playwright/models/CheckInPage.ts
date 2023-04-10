@@ -60,7 +60,7 @@ export class CheckInPage extends Common{
     // **Function Starts Here**
 
     // Verify Check in page is displayed
-    async VerifyCheckInPage(bookingDetails: AccommodationDetails, guestDetails: CustomerDetails){
+    async VerifyCheckInPage(bookingDetails: DashboardDetails){
         try{
             // Initialize variables
             var firstname = await this.GetElementText(this.lbl_Firstname, "Firstname");
@@ -77,17 +77,14 @@ export class CheckInPage extends Common{
             var child = initialChild.split(" & ")[0];
             var infant = detailedGuests.split("&")[1];
 
-            var expectedAccommodationName = (bookingDetails.accommodationName[0]).split(" - ")[0];
-            var expectedAssignedRoom = (bookingDetails.accommodationName[0]).split(" - ")[1];
-
             // Verify guest name
-            if(firstname.toLocaleLowerCase()!=guestDetails.firstName[0].toLocaleLowerCase()){
-                throw new Error("Expected firstname did not matched.\nExpected: " + guestDetails.firstName[0] + 
+            if(firstname.toLocaleLowerCase()!=bookingDetails.customerFirstName[0].toLocaleLowerCase()){
+                throw new Error("Expected firstname did not matched.\nExpected: " + bookingDetails.customerFirstName[0] + 
                 "\nActual: " + firstname);
             }
 
-            if(lastname.toLocaleLowerCase()!=guestDetails.lastName[0].toLocaleLowerCase()){
-                throw new Error("Expected lastname did not matched.\nExpected: " + guestDetails.lastName[0] + 
+            if(lastname.toLocaleLowerCase()!=bookingDetails.customerLastName[0].toLocaleLowerCase()){
+                throw new Error("Expected lastname did not matched.\nExpected: " + bookingDetails.customerLastName[0] + 
                 "\nActual: " + lastname);
             }
 
@@ -98,13 +95,13 @@ export class CheckInPage extends Common{
             }
 
             // Verify accommodation name.
-            if(accommodationName.trim().toLowerCase()!=expectedAccommodationName.trim().toLowerCase()){
+            if(accommodationName.trim().toLowerCase()!=bookingDetails.accommodationName[0].trim().toLowerCase()){
                 throw new Error("Expected accommodation did not matched.\nExpected: " + bookingDetails.AccommodationName[0] + 
                 "\nActual: " + accommodationName);
             }
 
             // Verify accommodation ID.
-            if(assignedRoom.trim().toLowerCase()!=expectedAssignedRoom.trim().toLowerCase()){
+            if(assignedRoom.trim().toLowerCase()!=bookingDetails.assignedRoom[0].trim().toLowerCase()){
                 throw new Error("Expected accommodation ID did not matched.\nExpected: " + bookingDetails.AssignedRoom[0] + 
                 "\nActual: " + assignedRoom);
             }
@@ -268,37 +265,41 @@ export class CheckInPage extends Common{
                         ccFee.push(surcharge);
                     }
             }
-            var day = paymentDetails.paymentDate.split("/")[0];
-            var month = paymentDetails.paymentDate.split("/")[1];
-            var year = paymentDetails.paymentDate.split("/")[2];
-            const expectedDate = day+"/"+month+"/"+year.replace("20","");
+        
+            
+            for(var i = 0; i<paymentDetails.paymentType.length; i++){
+                // This function will verify each payments
+                var day = paymentDetails.paymentDate[i].split("/")[0];
+                var month = paymentDetails.paymentDate[i].split("/")[1];
+                var year = paymentDetails.paymentDate[i].split("/")[2];
+                const expectedDate = day+"/"+month+"/"+year.replace("20","");
+                if(expectedDate != paymentDate[0].replace("Payment ", "")){
+                    throw new Error ("Payment Date did not matched"
+                    +"\n Actual: "+ paymentDate[0]
+                    +"\n Expected: "+ expectedDate);
+                }
 
-            // This function will verify each payments
-            if(expectedDate != paymentDate[0].replace("Payment ", "")){
-                throw new Error ("Payment Date did not matched"
-                +"\n Actual: "+ paymentDate[0]
-                +"\n Expected: "+ expectedDate);
-            }
+                if(paymentDetails.paymentType[i].toLowerCase().trim() != paymentType[0].toLowerCase().trim()){
+                    throw new Error ("Payment Type did not matched"
+                    +"\n Actual: "+ paymentType[0]
+                    +"\n Expected: "+ paymentDetails.paymentType);
+                }
 
-            if(paymentDetails.paymentType.toLowerCase().trim() != paymentType[0].toLowerCase().trim()){
-                throw new Error ("Payment Type did not matched"
-                +"\n Actual: "+ paymentType[0]
-                +"\n Expected: "+ paymentDetails.paymentType);
-            }
-
-            if(paymentDetails.totalPayment != paymentAmount[0].replace("+ $","")){
-                throw new Error ("Payment Amount did not matched"
-                +"\n Actual: "+ paymentAmount[0]
-                +"\n Expected: "+ paymentDetails.totalPayment);
-            }
-
-            if(paymentDetails.paymentType.toLowerCase().trim() == paymentMethod.eftpos){
-                if(paymentDetails.Surcharge != ccFee[0]){
+                if(paymentDetails.totalPayment[i] != paymentAmount[0].replace("+ $","")){
                     throw new Error ("Payment Amount did not matched"
-                    +"\n Actual: "+ ccFee[0]
-                    +"\n Expected: "+ paymentDetails.Surcharge);
+                    +"\n Actual: "+ paymentAmount[0]
+                    +"\n Expected: "+ paymentDetails.totalPayment);
+                }
+
+                if(paymentDetails.paymentType[i].toLowerCase().trim() == paymentMethod.eftpos){
+                    if(paymentDetails.Surcharge != ccFee[0]){
+                        throw new Error ("Payment Amount did not matched"
+                        +"\n Actual: "+ ccFee[0]
+                        +"\n Expected: "+ paymentDetails.Surcharge);
+                    }
                 }
             }
+            
         }catch(e){
             await this.ScreenShot("Failed", false, e.stack);
             if(e instanceof errors.TimeoutError){

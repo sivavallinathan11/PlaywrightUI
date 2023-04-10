@@ -172,7 +172,7 @@ export const CreateReservationWithNonMember = {
     customerIP: '127.0.0.1',
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0',
     Type: 'Base',
-    Amount: 500,
+    Amount: 250,
     Description: 'Base',
     date: '',
     baseAmount: 0,

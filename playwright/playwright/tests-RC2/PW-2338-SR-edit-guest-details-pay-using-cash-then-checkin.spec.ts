@@ -20,11 +20,9 @@ test('Edit guest details and pay cash then checkin single reservation', async ({
     // Set page objects.
     const login = new LoginPage(page, testDetails);
     const dashboard = new BookingDashboardPage(page, request, testDetails);
-    const booking = new BookingPage(page, testDetails);
     const editBooking = new EditBookingPage(page, testDetails);
     const checkin = new CheckInPage(page, testDetails);
     const apiHelper = new APIHelper(page, request, testDetails);
-    const smokeSteps = new SmokeSteps(page, testDetails);
     const paymentModal = new MakePaymentModal(page, testDetails);
     const editDetails = editGuestDetails;
 
@@ -49,7 +47,7 @@ test('Edit guest details and pay cash then checkin single reservation', async ({
     //(list: Vacant Clean, Occupied, Vacant Dirty).
     var bookingDetails = await dashboard.SelectSpecificReservation("Reservation Number", reservationNumber);
     var accomDetails = await dashboard.SetBookingDetails(bookingDetails);
-    var guestDetails = await dashboard.SetCustomerDetails(bookingDetails);
+    var guestDetails = await dashboard.SetCustomerDetails(bookingDetails, editDetails);
 
     // Verify Edit Booking Page.
     var currentDetails = await editBooking.VerifyManageBookingPage(bookingDetails);
@@ -61,7 +59,7 @@ test('Edit guest details and pay cash then checkin single reservation', async ({
     await editBooking.VerifyToastMessage();
 
     // Verify editted details
-    await editBooking.VerifyEditedGuestDetails(currentDetails, guestDetails);
+    await editBooking.VerifyEditedGuestDetails(currentDetails, guestDetails, bookingDetails);
 
     // Click Make Payment CTA
     await editBooking.ClickMakePayment();
@@ -71,6 +69,9 @@ test('Edit guest details and pay cash then checkin single reservation', async ({
 
     // Process payment
     var paymentDetails = await paymentModal.MakePaymentInEditBooking(accomDetails, guestDetails, "cash");
+
+    // Verify Toast Message
+    await editBooking.VerifyPaymentToasTMsg(paymentDetails);
 
     // Verify payment
     await editBooking.VerifyPayments(paymentDetails);
@@ -82,7 +83,7 @@ test('Edit guest details and pay cash then checkin single reservation', async ({
     await editBooking.ClickManageBookingCheckInButton();
 
     // Verify Check In Page
-    await checkin.VerifyCheckInPage(accomDetails, guestDetails);
+    await checkin.VerifyCheckInPage(bookingDetails);
 
     // Verify Payments in Check In Page
     await checkin.VerifyPayments(paymentDetails);
@@ -98,4 +99,6 @@ test('Edit guest details and pay cash then checkin single reservation', async ({
 
     // Verify booking in inhouse dashboard
     await dashboard.VerifyBookingInhouseDashboard(accomDetails);
+
+    //#endregion
 }) 

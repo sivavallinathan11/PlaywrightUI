@@ -109,6 +109,7 @@ export class DataSetup{
         pay.MemberDiscount = data[4];
         pay.PaymentPercentage = data[5];
         pay.PaymentDate = data[6];
+        pay.TransactionType = data[7];
         return pay;
     }
 

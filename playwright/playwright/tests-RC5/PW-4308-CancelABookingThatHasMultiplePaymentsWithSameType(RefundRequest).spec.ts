@@ -3,7 +3,6 @@ import { APIHelper } from "../models/APIHelper";
 import { BaseSteps } from "../models/BaseSteps";
 import { BookingDashboardPage } from "../models/BookingDashboardPage";
 import { LoginPage } from "../models/LoginPage";
-import { ManageBookingPage } from "../models/ManageBookingPage";
 import { ReimbursementReviewModal } from "../models/ReimbursementReviewModal";
 import { ConfirmCancellationModal } from "../models/ConfirmCancellationModal";
 import { BookingCancelledModal } from "../models/BookingCancelledModal";
@@ -11,6 +10,7 @@ import { CancelBookingModal } from "../models/CancelBookingModal";
 import { CheckInPage } from "../models/CheckInPage";
 import { SelectReimbursementTypeModal } from "../models/SelectReimbursementTypeModal";
 import { ProcessRefundModal } from "../models/ProcessRefundModal";
+import { EditBookingPage } from "../models/EditBookingPage";
 
 test('Cancel a booking that has multiple payments with same type (Refund Request)', async({page, request}) =>{
     // Set base object.
@@ -22,7 +22,7 @@ test('Cancel a booking that has multiple payments with same type (Refund Request
     // Set page objects.
     const login = new LoginPage(page, testDetails);
     const dashboard = new BookingDashboardPage(page, request, testDetails);
-    const manageBooking = new ManageBookingPage(page, testDetails);
+    const editBooking = new EditBookingPage(page, testDetails);
     const apiHelper = new APIHelper(page, request, testDetails);
     const checkIn = new CheckInPage(page, testDetails);
     const reimbursement = new ReimbursementReviewModal(page, testDetails);
@@ -60,13 +60,13 @@ test('Cancel a booking that has multiple payments with same type (Refund Request
     var bookingDetails = await dashboard.ManageBookingOfSearchedReservation(bookingNumber);
 
     // Verify Manage Booking Page.
-    await manageBooking.VerifyManageBookingPage(bookingDetails);
+    await editBooking.VerifyManageBookingPage(bookingDetails);
 
     // Verify Payments
-    await manageBooking.VerifyPayments(paymentDetails);
+    await editBooking.VerifyPayments(paymentDetails);
 
     // Click Check In
-    await manageBooking.ClickManageBookingCheckInButton();
+    await editBooking.ClickManageBookingCheckInButton();
 
     // Verify Check In Page
     await checkIn.VerifyCheckInPage(bookingDetails);
