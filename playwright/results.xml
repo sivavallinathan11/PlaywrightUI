@@ -1,0 +1,128 @@
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="41.402541999995705">
+<testsuite name="tests-RC4\PW-3790-AddOfferThenAssignNonMember.spec.ts" timestamp="2023-04-12T06:54:13.165Z" hostname="chromium" tests="1" failures="1" skipped="0" time="40.223" errors="0">
+<testcase name="Add an offer then assign a non-member to the booking" classname="tests-RC4\PW-3790-AddOfferThenAssignNonMember.spec.ts" time="40.223">
+<failure message="PW-3790-AddOfferThenAssignNonMember.spec.ts:9:5 Add an offer then assign a non-member to the booking" type="FAILURE">
+<![CDATA[  [chromium] › tests-RC4\PW-3790-AddOfferThenAssignNonMember.spec.ts:9:5 › Add an offer then assign a non-member to the booking 
+
+    Error: TypeError: Cannot read properties of undefined (reading 'split')
+
+       at data\datasetup.ts:18
+
+      16 |         bookings.Infant = data[7].split('|');
+      17 |         bookings.Price = data[8].split('|');
+    > 18 |         bookings.Night = data[9].split('|');
+         |                                  ^
+      19 |         return bookings;
+      20 |     }
+      21 |
+
+        at DataSetup.SetBookingsData (C:\SourceCode\ParkWebUI\playwright\tests\data\datasetup.ts:18:34)
+        at BookingPage.CreateBookingReservation (C:\SourceCode\ParkWebUI\playwright\tests\models\BookingPage.ts:927:41)
+        at C:\SourceCode\ParkWebUI\playwright\tests\tests-RC4\PW-3790-AddOfferThenAssignNonMember.spec.ts:41:26
+        at C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\worker\workerMain.js:354:9
+        at TestInfoImpl._runFn (C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\worker\testInfo.js:152:7)
+        at C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\worker\workerMain.js:309:26
+        at TimeoutRunner.run (C:\SourceCode\ParkWebUI\playwright\node_modules\playwright-core\lib\utils\timeoutRunner.js:46:14)
+        at TimeoutManager.runWithTimeout (C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\worker\timeoutManager.js:62:7)
+        at TestInfoImpl._runWithTimeout (C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\worker\testInfo.js:139:26)
+        at WorkerMain._runTest (C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\worker\workerMain.js:289:5)
+        at WorkerMain.runTestGroup (C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\worker\workerMain.js:213:11)
+        at process.<anonymous> (C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\common\process.js:88:22)
+        at DataSetup.SetBookingsData (C:\SourceCode\ParkWebUI\playwright\tests\data\datasetup.ts:18:34)
+        at BookingPage.CreateBookingReservation (C:\SourceCode\ParkWebUI\playwright\tests\models\BookingPage.ts:927:41)
+        at C:\SourceCode\ParkWebUI\playwright\tests\tests-RC4\PW-3790-AddOfferThenAssignNonMember.spec.ts:41:26
+        at BookingPage.CreateBookingReservation (C:\SourceCode\ParkWebUI\playwright\tests\models\BookingPage.ts:935:23)
+        at C:\SourceCode\ParkWebUI\playwright\tests\tests-RC4\PW-3790-AddOfferThenAssignNonMember.spec.ts:41:26
+]]>
+</failure>
+<system-out>
+<![CDATA[Email field was clicked.
+Password field was clicked.
+Login Button was found.
+Login button was clicked.
+Search button was found.
+Element Attribute: nr-cta-blue disabled
+Calendar Icon was clicked.
+Calendar Month and Year value: April 2023
+Next Month button was clicked.
+Calendar Month and Year value: May 2023
+Next Month button was clicked.
+Calendar Month and Year value: June 2023
+30 Available Dates was found.
+Selected Date value: 1
+Selected Date value: 2
+Selected Date value: 3
+Selected Date value: 4
+Selected Date value: 5
+Selected Date value: 6
+Selected Date value: 7
+Selected Date value: 8
+Selected Date value: 9
+Selected Date value: 10
+Selected Date value: 11
+Selected Date value: 12
+Selected Date value: 13
+Selected Date value: 14
+Selected Date value: 15
+Selected Date value: 16
+Selected Date value: 17
+Selected Date value: 18
+Selected Date value: 19
+Selected Date value: 20
+Selected Date value: 21
+Selected Date value: 22
+Selected Date value: 23
+Selected Date value: 24
+Selected Date was clicked.
+Calendar Month and Year value: June 2023
+30 Available Dates was found.
+Selected Date value: 1
+Selected Date value: 2
+Selected Date value: 3
+Selected Date value: 4
+Selected Date value: 5
+Selected Date value: 6
+Selected Date value: 7
+Selected Date value: 8
+Selected Date value: 9
+Selected Date value: 10
+Selected Date value: 11
+Selected Date value: 12
+Selected Date value: 13
+Selected Date value: 14
+Selected Date value: 15
+Selected Date value: 16
+Selected Date value: 17
+Selected Date value: 18
+Selected Date value: 19
+Selected Date value: 20
+Selected Date value: 21
+Selected Date value: 22
+Selected Date value: 23
+Selected Date value: 24
+Selected Date value: 25
+Selected Date was clicked.
+Confirm date range button was clicked.
+Guest dropdown field was clicked.
+Adult Count value: 1
+Child Count value: 0
+Infant Count value: 0
+Add adult was clicked.
+Add child was clicked.
+Guest field name was clicked.
+Search button was clicked.
+9 Accommodation names was found.
+9 Available room count was found.
+Accommodation name value: Standard Studio Cabin
+9 List of Accommodation Price was found.
+Selected Accommodation Price value: $150 total
+9 List of Accommodation Night was found.
+Selected Accommodation Night value: 1 night/s
+9 Add Booking buttons was found.
+Add booking button was clicked.
+File moved to failed directory.
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

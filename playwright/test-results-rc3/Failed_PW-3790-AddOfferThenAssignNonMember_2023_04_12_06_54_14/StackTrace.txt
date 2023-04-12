@@ -1,0 +1,13 @@
+TypeError: Cannot read properties of undefined (reading 'split')
+    at DataSetup.SetBookingsData (C:\SourceCode\ParkWebUI\playwright\tests\data\datasetup.ts:18:34)
+    at BookingPage.CreateBookingReservation (C:\SourceCode\ParkWebUI\playwright\tests\models\BookingPage.ts:927:41)
+    at C:\SourceCode\ParkWebUI\playwright\tests\tests-RC4\PW-3790-AddOfferThenAssignNonMember.spec.ts:41:26
+    at C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\worker\workerMain.js:354:9
+    at TestInfoImpl._runFn (C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\worker\testInfo.js:152:7)
+    at C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\worker\workerMain.js:309:26
+    at TimeoutRunner.run (C:\SourceCode\ParkWebUI\playwright\node_modules\playwright-core\lib\utils\timeoutRunner.js:46:14)
+    at TimeoutManager.runWithTimeout (C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\worker\timeoutManager.js:62:7)
+    at TestInfoImpl._runWithTimeout (C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\worker\testInfo.js:139:26)
+    at WorkerMain._runTest (C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\worker\workerMain.js:289:5)
+    at WorkerMain.runTestGroup (C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\worker\workerMain.js:213:11)
+    at process.<anonymous> (C:\SourceCode\ParkWebUI\playwright\node_modules\@playwright\test\lib\common\process.js:88:22)
