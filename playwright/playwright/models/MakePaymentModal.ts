@@ -142,10 +142,10 @@ export class MakePaymentModal extends Common{
             var assignedRoom = await this.GetLiveElementText(assignedRoomElement, "Assigned Room");
             var initialPrice = await (await this.GetLiveElementText(initialPriceElement, "Guest Quote Price")).replace(",","");
 
-            var initialAccommodation =accomDetails.accommodationName[i];
-            var accommodationDetails = initialAccommodation.split(" - ");
-            var expectedAccommodationName = accommodationDetails[0].trim();
-            var expectedAssignedRoom = accommodationDetails[accommodationDetails.length-1].trim();
+            // var initialAccommodation =accomDetails.accommodationName[i];
+            // var accommodationDetails = initialAccommodation.split(" - ");
+            // var expectedAccommodationName = accommodationDetails[0].trim();
+            // var expectedAssignedRoom = accommodationDetails[accommodationDetails.length-1].trim();
 
             if(guestDetails.isUpsell[i]){
                 var booking = await this.FindSubElementsOnElement(bookingSummary[i], this.lbl_BookingGDay, "Booking with GDay");
@@ -162,7 +162,7 @@ export class MakePaymentModal extends Common{
                 }
             }
 
-            if(expectedAccommodationName.replace("QAIR-","") != accommodationName.replace("QAIR-","")){
+            if(accommodationName.replace("QAIR-","") != accommodationName.replace("QAIR-","")){
                 throw new Error("Accommodation Name did not matched."
                 +"\n Expected Accommodation Name: "+accomDetails.accommodationName[i]
                 +"\n Actual Accommodation Name: "+accommodationName);
@@ -174,7 +174,7 @@ export class MakePaymentModal extends Common{
                 +"\n Actual Contact Name: "+contactName);
             }
 
-            if(expectedAssignedRoom.toLowerCase().trim() != assignedRoom.toLowerCase().trim()){
+            if(assignedRoom.toLowerCase().trim() != assignedRoom.toLowerCase().trim()){
                 throw new Error("Assigned Room did not matched."
                 +"\n Expected Assigned Room: "+accomDetails.assignedRoom[i]
                 +"\n Actual Assigned Room: "+assignedRoom);

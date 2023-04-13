@@ -2,7 +2,7 @@ import { errors, Page } from "@playwright/test";
 import { AccommodationDetails, CustomerDetails, OfferDetails } from "../data/bookings";
 import { DataSetup } from "../data/datasetup";
 import { TestDirectory } from "../data/directory";
-import { MembershipDiscount, MembershipFee } from "../data/users";
+import { BetterOffer, LesserOffer, MembershipDiscount, MembershipFee, standardOfferName } from "../data/users";
 import { Common } from "./Common";
 
 export class OffersModal extends Common{
@@ -114,6 +114,18 @@ export class OffersModal extends Common{
             }
         }
 
+        // This will store the minimum/maximum offer rate
+        var ratesList: any [] = [];
+        var rates = await this.FindElements(this.lbl_Rate, "Rates");
+        for(var i=0; i<setIndex.length; i++){
+            var rate = (await this.GetLiveElementText(rates[setIndex[i]], "Rate")).replace("$","");
+                ratesList.push(parseFloat(rate).toFixed(2));
+        }
+        var maxRate = (Math.min(...ratesList));
+        var minRate = (Math.max(...ratesList));
+        var ratesLength = ratesList.length;
+        ratesList.sort();
+
         // Select offer based on offer type.
         if(offerType.toLowerCase().trim()==""){
             selectedIndex = setIndex[0];
@@ -160,14 +172,38 @@ export class OffersModal extends Common{
         }
         else{
             var selectedOffer = false;
+            var rates = await this.FindElements(this.lbl_Rate, "Rates");
             var offerNames = await this.FindElements(this.lbl_OfferName, "Offer Name");
             for(var x=0; x<setIndex.length; x++){
+                var rate = await this.GetLiveElementText(rates[setIndex[x]], "Rate");
                 var offerName = await this.GetLiveElementText(offerNames[setIndex[x]], "Offer Name");
-                if(offerName.toLowerCase().trim().includes(offerType.toLowerCase().trim())){
-                    selectedIndex = setIndex[x];
-                    selectedOffer = true;
-                    break;
+                // if(offerName.toLowerCase().trim().includes(offerType.toLowerCase().trim())){
+                //     selectedIndex = setIndex[x];
+                //     selectedOffer = true;
+                //     break;
+                // }
+                if(parseFloat(rate.replace("$","")) == maxRate){
+                    if(offerType == BetterOffer){
+                        selectedIndex = setIndex[x];
+                        selectedOffer = true;
+                        break;
+                    }
                 }
+                if(offerName != standardOfferName){
+                    if(parseFloat(rate.replace("$","")) == minRate){
+                        if(offerType == LesserOffer){
+                            selectedIndex = setIndex[x];
+                            selectedOffer = true;
+                            break;
+                        }
+                    }
+                }else{
+                    minRate = ratesList[ratesLength-1];
+                    if(parseFloat(rate) == minRate){
+                        minRate = ratesList[ratesLength-2];
+                    }
+                }
+                
             }
 
             // Verify if the inputted offer was selected.

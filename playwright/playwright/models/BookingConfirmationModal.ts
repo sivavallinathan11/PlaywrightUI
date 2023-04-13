@@ -80,11 +80,11 @@ export class BookingConfirmationModal extends Common{
             }
 
             // Verify balance details
-            if(payment.PaymentType.toLowerCase().trim()=="skip"){
+            if(payment.PaymentType[0].toLowerCase().trim()=="skip"){
                 // Check if balance due is matched.
                 var initialBalance = await this.GetElementText(this.lbl_PaymentFee, "Outstanding Balance");
                 var balance = initialBalance.replace('$','').replace(',','').trim();
-                if(balance!=payment.TotalBalance){
+                if(balance!=payment.TotalBalance[0]){
                     throw new Error("Expected balance due did NOT matched.\nExpected: " + payment.TotalBalance + 
                     "\nActual: " + balance);
                 }
@@ -108,10 +108,10 @@ export class BookingConfirmationModal extends Common{
                     "\nActual: " + dueDate);
                 }
             }
-            else if(payment.PaymentPercentage=="100"){
+            else if(payment.PaymentPercentage[0]=="100"){
                 // Check if paid amount matched.
-                var expectedTotalPaidAmount = (parseFloat(payment.TotalPayment) + 
-                parseFloat(payment.Surcharge)).toFixed(2);
+                var expectedTotalPaidAmount = (parseFloat(payment.TotalPayment[0]) + 
+                parseFloat(payment.Surcharge[0])).toFixed(2);
                 var initialPaidAmount = await this.GetElementText(this.lbl_PaymentFee, "Paid Amount");
                 var actualPaidAmount = initialPaidAmount.replace('$','').replace(',','').trim();
                 if(actualPaidAmount!=expectedTotalPaidAmount){
@@ -121,7 +121,7 @@ export class BookingConfirmationModal extends Common{
             }
             else{
                 // Check if paid amount matched.
-                var expectedPayment = (parseFloat(payment.TotalPayment) + parseFloat(payment.Surcharge)).toFixed(2);
+                var expectedPayment = (parseFloat(payment.TotalPayment[0]) + parseFloat(payment.Surcharge[0])).toFixed(2);
                 var initialPaidAmount = await this.GetElementText(this.lbl_PaymentFee, "Paid Amount");
                 var actualPaidAmount = initialPaidAmount.replace('$','').replace(',','').trim();
                 if(actualPaidAmount!=expectedPayment){
@@ -130,7 +130,7 @@ export class BookingConfirmationModal extends Common{
                 }
 
                 // Check if remaining balance matched.
-                var expectedBalance = payment.TotalBalance;
+                var expectedBalance = payment.TotalBalance[0];
                 var initialBalanceAmount = await this.GetElementText(this.lbl_PaymentBalance, "Confirmed remaining balance");
                 var actualBalanceAMount = initialBalanceAmount.replace('$','').replace(',','').trim();
                 if(actualBalanceAMount!=expectedBalance){
@@ -267,7 +267,7 @@ export class BookingConfirmationModal extends Common{
             }*/
 
             // Check payment details.
-            switch(payment.PaymentType.toLowerCase().trim()){
+            switch(payment.PaymentType[0].toLowerCase().trim()){
                 case "skip":
                     // Verify payment details.
                     var initialBalanceAmount = await this.GetElementText(this.lbl_AmountDue, "Confirmed Amount Due");
@@ -281,7 +281,7 @@ export class BookingConfirmationModal extends Common{
                     }
 
                     // Verify balance amount.
-                    if(balanceAmount!=payment.TotalBalance){
+                    if(balanceAmount!=payment.TotalBalance[0]){
                         throw new Error("Expected Amount due in Confirmation Modal did NOT matched.\nExpected: " + payment.TotalBalance +
                         "\nActual: " + balanceAmount);
                     }
@@ -289,7 +289,7 @@ export class BookingConfirmationModal extends Common{
                 case "cash":
                     // Verify payment type.
                     var paymentType = await this.GetElementText(this.lbl_PaymentType, "Confirmed Payment Status");
-                    if(paymentType!=payment.PaymentType){
+                    if(paymentType!=payment.PaymentType[0]){
                         throw new Error("Expected Payment Type in Confirmation Modal did NOT matched.\nExpected: " + 
                         payment.PaymentType + "\nActual: " + paymentType);
                     }
@@ -299,19 +299,19 @@ export class BookingConfirmationModal extends Common{
                     var actualPaymentAmount = initialPaymentAmount.replace('$','').replace(',','').trim();
 
                     // Verify payment amount.
-                    if(actualPaymentAmount!=payment.TotalPayment){
+                    if(actualPaymentAmount!=payment.TotalPayment[0]){
                         throw new Error("Expected Payment Amount in Confirmation Modal did NOT matched.\nExpected: " + 
                         payment.TotalPayment + "\nActual: " + actualPaymentAmount);
                     }
 
                     // Verify payment details based on payment percentage.
-                    if(payment.PaymentPercentage!="100"){
+                    if(payment.PaymentPercentage[0]!="100"){
                         // Get total balance.
                         var initialBalanceAmount = await this.GetElementText(this.lbl_AmountDue, "Confirmed Amount Due");
                         var balanceAmount = initialBalanceAmount.replace('$','').replace(',','').trim();
 
                         // Verify balance amount.
-                        if(balanceAmount!=payment.TotalBalance){
+                        if(balanceAmount!=payment.TotalBalance[0]){
                             throw new Error("Expected Amount due in Confirmation Modal did NOT matched.\nExpected: " + payment.TotalBalance +
                             "\nActual: " + balanceAmount);
                         }
@@ -352,18 +352,18 @@ export class BookingConfirmationModal extends Common{
                     var actualPaymentAmount = initialPaymentAmount.replace('$','').replace(',','').trim();
 
                     // Verify payment amount.
-                    if(actualPaymentAmount!=payment.TotalPayment){
+                    if(actualPaymentAmount!=payment.TotalPayment[0]){
                         throw new Error("Expected Payment Amount in Confirmation Modal did NOT matched.\nExpected: " + 
                         payment.TotalPayment + "\nActual: " + actualPaymentAmount);
                     }
 
-                    if(payment.PaymentPercentage!="100"){
+                    if(payment.PaymentPercentage[0]!="100"){
                         // Get total balance.
                         var initialBalanceAmount = await this.GetElementText(this.lbl_AmountDue, "Confirmed Amount Due");
                         var balanceAmount = initialBalanceAmount.replace('$','').replace(',','').trim();
 
                         // Verify balance amount.
-                        if(balanceAmount!=payment.TotalBalance){
+                        if(balanceAmount!=payment.TotalBalance[0]){
                             throw new Error("Expected Amount due in Confirmation Modal did NOT matched.\nExpected: " + payment.TotalBalance +
                             "\nActual: " + balanceAmount);
                         }
@@ -404,7 +404,7 @@ export class BookingConfirmationModal extends Common{
                     var actualPaymentAmount = initialPaymentAmount.replace('$','').replace(',','').trim();
 
                     // Verify payment amount.
-                    if(actualPaymentAmount!=payment.TotalPayment){
+                    if(actualPaymentAmount!=payment.TotalPayment[0]){
                         throw new Error("Expected Payment Amount in Confirmation Modal did NOT matched.\nExpected: " + 
                         payment.TotalPayment + "\nActual: " + actualPaymentAmount);
                     }
@@ -414,19 +414,19 @@ export class BookingConfirmationModal extends Common{
                     var actualSurcharge = initialSurcharge.replace('$','').trim();
 
                     // Verify surcharge amount.
-                    if(actualSurcharge!=payment.Surcharge){
+                    if(actualSurcharge!=payment.Surcharge[0]){
                         throw new Error("Expected Card Surcharge in Confirmation Modal did NOT matched.\nExpected: " + 
                         payment.Surcharge + "\nActual: " + actualSurcharge);
                     }
 
                     // Check balance status.
-                    if(payment.PaymentPercentage!="100"){
+                    if(payment.PaymentPercentage[0]!="100"){
                         // Verify payment details.
                         var initialBalanceAmount = await this.GetElementText(this.lbl_AmountDue, "Confirmed Amount Due");
                         var balanceAmount = initialBalanceAmount.replace('$','').replace(',','').trim();
 
                         // Verify balance amount.
-                        if(balanceAmount!=payment.TotalBalance){
+                        if(balanceAmount!=payment.TotalBalance[0]){
                             throw new Error("Expected Amount due in Confirmation Modal did NOT matched.\nExpected: " + payment.TotalBalance +
                             "\nActual: " + balanceAmount);
                         }

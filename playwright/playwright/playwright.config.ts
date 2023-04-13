@@ -44,7 +44,7 @@ const config: PlaywrightTestConfig = {
   testDir: TestScriptDirectory.Path,
   outputDir: testResultPath,
   workers: 2,
-  //testMatch: ["PW-3114-CreateIndividualBookingExpiredMemberThenRenewAndPayUsingAnyModeofPayment.spec.ts"],
+  testMatch: ["PW-4332-AddBetterOfferTo1stBookingwithNonMemberAndJoinGDayAndLessOfferTo2ndBookingwithMember.spec.ts"],
   use: {
     //trace: 'on',
   },

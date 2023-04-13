@@ -596,6 +596,10 @@ export class ReserveAndPayModal extends Common{
     async ClickSkipAndPayLater(){
         try{
             // **SUBJECT FOR CHANGE**
+            var paymentTypeSet: any [] = [], totalPaymentSet: any [] = [],
+            surchargeSet: any [] = [], totalBalanceSet: any [] = [], memberDiscountSet: any [] = [], 
+            paymentPercentageSet: any [] = [], paymentDateSet: any [] = [], transactionTypeSet: any [] = [] ;
+            
             var initialBalance = "";
             if(TestingEnvironment.toLowerCase().trim()=="test"){
                 initialBalance = await this.GetElementText(this.lbl_DevBalanceDue, "Reserved Booking Balance Due");
@@ -605,6 +609,15 @@ export class ReserveAndPayModal extends Common{
             }
             var balanceDue = initialBalance.replace('$','').replace(',','').trim();
     
+            paymentTypeSet.push("Skip");
+            totalPaymentSet.push("0.00");
+            surchargeSet.push("0.00");
+            totalBalanceSet.push(balanceDue);
+            memberDiscountSet.push("0.00");
+            paymentPercentageSet.push("0");
+            paymentDateSet.push("0");
+            transactionTypeSet.push("0");
+
             // Click Skip and pay later button.
             await this.Click(this.btn_SkipAndPayLater, "Skip and pay later button");
     
@@ -614,7 +627,7 @@ export class ReserveAndPayModal extends Common{
             }
     
             // Set payment details
-            var paymentDetails = ["Skip", "0.00", "0.00", balanceDue, "0.00", ""];
+            var paymentDetails = [paymentTypeSet, totalPaymentSet, surchargeSet, totalBalanceSet, memberDiscountSet, paymentPercentageSet, paymentDateSet, transactionTypeSet];
             return await this.dataSetup.SetPaymentDetails(paymentDetails);
         }
         catch(e){
