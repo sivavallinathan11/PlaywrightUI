@@ -1,12 +1,23 @@
-import test from "@playwright/test";
+import { test, expect }  from "@playwright/test";
 import { GuestData } from "../data/users";
 import { APIHelper } from "../models/APIHelper";
 import { BaseSteps } from "../models/BaseSteps";
 import { BookingPage } from "../models/BookingPage";
 import { LoginPage } from "../models/LoginPage";
+import { accom } from "../mocks/accommodations";
+
+// test.beforeEach(async ({ context }) => {
+//     // Block any css requests for each test in this file.
+//     // await context.route(/.css$/, route => route.abort());
+//   });
 
 test('Check price sorting and accommodation filter', async({page, request}) =>{
     // Set base object.
+    // mocking example
+    // await page.route('**/Booking/SearchAccommodation', route => route.fulfill({
+    //     status: 200,
+    //     body: accom.body,
+    //   }));
     const baseSteps = new BaseSteps();
 
     // Initialize directory for test.

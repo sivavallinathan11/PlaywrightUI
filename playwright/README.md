@@ -29,3 +29,7 @@ or to see the run in the browser
 ```
 npx playwright test --headed
 ```
+Running a specific test for a single browser
+```
+npx playwright test tests/tests-RC3/PW-3127-CreateIndividualBookingwithMoreThan28Days.spec.ts --project=chromium
+```

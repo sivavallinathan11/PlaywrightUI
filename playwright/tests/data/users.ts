@@ -15,10 +15,10 @@ export const URL={
     DEV_BookingDashboard: "https://dev-gdaynetwork-webapp-"+Slot+".azurewebsites.net/Booking",
 }
 export const ResultsDirectory = {
-    RC2: './test-results-rc2',
-    RC3: './test-results-rc3',
-    RC4: './test-results-rc4',
-    RC5: './test-results-rc5',
+    RC2: './test-results/test-results-rc2',
+    RC3: './test-results/test-results-rc3',
+    RC4: './test-results/test-results-rc4',
+    RC5: './test-results/test-results-rc5',
     TempRC3: './test-results-temprc3',
 }
 export const XMLResultDirectory = {
