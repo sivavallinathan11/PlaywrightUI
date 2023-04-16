@@ -60,7 +60,7 @@ test('Assign non-MEMBER and upsell THEN add an offer that is LESS THAN GDAY PRIC
 
     // Select an offer in the view offers modal and click on keep on selected offer.
     var afterOfferDetails = await offers.SelectAndProcessOfferFromViewOffersModalAfterGuestIsAssigned(bookingDetails, 
-        guestDetails, "Accept Offers", LesserOffer, "Keep");
+        guestDetails, "Accept Offers", LesserOffer, "Apply");
     bookingDetails = afterOfferDetails[1];
     var offerDetails = afterOfferDetails[0];
 

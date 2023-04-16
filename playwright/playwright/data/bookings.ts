@@ -1,7 +1,6 @@
 export class AccommodationDetails{
     // Set variables.
     public bookingCount: number;
-    public reservationNumber: any[] = [];
     public accommodationName: any[] = [];
     public roomName: any[] = [];
     public checkInDate: any[] = [];
@@ -19,12 +18,6 @@ export class AccommodationDetails{
     // Getter/Setter data.
     get BookingCount(){
         return this.bookingCount;
-    }
-    set ReservationNumber(data){
-        this.reservationNumber = data;
-    }
-    get ReservationNumber(){
-        return this.reservationNumber;
     }
     set BookingCount(data){
         this.bookingCount = data;

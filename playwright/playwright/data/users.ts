@@ -1,18 +1,20 @@
 export const TestScriptDirectory={
-    Path: './tests-RC2'
+    Path: './tests-RC4'
 }
 export const TestingEnvironment = "dev";
 export const Slot = "slot4";
 export const URL={
     GDayAddress: 'https://test.gdaynetwork.com.au/',
-    DEV_GDayAddress: "https://dev-gdaynetwork-webapp-"+Slot+".azurewebsites.net/",
-    //DEV_GDayAddress: "https://dev.gdaynetwork.com.au/",
+    //DEV_GDayAddress: "https://dev-gdaynetwork-webapp-"+Slot+".azurewebsites.net/",
+    DEV_GDayAddress: "https://dev.gdaynetwork.com.au/",
 
     NewReservation: 'https://test.gdaynetwork.com.au/Booking/NewReservation',
-    DEV_NewReservation: "https://dev-gdaynetwork-webapp-"+Slot+".azurewebsites.net/Booking/NewReservation",
+    //DEV_NewReservation: "https://dev-gdaynetwork-webapp-"+Slot+".azurewebsites.net/Booking/NewReservation",
+    DEV_NewReservation: "https://dev.gdaynetwork.com.au/Booking/NewReservation",
 
     BookingDashboard: 'https://test.gdaynetwork.com.au/Booking',
-    DEV_BookingDashboard: "https://dev-gdaynetwork-webapp-"+Slot+".azurewebsites.net/Booking",
+    //DEV_BookingDashboard: "https://dev-gdaynetwork-webapp-"+Slot+".azurewebsites.net/Booking",
+    DEV_BookingDashboard: "https://dev.gdaynetwork.com.au/Booking",
 }
 export const ResultsDirectory = {
     RC2: './test-results-rc2',
@@ -157,12 +159,12 @@ export const MateMember = {
     adults: 2,
     child: 1,
     infant: 0,
-    membershipNumber: '105031940',
+    membershipNumber: '100399279' /*'105031940'*/,
     searchText: 'xyz123',
-    firstName: 'Test Ellis',
-    lastName: 'Tester26',
-    email: 'dhprobot+tester032621@gmail.com',
-    mobile: '0412345645',
+    firstName: 'Iris' /*'Test Ellis'*/,
+    lastName: 'Nonmember' /*'Tester26'*/,
+    email: 'parkhubtest+40@gmail.com' /*'dhprobot+tester032621@gmail.com'*/,
+    mobile: '0457787899' /*'0412345645'*/,
     street: '60 Light Square',
     town: 'Adelaide',
     state: 'SA',
@@ -758,6 +760,7 @@ export const MembershipErrorOnGroupReservation = "Note: The G'Day rewards member
 export const MembershipErrorOnIndividualReservation = "Note: The G'Day rewards memberships has been processed. To keep the membership please process the payment manually. Otherwise cancel the membership.";
 export const BetterOffer = "Better";
 export const LesserOffer = "Not better";
+export const standardOfferName = "Standard Rate";
 export const BetterDiscount = "25% Uncapped";
 export const LesserDiscount = "P-TRADE25 20%";
 export const NoPaymentMessage = "No payments made.";

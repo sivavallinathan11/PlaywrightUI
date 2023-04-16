@@ -512,7 +512,7 @@ export class EditBookingModal extends Common{
             // Get customer card details.
             var customerName = await this.GetElementText(this.lbl_CustomerName, "Customer Name");
             var customerEmail = await this.GetElementText(this.lbl_CustomerEmail, "Customer Email");
-            var customerContact = await this.GetElementText(this.lbl_CustomerContactNumber, "Customer Contact Number");
+            var customerContact = (await this.GetElementText(this.lbl_CustomerContactNumber, "Customer Contact Number")).replace("04","+614");
     
             // Set expected customer card.
             var expectedCustomerName = details.FirstName[index] + " " + details.LastName[index];
@@ -1204,7 +1204,7 @@ export class EditBookingModal extends Common{
             // Get customer card details.
             var customerName = await this.GetElementText(this.lbl_CustomerName, "Customer Name");
             var customerEmail = await this.GetElementText(this.lbl_CustomerEmail, "Customer Email");
-            var customerContact = await this.GetElementText(this.lbl_CustomerContactNumber, "Customer Contact Number");
+            var customerContact = (await this.GetElementText(this.lbl_CustomerContactNumber, "Customer Contact Number")).replace("04","+614");
     
             // Set expected customer card.
             var expectedCustomerName = details.FirstName[index] + " " + details.LastName[index];
