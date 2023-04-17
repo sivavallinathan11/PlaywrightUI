@@ -1,6 +1,6 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
-import { ResultsDirectory, TestScriptDirectory, XMLResultDirectory } from './data/users';
+import { ResultsDirectory, TestScriptDirectory, XMLResultDirectory } from './tests/data/users';
 
 // Set default xml result path.
 var resultPath = XMLResultDirectory.RC3;

@@ -1,0 +1,18 @@
+Error: Unable to find Accommodation list.
+Message: page.waitForSelector: Target closed
+=========================== logs ===========================
+waiting for selector "//tbody[@id='available-accommodation-result-container']/tr" to be visible
+============================================================
+    at BookingPage.WaitForElement (C:\SourceCode\ParkWebUI\playwright\playwright\tests\models\Common.ts:114:23)
+    at BookingPage.VerifySearchResult (C:\SourceCode\ParkWebUI\playwright\playwright\tests\models\BookingPage.ts:352:13)
+    at BookingPage.CreateBookingReservation (C:\SourceCode\ParkWebUI\playwright\playwright\tests\models\BookingPage.ts:859:17)
+    at C:\SourceCode\ParkWebUI\playwright\playwright\tests\tests-RC3\PW-3409-AddMembershiptoAllChildBookingthenForceBookingFailure.spec.ts:41:26
+    at C:\SourceCode\ParkWebUI\playwright\playwright\node_modules\@playwright\test\lib\workerRunner.js:388:9
+    at TestInfoImpl._runFn (C:\SourceCode\ParkWebUI\playwright\playwright\node_modules\@playwright\test\lib\testInfo.js:166:7)
+    at C:\SourceCode\ParkWebUI\playwright\playwright\node_modules\@playwright\test\lib\workerRunner.js:344:26
+    at TimeoutRunner.run (C:\SourceCode\ParkWebUI\playwright\playwright\node_modules\@playwright\test\node_modules\playwright-core\lib\utils\timeoutRunner.js:53:14)
+    at TimeoutManager.runWithTimeout (C:\SourceCode\ParkWebUI\playwright\playwright\node_modules\@playwright\test\lib\timeoutManager.js:70:7)
+    at TestInfoImpl._runWithTimeout (C:\SourceCode\ParkWebUI\playwright\playwright\node_modules\@playwright\test\lib\testInfo.js:154:26)
+    at WorkerRunner._runTest (C:\SourceCode\ParkWebUI\playwright\playwright\node_modules\@playwright\test\lib\workerRunner.js:326:5)
+    at WorkerRunner.runTestGroup (C:\SourceCode\ParkWebUI\playwright\playwright\node_modules\@playwright\test\lib\workerRunner.js:195:11)
+    at process.<anonymous> (C:\SourceCode\ParkWebUI\playwright\playwright\node_modules\@playwright\test\lib\worker.js:87:5)

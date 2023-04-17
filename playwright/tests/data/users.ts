@@ -1,7 +1,7 @@
 export const TestScriptDirectory={
     Path: './tests-RC4'
 }
-export const TestingEnvironment = "dev";
+export const TestingEnvironment = "test";
 export const Slot = "slot4";
 export const URL={
     GDayAddress: 'https://test.gdaynetwork.com.au/',
