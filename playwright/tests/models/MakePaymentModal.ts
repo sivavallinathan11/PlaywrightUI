@@ -89,7 +89,7 @@ export class MakePaymentModal extends Common{
                 var randomPaymentIndex = Math.floor(Math.random() * paymentSet.length);
                 paymentType = paymentSet[randomPaymentIndex];
             }
-            console.log("Selected payment method: " + paymentType);
+            // console.log("Selected payment method: " + paymentType);
     
             // Set random percentage.
             var electedPercentage = percentage;
@@ -108,7 +108,7 @@ export class MakePaymentModal extends Common{
                 }
                 electedPercentage = percentSet[randomPercentageIndex];
             }
-            console.log("Selected percentage: " + electedPercentage);
+            // console.log("Selected percentage: " + electedPercentage);
     
             // Select payment method.
             var paymentDetails = await this.SelectPaymentMethod(accomDetails, guestDetails, paymentType, 
@@ -205,7 +205,7 @@ export class MakePaymentModal extends Common{
                     upsellAmount = (parseFloat(upsellAmount) + parseFloat(MembershipFee)).toFixed(2);
                 }
             }
-            console.log("Membership Fee: " + upsellAmount);
+            // console.log("Membership Fee: " + upsellAmount);
     
             // Get all payment details.
             var quotedPrice = "0.00"

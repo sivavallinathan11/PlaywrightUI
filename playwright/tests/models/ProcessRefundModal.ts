@@ -249,8 +249,8 @@ export class ProcessRefundModal extends Common{
                         counter++;
                     }
                 }
-                console.log(paymentsDetailsSet[y]);
-                console.log(details[counter]);
+                // console.log(paymentsDetailsSet[y]);
+                // console.log(details[counter]);
                 if(!paymentsDetailsSet[y].includes(details[counter])){
                     throw new Error("Actual and Expected "+sectionType+" Payment Details did NOT matched. \nActual: "+paymentsDetailsSet[y]
                 +"\nExpected: "+details[counter]);

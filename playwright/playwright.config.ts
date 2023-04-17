@@ -42,6 +42,8 @@ const config: PlaywrightTestConfig = {
   // globalTimeout: 8000000,
   reporter: [['list'], ['junit', {outputFile: 'results.xml'}]],
   testDir: './tests',
+  outputDir: './screenshots',
+
   // outputDir: testResultPath,
   workers: 2,
   //testMatch: ["PW-4332-AddBetterOfferTo1stBookingwithNonMemberAndJoinGDayAndLessOfferTo2ndBookingwithMember.spec.ts"],
@@ -57,8 +59,15 @@ const config: PlaywrightTestConfig = {
         ...devices['Desktop Chrome'],
         viewport: { width: 2560, height: 1440 }
       },
+      
     },
-
+    {
+      name: 'Microsoft Edge',
+      use: {
+        // Supported Microsoft Edge channels are: msedge, msedge-beta, msedge-dev, msedge-canary
+        channel: 'msedge',
+      },
+    }
     /*{
       name: 'firefox',
       use: {

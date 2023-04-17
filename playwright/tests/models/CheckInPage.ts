@@ -319,7 +319,7 @@ export class CheckInPage extends Common{
             var termsAndCondition = await this.FindElement(this.chk_TermsAndConditions, "Terms and Condition");
             if(!await covidDec.isChecked || !await termsAndCondition.isChecked){
                 if(await completeCheckInCTA.isDisabled){
-                    console.log("Complete Check In is Disabled");
+                    // console.log("Complete Check In is Disabled");
                 }else{
                     throw new Error("Complete Check In Button was not disabled");
                 }
@@ -348,7 +348,7 @@ export class CheckInPage extends Common{
                         +"\n Actual: "+checkInName
                         +"\n Expected: "+completeName);
                     }else{
-                        console.log(completeName+" "+checkIn.isNowCheckIn);
+                        // console.log(completeName+" "+checkIn.isNowCheckIn);
                         if(await this.ElementExist(this.btn_BookingDashboard) && await this.ElementEnabled(this.btn_ReturnBooking)){
                             if(index == 0){
                                 await this.Click(this.btn_BookingDashboard, "Booking Dashboard");

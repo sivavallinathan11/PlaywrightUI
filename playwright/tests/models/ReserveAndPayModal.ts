@@ -543,7 +543,7 @@ export class ReserveAndPayModal extends Common{
                             throw new Error("Skip And Pay Later button was DISPLAYED");
                         }
                         else{
-                            console.log("Skip and Pay Later is not available for Guest with Upsell.");
+                            // console.log("Skip and Pay Later is not available for Guest with Upsell.");
                         }
 
                         // Capture no Skip and Pay Later button was NOT displayed.

@@ -1,4 +1,4 @@
-import { errors, Page } from "@playwright/test";
+import { errors, Page, test, expect } from "@playwright/test";
 import { TestDirectory } from "../data/directory";
 import { BDMCredentials, LoginType, TestingEnvironment, URL } from "../data/users";
 import { Common } from "./Common";
@@ -17,6 +17,32 @@ export class LoginPage extends Common{
     public txt_Email = "#Username";
     public txt_Password = "#Password";
     public btn_Login = "//button[@value='login']";
+
+    // This is much faster. There's no need to abstract it down further when everything you need to login is in one place.
+    // If the login screen changes then it's much more obvious how this works
+    // this is almost twice as quick as the old way
+    async JustLoginFFS() {
+        if(TestingEnvironment.toLowerCase().trim()=="dev"){
+            await this.GoTo(URL.DEV_GDayAddress, "Parkweb Login Page");
+        }
+        else{
+            await this.GoTo(URL.GDayAddress, "Parkweb Login Page");
+        }
+        var email = "";
+        var password = "";
+            
+        // Identify what type of user will be logged in.
+        switch(LoginType.toLowerCase().trim()){
+            case "bdm":
+                email = BDMCredentials.email;
+                password = BDMCredentials.password;
+                break;
+        }
+      
+        await this.page.locator('#Username').fill(email, { timeout: 3000 })
+        await this.page.getByLabel('Password').fill(password, { timeout: 3000 })
+        await this.page.getByRole('button', { name: 'Login' }).click()
+    }
 
     // Navigate to parkweb login page.
     async Open(){
@@ -81,7 +107,7 @@ export class LoginPage extends Common{
         try{
             await this.FindElement(this.btn_Login, "Login Button");
             await this.Click(this.btn_Login, "Login button");
-            await this.Sleep(5000);
+            // await this.Sleep(5000);
         }
         catch(e){
             await this.ScreenShot("Failed", false, e.stack);

@@ -133,6 +133,10 @@ export class BookingPage extends Common{
         }
     }
 
+    async VerifyNewReservationPageV2(){
+        this.page.locator('#new-reservation-form div').filter({ hasText: 'STEP ONE Find accommodation for your booking Find accommodation for booking 1 Se' }).first()
+    }
+
     // Step: Set reservation date range.
     async SetReservationDateRange(checkInDate: number, checkOutDate: number){
         try{
@@ -391,12 +395,12 @@ export class BookingPage extends Common{
                         if(actualName.trim()==cdn_AccommodationName.trim() && !actualName.toLowerCase().includes("kristy awesome")){
                             if(accommodationType.toLowerCase().trim()=="site"){
                                 /*if(typeId==2){
-                                    console.log("Selected Accommodation: " + actualName);
+                                    // console.log("Selected Accommodation: " + actualName);
                                     availablility = true;
                                     break;
                                 }*/
                                 if(!hasMultipleRoom){
-                                    console.log("Selected Accommodation: " + actualName);
+                                    // console.log("Selected Accommodation: " + actualName);
                                     availablility = true;
                                     break;
                                 }
@@ -404,9 +408,9 @@ export class BookingPage extends Common{
                                     var initialCount = await this.GetLiveElementText(listOfAvailableRooms[i], 
                                         actualName + "'s Available Room");
                                     var roomCount = initialCount.replace("Available", "").trim();
-                                    console.log("S" + roomCount + "S");
+                                    // console.log("S" + roomCount + "S");
                                     if(parseInt(roomCount) > 1){
-                                        console.log("Selected Accommodation: " + actualName);
+                                        // console.log("Selected Accommodation: " + actualName);
                                         availablility = true;
                                         break;
                                     }
@@ -506,7 +510,7 @@ export class BookingPage extends Common{
                         actualName + "'s Available Room");
                     var roomCount = initialCount.replace("Available", "").trim();
                     if(parseInt(roomCount) > 2 && !actualName.toLowerCase().includes("kristy awesome")){
-                        console.log("Selected Accommodation: " + actualName);
+                        // console.log("Selected Accommodation: " + actualName);
                         setAccommodations.push(i);
                     }
                 }

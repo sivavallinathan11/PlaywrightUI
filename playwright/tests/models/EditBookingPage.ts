@@ -396,7 +396,7 @@ export class EditBookingPage extends Common{
                 if(toastMsg != toastMessage.update){
                     throw new Error(toastMsg);
                 }else{
-                    console.log("Update Successful!");
+                    // console.log("Update Successful!");
                 }
             }else{
                 throw new Error("Toast Message does NOT show");
@@ -508,7 +508,7 @@ export class EditBookingPage extends Common{
                     +"\n Expected: "+toastMessage.payment.replace("{Payment}",totalAmount.toFixed(2))
                     +"\n Actual: "+toastMsg);
                 }else{
-                    console.log(toastMsg);
+                    // console.log(toastMsg);
                 }
             }else{
             throw new Error("Toast Message does NOT show");
@@ -598,7 +598,7 @@ export class EditBookingPage extends Common{
             if(makePaymentClass.toLowerCase().trim() != buttonType){
                 throw new Error("Make payment button is not disabled");
             }else{
-                console.log("Make payment button is disabled");
+                // console.log("Make payment button is disabled");
             }
         }catch(e){
             await this.ScreenShot("Failed", false, e.stack);
@@ -621,7 +621,7 @@ export class EditBookingPage extends Common{
                     +"\n Actual: "+actualBookingStatus
                     +"\n Expected: "+status);
                 }else{
-                    console.log("Booking is in "+status);
+                    // console.log("Booking is in "+status);
                 }
             }else{
                 throw new Error("Navigated to wrong reservation"

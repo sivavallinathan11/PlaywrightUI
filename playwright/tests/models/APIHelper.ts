@@ -103,7 +103,7 @@ export class APIHelper extends SmokeSteps{
                 response.statusText());
             }
             else{
-                console.log(reservationNumber + " was cancelled successfully.");
+                // console.log(reservationNumber + " was cancelled successfully.");
             }
         }
         catch(e){
@@ -169,7 +169,7 @@ export class APIHelper extends SmokeSteps{
             }
             else{
                 result = await response.json();
-                console.log(reservationNumber + " details was displayed.");
+                // console.log(reservationNumber + " details was displayed.");
             }
             return await result;
         }
@@ -240,7 +240,7 @@ export class APIHelper extends SmokeSteps{
                     response.statusText());
                 }
                 else{
-                    console.log("Pencil booking was created successfully.");
+                    // console.log("Pencil booking was created successfully.");
                     result = await response.json();
                 }
 
@@ -352,7 +352,7 @@ export class APIHelper extends SmokeSteps{
             const firstName = result["firstName"];
             const lastName = result["lastName"];
             const memberNumber = result["memberNumber"];
-            console.log("Member Name: " + result["fullName"]);
+            // console.log("Member Name: " + result["fullName"]);
     
             // Get the member number.
             var result = await this.GetMemberDetailsUsingMemberNumber(memberNumber);
@@ -371,7 +371,7 @@ export class APIHelper extends SmokeSteps{
             // Expire the member.
             var expiredDate = await this.SetExpiryDate(expiryType, expiryRange);
             var result = await this.ExpireMember(MembershipId, memberGuid, expiredDate.toString());
-            console.log("Expiry Date: " + result["ExpiryDate"]);
+            // console.log("Expiry Date: " + result["ExpiryDate"]);
     
             // Set member information to be used for creating reservation.
             var isMember: any[] = []; 
@@ -428,9 +428,9 @@ export class APIHelper extends SmokeSteps{
             }
             else{
                 result = await response.json();
-                console.log("Membership details was displayed.");
+                // console.log("Membership details was displayed.");
             }
-            console.log(result);
+            // console.log(result);
             return result;
         }
         catch(e){
@@ -476,9 +476,9 @@ export class APIHelper extends SmokeSteps{
             }
             else{
                 result = await response.json();
-                console.log("Member details was displayed.");
+                // console.log("Member details was displayed.");
             }
-            console.log(result);
+            // console.log(result);
             return result;
         }
         catch(e){
@@ -554,9 +554,9 @@ export class APIHelper extends SmokeSteps{
             }
             else{
                 result = await response.json();
-                console.log("Member was expired.");
+                // console.log("Member was expired.");
             }
-            console.log(result);
+            // console.log(result);
             return result;
         }
         catch(e){
@@ -644,9 +644,9 @@ export class APIHelper extends SmokeSteps{
             }
             else{
                 result = await response.json();
-                console.log(result[0]);
+                // console.log(result[0]);
                 memberDetails = await result[0];
-                console.log(memberDetails["fullName"]);
+                // console.log(memberDetails["fullName"]);
                 if(memberDetails["fullName"] != null){
                     memberFetched = true;
                 }
@@ -931,7 +931,7 @@ export class APIHelper extends SmokeSteps{
 
                 // This will get the JSON response.
                 const jsonResponse = await response.json();
-                console.log(jsonResponse);
+                // console.log(jsonResponse);
 
                 // Get booking number.
                 const bookingStatus = jsonResponse["bookingCreated"];
@@ -951,7 +951,7 @@ export class APIHelper extends SmokeSteps{
                         //     bookingNumber = createdBooking["ReferenceNumber"];
                         // }
                     }
-                    console.log("Reservation Number: " + bookingNumber);
+                    // console.log("Reservation Number: " + bookingNumber);
                 }
                 else{
                     throw new Error(bookingMessage + "\nException Message: " + exceptionMessage);
@@ -1101,7 +1101,7 @@ export class APIHelper extends SmokeSteps{
             if(status != 200){
                 throw new Error("Charge has NOT been created");
             }else{
-                console.log("Charge has been created")
+                // console.log("Charge has been created")
                 if(newMembership == "true"){
                     return newMembership;
                 }
@@ -1158,13 +1158,13 @@ export class APIHelper extends SmokeSteps{
                     throw new Error("Payment has NOT been created!");
                 }else{
                     totalPayment = totalPayment + totalAmount;
-                    console.log("Payment "+(i+1)+" has been created!");
+                    // console.log("Payment "+(i+1)+" has been created!");
                 }
             }
             if(totalPayment > balance+creditCardFee){
                 throw new Error("Payment SHOULD not exceed the total amount of "+balance);
             }
-            console.log(result);
+            // console.log(result);
         }catch(e){
             if(e instanceof errors.TimeoutError){
                 await this.SaveFailedTraceLogs(e.stack);
@@ -1224,8 +1224,8 @@ export class APIHelper extends SmokeSteps{
             }else{
                 res = await response.json();
                 var resultLength = res.length;
-                console.log(res);
-                console.log(resultLength)
+                // console.log(res);
+                // console.log(resultLength)
                 for(var i = 1; i<res.length; i++){
                     paymentDetails.push(res[i]);
                 }
@@ -1252,14 +1252,14 @@ export class APIHelper extends SmokeSteps{
             if(result['bookingStatus'] != bookingStatus.cancelled){
                 throw new Error("Reservation "+reservationID+" was not cancelled")
             }else{
-                console.log("Reservation "+reservationID+" has been cancelled");
+                // console.log("Reservation "+reservationID+" has been cancelled");
             }
 
             if(actualEmployeeName != employeeName.trim()){
                 throw new Error("Actual and Expected employee name did not matched.\nExpected: " + employeeName +
                 "\nActual: " + actualEmployeeName);
             }else{
-                console.log("PMS Notes: "+pmsNotes);
+                // console.log("PMS Notes: "+pmsNotes);
             }
 
             var voidTransaction = await this.SearchTransactions(result['reservationId'],"true");
@@ -1269,7 +1269,7 @@ export class APIHelper extends SmokeSteps{
                         throw new Error("No voided transaction");
                     }
                 }else{
-                    console.log("Accommodation Transaction has been voided");
+                    // console.log("Accommodation Transaction has been voided");
                 }
             }
 
@@ -1283,7 +1283,7 @@ export class APIHelper extends SmokeSteps{
                         +"\nActual Cancellation Fee "+stayCostDetails.CancellationFee
                         +"\nExpected Cancellation Fee: "+chargeTransaction[i]['amount']);
                     }else{
-                        console.log("Cancellation fee turned into Sundry Charge and fee did matched");
+                        // console.log("Cancellation fee turned into Sundry Charge and fee did matched");
                     }
                 }
             }
@@ -1295,7 +1295,7 @@ export class APIHelper extends SmokeSteps{
                 && !(refundTransaction['description'].includes(description.machineRefund))){
                     throw new Error("Transaction is NOT a refund type / Actual and Expected refund amount did NOT matched / description did NOT matched")
                 }else{
-                    console.log("Refund amount is posted in client's account");
+                    // console.log("Refund amount is posted in client's account");
                 }
             }
 
@@ -1361,9 +1361,9 @@ export class APIHelper extends SmokeSteps{
             var initialCheckOut = results["departureDate"];
     
             var checkIn = initialCheckIn.split('T')[0];
-            console.log("Check in date: " + checkIn);
+            // console.log("Check in date: " + checkIn);
             var checkOut = initialCheckOut.split('T')[0];
-            console.log("Check out date: " + checkOut);
+            // console.log("Check out date: " + checkOut);
     
             return [checkIn, checkOut];
         }

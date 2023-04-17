@@ -252,7 +252,7 @@ export class EditBookingModal extends Common{
                 /* SUBJECT FOR CHANGE
                 // Check if actual price matched the expected.
                 if(price!=expectedMemberPrice.toFixed(2)){
-                    console.log("Expected Member Price: " + expectedMemberPrice);
+                    // console.log("Expected Member Price: " + expectedMemberPrice);
                     if(tier.toLowerCase().trim()=="best mate"){
                         throw new Error("Expected best mate member price did NOT matched for non-capped value.\nExpected: " + expectedMemberPrice + 
                         "\nActual: " + price);
@@ -873,7 +873,7 @@ export class EditBookingModal extends Common{
 
             // Get random index.
             var randomIndex = Math.floor(Math.random() * result.length);
-            console.log(randomIndex + " is random index for existing guest");
+            // console.log(randomIndex + " is random index for existing guest");
     
             // Capture search result.
             await this.ScreenShot("Existing Guest Search Results");

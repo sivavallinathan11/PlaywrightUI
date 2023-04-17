@@ -60,7 +60,7 @@ export class Common{
                 await this.Sleep(5000);
                 fs.renameSync(this.testDirectory.PassedDirectory, this.testDirectory.FailedDirectory);
                 await this.SaveStackTrace(error)
-                console.log("File moved to failed directory.");
+                // console.log("File moved to failed directory.");
             }
             catch(err){
                 throw new Error("Message: " + error);
@@ -79,7 +79,7 @@ export class Common{
             }
             fs.renameSync(this.testDirectory.PassedDirectory, this.testDirectory.FailedDirectory);
             await this.SaveStackTrace(error);
-            console.log("File moved to failed directory.");
+            // console.log("File moved to failed directory.");
         }
         catch(err){
             throw new Error("Message: " + err);
@@ -159,7 +159,7 @@ export class Common{
                 await this.WaitForElement(locator, locatorName, 90000);
             }
             var currentValue = await this.page.$(locator);
-            console.log(locatorName + " was found.");
+            // console.log(locatorName + " was found.");
             if(currentValue!=null){
                 var elementValue =currentValue;
                 return elementValue;
@@ -188,7 +188,7 @@ export class Common{
             var currentValues = await this.page.$$(locator);
             if(currentValues!=null){
                 var elementValues = currentValues;
-                console.log(elementValues.length + " " + locatorName + " was found.");
+                // console.log(elementValues.length + " " + locatorName + " was found.");
                 return elementValues;
             }
             else{
@@ -211,7 +211,7 @@ export class Common{
             var currentValue = await element.$(locator);
             if(currentValue!=null){
                 var elementValue = currentValue;
-                console.log(locatorName + " was found.");
+                // console.log(locatorName + " was found.");
                 return elementValue;
             }
             else{
@@ -232,7 +232,7 @@ export class Common{
     async FindSubElementsOnElement(element: ElementHandle, locator: string, locatorName: string){
         try{
             var elementValues = await element.$$(locator);
-            console.log(elementValues.length + " " + locatorName + " was found.");
+            // console.log(elementValues.length + " " + locatorName + " was found.");
         }
         catch(e){
             if(e instanceof errors.TimeoutError){
@@ -338,7 +338,7 @@ export class Common{
         try{
             await this.page.isEnabled(locator);
             await this.page.click(locator);
-            console.log(locatorName + " was clicked.");
+            // console.log(locatorName + " was clicked.");
         }
         catch(e){
             if(e instanceof errors.TimeoutError){
@@ -354,7 +354,7 @@ export class Common{
     async ClickElement(element: ElementHandle, locatorName: string){
         try{
             await element.click({timeout: 90000});
-            console.log(locatorName + " was clicked.");
+            // console.log(locatorName + " was clicked.");
         }
         catch(e){
             if(e instanceof errors.TimeoutError){
@@ -506,7 +506,7 @@ export class Common{
     async GetElementTextviaHTML(locator: string, locatorName: string){
         try{
           var textValue = await this.page.$eval<string, HTMLSelectElement>(locator, ele => ele.value); 
-          console.log(locatorName + " value: " + textValue);
+          // console.log(locatorName + " value: " + textValue);
         }
         catch(e){
           if(e instanceof errors.TimeoutError){
@@ -529,7 +529,7 @@ export class Common{
             if(currentValue!=null){
                 textValue = currentValue.toString().trim();
             }
-            console.log(locatorName + " value: " + textValue);
+            // console.log(locatorName + " value: " + textValue);
         }
         catch(e){
             if(e instanceof errors.TimeoutError){
@@ -553,7 +553,7 @@ export class Common{
                     var currentValue = elements[i];
                     if(currentValue!=null){
                         textValue = await currentValue.innerText();
-                        console.log(locatorName + " value: " + textValue.toString().trim());
+                        // console.log(locatorName + " value: " + textValue.toString().trim());
                         textSet.push(textValue.toString().trim());
                     }
                 }
@@ -579,7 +579,7 @@ export class Common{
         try{
             if(element!=null){
                 textValue = (await element.innerText()).toString().trim();
-                console.log(locatorName + " value: " + textValue);
+                // console.log(locatorName + " value: " + textValue);
             }
             else{
                 throw new Error (locatorName + " value is null.");
@@ -602,7 +602,7 @@ export class Common{
         try{
             if(element!=null){
                 attribute = await element.getAttribute(attributeType);
-                console.log("Element Attribute: " + attribute.toString().trim());
+                // console.log("Element Attribute: " + attribute.toString().trim());
             }
             else{
                 throw new Error (elementName + " value is null.");
@@ -626,7 +626,7 @@ export class Common{
       try{
         if(element!=null){
             attribute = await element.getAttribute(attributeType);
-            console.log("Element attribute: " + attribute.toString().trim());
+            // console.log("Element attribute: " + attribute.toString().trim());
             if(!attribute.toString().trim().includes(attributeValue)){
                 isExist = false;
             }
@@ -644,7 +644,7 @@ export class Common{
         }
       }
 
-      console.log(elementName + " attribute status: " + isExist);
+      // console.log(elementName + " attribute status: " + isExist);
       return isExist;
     }
 
@@ -688,7 +688,7 @@ export class Common{
                 await element.scrollIntoViewIfNeeded();
                 await element.hover({force: true});
             }
-            console.log(locatorName + " was hovered ");
+            // console.log(locatorName + " was hovered ");
         }
         catch(e){
             if(e instanceof errors.TimeoutError){
@@ -821,7 +821,7 @@ export class Common{
                 const value = await element.evaluate((ele) => {
                     return window.getComputedStyle(ele).getPropertyValue("color")
                 });
-                console.log(value);
+                // console.log(value);
                 return value.toString().trim();
         }
     }

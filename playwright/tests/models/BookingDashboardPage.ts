@@ -808,7 +808,7 @@ export class BookingDashboardPage extends Common{
                                 throw new Error("Reservation was still still displayed.");
                             }
                             else{
-                                console.log(searchValue + " was NOT displayed in " + tableType);
+                                // console.log(searchValue + " was NOT displayed in " + tableType);
                             }
                         }
                         else{
@@ -974,7 +974,7 @@ export class BookingDashboardPage extends Common{
                 +"\n Actual: "+reservationNumber
                 +"\n Expected: "+accomdDetails.reservationNumber[0]);
             }else{
-                console.log("Reservation foudn in In house dashboard");
+                // console.log("Reservation foudn in In house dashboard");
             }
         }catch(e){
             await this.ScreenShot("Failed", false, e.stack);
