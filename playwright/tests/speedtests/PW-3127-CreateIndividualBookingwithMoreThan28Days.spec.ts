@@ -15,15 +15,16 @@ test('Create and pay an individual booking with more than 28 days', async({page}
     const login = new LoginPage(page, testDetails);
 
     
-    // Navigate to Parkweb login page.
-    var url = URL.NewReservation;
-    if(TestingEnvironment.toLowerCase().trim()=="dev"){
-        url = URL.DEV_NewReservation;
-    }
+    // // Navigate to Parkweb login page.
+    // var url = URL.NewReservation;
+    // if(TestingEnvironment.toLowerCase().trim()=="dev"){
+    //     url = URL.DEV_NewReservation;
+    // }
     
 
+    
+    await page.goto('/Booking/NewReservation', {timeout: 90000});
     await login.JustLoginFFS();
-    await page.goto(url, {timeout: 90000});
     await page.screenshot({ path: 'screenshots/screenshot.png', fullPage: true });
 
     // Verify new reservation page.

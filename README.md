@@ -22,6 +22,20 @@ install playwright
 npx playwright install
 ```
 #Run Tests in Chrome
+The following environment files have been created in the env folder for these tests:
+dev.env
+test.env
+
+Usernames and passwords will eventually be extracted there so they can be setup as secrets on the piplines.
+
+###To switch between environments
+Update the playwright.config.ts
+
+```
+dotenv.config({ path: path.resolve(__dirname, './env', 'dev.env') });
+```
+
+
 ```
 npx playwright test
 ```

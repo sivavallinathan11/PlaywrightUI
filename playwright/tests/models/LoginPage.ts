@@ -22,12 +22,12 @@ export class LoginPage extends Common{
     // If the login screen changes then it's much more obvious how this works
     // this is almost twice as quick as the old way
     async JustLoginFFS() {
-        if(TestingEnvironment.toLowerCase().trim()=="dev"){
-            await this.GoTo(URL.DEV_GDayAddress, "Parkweb Login Page");
-        }
-        else{
-            await this.GoTo(URL.GDayAddress, "Parkweb Login Page");
-        }
+        // if(TestingEnvironment.toLowerCase().trim()=="dev"){
+        //     await this.GoTo(URL.DEV_GDayAddress, "Parkweb Login Page");
+        // }
+        // else{
+        //     await this.GoTo(URL.GDayAddress, "Parkweb Login Page");
+        // }
         var email = "";
         var password = "";
             

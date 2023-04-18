@@ -1,3 +1,8 @@
+import dotenv from 'dotenv';
+import path from 'path';
+// Alternatively, read from "../my.env" file.
+dotenv.config({ path: path.resolve(__dirname, '../../env', 'test.env') });
+
 export const TestScriptDirectory={
     Path: './tests-RC4'
 }
