@@ -13,10 +13,8 @@ test('Create and pay an individual booking with more than 28 days', async({page}
 
     // Set page objects.
     const login = new LoginPage(page, testDetails);
-    const booking = new BookingPage(page, testDetails);
-    const customerDetails = GuestDatawithMoreThan28Days;
 
-    //#region Start Test.
+    
     // Navigate to Parkweb login page.
     var url = URL.NewReservation;
     if(TestingEnvironment.toLowerCase().trim()=="dev"){
@@ -38,11 +36,10 @@ test('Create and pay an individual booking with more than 28 days', async({page}
     
 
     await page.getByRole('button', { name: 'Confirm', exact: true }).click()
-    
+    //get the text display from the calendar
     var textValue = await page.$eval<string, HTMLSelectElement>(dateWidget, ele => ele.value); 
     
     await expect(textValue).toBe(MoreThan28DaysMessage)
 
 
-    //#endregion*/
 });
