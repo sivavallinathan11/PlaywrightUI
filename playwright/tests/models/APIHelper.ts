@@ -1,4 +1,4 @@
-import { Page, APIRequestContext, errors, test } from "@playwright/test";
+import { Page, APIRequestContext, errors, test, expect } from "@playwright/test";
 import { TestDirectory } from "../data/directory";
 import { Common } from "./Common";
 import { bookingStatus, CCSurcharge, CommonAPIData, description, paymentMethod, TestingEnvironment, transactionType } from "../data/users";
@@ -573,7 +573,7 @@ export class APIHelper extends SmokeSteps{
 
     // Get the membership details using memberId.
     async GetParkDetails(){
-        try{
+        // try{
             if(TestingEnvironment.toLowerCase()=="dev"){
                 var ep_Parks = endpoint.DEV_CDN;
             }
@@ -589,25 +589,23 @@ export class APIHelper extends SmokeSteps{
             var parkDetails: any;
             result = await response.json();
             var statusCode = response.status();
-            if(statusCode!=200){
-                throw new Error("API request was not successful.\nMessage: (" + statusCode + ") " + response.statusText());
-            }
-            else{
-                result = await response.json();
-                parkDetails = result["ParkInfo"]["rooms"];
-            }
+            // if we couldn't get the CDN data then fail the test
+            await expect(statusCode).toBe(200);            
+            result = await response.json();
+            parkDetails = result["ParkInfo"]["rooms"];
+            
             return parkDetails;
-        }
-        catch(e){
-            if(e instanceof errors.TimeoutError){
-                await this.SaveFailedTraceLogs(e.stack);
-                throw new Error(e.stack);
-            }
-            else{
-                await this.SaveFailedTraceLogs(e.stack);
-                throw new Error(e.stack);
-            }
-        }
+        // }
+        // catch(e){
+        //     if(e instanceof errors.TimeoutError){
+        //         await this.SaveFailedTraceLogs(e.stack);
+        //         throw new Error(e.stack);
+        //     }
+        //     else{
+        //         await this.SaveFailedTraceLogs(e.stack);
+        //         throw new Error(e.stack);
+        //     }
+        // }
     }
 
     // This will search for existing member based on specific name search.

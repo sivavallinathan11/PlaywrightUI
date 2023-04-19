@@ -1,4 +1,4 @@
-import { Page, errors } from "@playwright/test";
+import { Page, errors, expect } from "@playwright/test";
 import { AccommodationDetails, CustomerDetails, OfferDetails } from "../data/bookings";
 import { DataSetup } from "../data/datasetup";
 import { TestDirectory } from "../data/directory";
@@ -6,6 +6,7 @@ import { ExistingGuestSearch, MembershipDiscount, MembershipFee, TestingEnvironm
 import { Common } from "./Common";
 import { EditBookingModal } from "./EditBookingModal";
 import { EditBookingPage} from "./EditBookingPage";
+import exp from "constants";
 
 export class BookingPage extends Common{
     // Set object variable.
@@ -334,19 +335,22 @@ export class BookingPage extends Common{
 
     // Step: Click Search button.
     async ClickSearch(){
-        try{
-            await this.WaitForElement(this.btn_Search, "Search button");
-            await this.Click(this.btn_Search, "Search button");
-        }
-        catch(e){
-            await this.ScreenShot("Failed", false, e.stack);
-            if(e instanceof errors.TimeoutError){
-                throw new Error(e.stack);
-            }
-            else{
-                throw new Error(e.stack);
-            }
-        }
+        const submitSearch = this.page.getByRole('button', { name: ' Search' });
+        // await expect(submitSearch).not.toHaveClass('nr-cta-blue disabled')
+        await submitSearch.click()
+        // try{
+        //     await this.WaitForElement(this.btn_Search, "Search button");
+        //     await this.Click(this.btn_Search, "Search button");
+        // }
+        // catch(e){
+        //     await this.ScreenShot("Failed", false, e.stack);
+        //     if(e instanceof errors.TimeoutError){
+        //         throw new Error(e.stack);
+        //     }
+        //     else{
+        //         throw new Error(e.stack);
+        //     }
+        // }
     }
 
     // Step: Verify Searh Result.
@@ -637,6 +641,32 @@ export class BookingPage extends Common{
         }
     }
 
+    async VerifyConfirmButtonIsDisabledV2(){
+        
+            // Set expected message.
+            var expectedMessage = "Must assign a guest to the first booking";
+
+            // Get the Confirm Booking attribute.
+            var element = await this.FindElement(this.btn_ConfirmBooking, "Confirm Booking");
+            var value = await this.GetElementValueByAttribute(element, "class", "Confirm Booking");
+
+            // Verify if the confirm booking button is disabled and check the hover message.
+            
+            if(!value.includes("disabled")){
+                throw new Error("Confirm Booking button was NOT disabled.");
+            }
+            else{
+                await this.ElementHover(this.btn_ConfirmBooking, "Confirm Button");
+                await this.ScreenShot("Confirm Booking Hover");
+                var hoverMessage = await this.GetElementText(this.toolTip_ConfirmBooking, "Confirm button hover message");
+
+                if(hoverMessage!=expectedMessage){
+                    throw new Error("Expected on hover message did NOT matched.\nExpected: " + expectedMessage +
+                    "\nActual: " + hoverMessage);
+                }
+            }
+        
+    }
     // Step: Verify Confirm button is disabled.
     async VerifyConfirmButtonIsDisabled(){
         try{

@@ -22,26 +22,12 @@ export class LoginPage extends Common{
     // If the login screen changes then it's much more obvious how this works
     // this is almost twice as quick as the old way
     async JustLoginFFS() {
-        // if(TestingEnvironment.toLowerCase().trim()=="dev"){
-        //     await this.GoTo(URL.DEV_GDayAddress, "Parkweb Login Page");
-        // }
-        // else{
-        //     await this.GoTo(URL.GDayAddress, "Parkweb Login Page");
-        // }
-        var email = "";
-        var password = "";
-            
-        // Identify what type of user will be logged in.
-        switch(LoginType.toLowerCase().trim()){
-            case "bdm":
-                email = BDMCredentials.email;
-                password = BDMCredentials.password;
-                break;
-        }
-      
+        var email = BDMCredentials.email;
+        var password = BDMCredentials.password;
         await this.page.locator('#Username').fill(email, { timeout: 3000 })
         await this.page.getByLabel('Password').fill(password, { timeout: 3000 })
         await this.page.getByRole('button', { name: 'Login' }).click()
+
     }
 
     // Navigate to parkweb login page.

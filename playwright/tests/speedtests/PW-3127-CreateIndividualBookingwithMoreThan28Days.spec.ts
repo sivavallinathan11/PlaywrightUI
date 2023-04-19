@@ -13,16 +13,7 @@ test('Create and pay an individual booking with more than 28 days', async({page}
 
     // Set page objects.
     const login = new LoginPage(page, testDetails);
-
-    
-    // // Navigate to Parkweb login page.
-    // var url = URL.NewReservation;
-    // if(TestingEnvironment.toLowerCase().trim()=="dev"){
-    //     url = URL.DEV_NewReservation;
-    // }
-    
-
-    
+  
     await page.goto('/Booking/NewReservation', {timeout: 90000});
     await login.JustLoginFFS();
     await page.screenshot({ path: 'screenshots/screenshot.png', fullPage: true });
@@ -40,7 +31,7 @@ test('Create and pay an individual booking with more than 28 days', async({page}
     //get the text display from the calendar
     var textValue = await page.$eval<string, HTMLSelectElement>(dateWidget, ele => ele.value); 
     
-    await expect(textValue).toBe(MoreThan28DaysMessage)
+    await expect(textValue).toBe('Cannot select more than 28 nights')
 
 
 });
