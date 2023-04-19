@@ -336,7 +336,8 @@ export class BookingPage extends Common{
     // Step: Click Search button.
     async ClickSearch(){
         const submitSearch = this.page.getByRole('button', { name: ' Search' });
-        // await expect(submitSearch).not.toHaveClass('nr-cta-blue disabled')
+        await expect(submitSearch).not.toHaveClass('nr-cta-blue disabled')
+        
         await submitSearch.click()
         // try{
         //     await this.WaitForElement(this.btn_Search, "Search button");
