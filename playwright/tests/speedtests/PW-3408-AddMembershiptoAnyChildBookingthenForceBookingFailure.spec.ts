@@ -3,6 +3,7 @@ import { UpsellGuestData } from "../data/users";
 import { APIHelper } from "../models/APIHelper";
 import { BaseSteps } from "../models/BaseSteps";
 import { BookingPage } from "../models/BookingPage";
+import { BookingPageV2 } from "../models/BookingPageV2";
 import { LoginPage } from "../models/LoginPage";
 import { ReserveAndPayModal } from "../models/ReserveAndPayModal";
 import { accoms } from "../mocks/SearchAccommodation";
@@ -33,6 +34,7 @@ test('Add Membership to Any Child Booking then force a booking failure', async({
     // Set page objects.
     const login = new LoginPage(page, testDetails);
     const booking = new BookingPage(page, testDetails);
+    const bookingv2 = new BookingPageV2(page, testDetails);
     const reservepay = new ReserveAndPayModal(page, testDetails)
     const apiHelper = new APIHelper(page, request, testDetails);
     const customerDetails = UpsellGuestData;
@@ -62,12 +64,12 @@ test('Add Membership to Any Child Booking then force a booking failure', async({
     await booking.SetNumberOfGuests(customerDetails.adults, customerDetails.child, customerDetails.infant)
 
     // rewritten the ClickSearch in POM to use playwright test features
-    await booking.ClickSearch()
+    await bookingv2.ClickSearch()
 
+    // adding two booking by clicking the first 2 CTAs. This will load the mocked bookings
     await page.getByRole('button', { name: '+ Add Booking' }).nth(0).click()
     await page.getByRole('button', { name: '+ Add Booking' }).nth(1).click()
 
-    console.log('stop')
     // // Verify added accommodation.
     // await booking.VerifyAddedAccommodationDetails(bookingDetails);
 
