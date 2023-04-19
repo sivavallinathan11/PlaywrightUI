@@ -8,6 +8,9 @@ import { LoginPage } from "../models/LoginPage";
 import { ReserveAndPayModal } from "../models/ReserveAndPayModal";
 import { accoms } from "../mocks/SearchAccommodation";
 import { addbooking } from "../mocks/AddBooking";
+import { editbooking } from "../mocks/EditBooking";
+import { reservebookingfailure } from "../mocks/ReserveBookingFailure";
+import { confirmbooking } from "../mocks/ConfirmBooking";
 
 
 
@@ -26,7 +29,18 @@ test('Add Membership to Any Child Booking then force a booking failure', async({
         status: 200,
         body: addbooking.body,
         }));
+    
+    // setup mock for editing a booking
+    await page.route('**/Booking/EditBooking', route => route.fulfill({
+        status: 200,
+        body: editbooking.body,
+        }));
 
+    await page.route('**/Booking/Mocked', route => route.fulfill({
+        status: 400,
+        body: reservebookingfailure.body,
+        }));
+    
 
     // Initialize directory for test.
     const testDetails = await baseSteps.InitializeTestResultDirectory("PW-3408-AddMembershiptoAnyChildBookingthenForceBookingFailure");
@@ -70,6 +84,9 @@ test('Add Membership to Any Child Booking then force a booking failure', async({
     await page.getByRole('button', { name: '+ Add Booking' }).nth(0).click()
     await page.getByRole('button', { name: '+ Add Booking' }).nth(1).click()
 
+
+
+
     // // Verify added accommodation.
     // await booking.VerifyAddedAccommodationDetails(bookingDetails);
 
@@ -79,7 +96,10 @@ test('Add Membership to Any Child Booking then force a booking failure', async({
     // // Edit guest booking details.
     // var guestDetails = await booking.SetCustomerDetails(customerDetails, bookingDetails, "Any");
     // var bookingDetails = await booking.EditSelectedBookingReservation(bookingDetails, guestDetails);
+    //edit the first booking in the list
+    await page.getByRole('button', { name: 'Edit' }).nth(0).click()
 
+    
     // // Verify Updated Booking Overview.
     // await booking.VerifyUpdatedBookingOverview(guestDetails, bookingDetails);
 
