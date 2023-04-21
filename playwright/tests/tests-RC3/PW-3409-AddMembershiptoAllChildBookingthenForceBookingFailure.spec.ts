@@ -21,12 +21,13 @@ test('Add Membership to All Child Booking then force a booking failure', async({
     const customerDetails = UpsellGuestData;
 
     //#region Start Test.
-    // Navigate to Parkweb login page.
+    //Navigate to Parkweb login page.
     await login.Open();
 
     // Login to parkweb using valid credentials.
     await login.EnterCredentials();
     await login.ClickLogin();
+    // await login.JustLoginFFS();
     
     // Navigate to create new booking page.
     await booking.Open();
@@ -77,5 +78,5 @@ test('Add Membership to All Child Booking then force a booking failure', async({
     // Verify Successful Booking Rerervation.
     await reservepay.VerifyBookingReservationError(guestDetails);
 
-    //#endregion*/
+    
 });

@@ -22,19 +22,8 @@ test('Create and pay an individual booking using cash', async({page, request}) =
     const apiHelper = new APIHelper(page, request, testDetails);
     const customerDetails = GuestData;
 
-    //#region Start Test.
-    // Navigate to Parkweb login page.
-    await login.Open();
-
-    // Login to parkweb using valid credentials.
-    await login.EnterCredentials();
-    await login.ClickLogin();
-    
-    // Navigate to create new booking page.
-    await booking.Open();
-
-    // Verify new reservation page.
-    await booking.VerifyNewReservationPage();
+    await page.goto('/Booking/NewReservation', {timeout: 90000});
+    await login.JustLoginFFS();
 
     // Get Park Details.
     var parkDetails = await apiHelper.GetParkDetails();

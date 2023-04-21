@@ -6,6 +6,7 @@ import { BookingConfirmationModal } from "../models/BookingConfirmationModal";
 import { BookingPage } from "../models/BookingPage";
 import { LoginPage } from "../models/LoginPage";
 import { ReserveAndPayModal } from "../models/ReserveAndPayModal";
+import { config } from "process";
 
 test('Create and pay an individual booking using credit card', async({page, request}) =>{
     // Set base object.
@@ -21,8 +22,13 @@ test('Create and pay an individual booking using credit card', async({page, requ
     const confirm = new BookingConfirmationModal(page, testDetails);
     const apiHelper = new APIHelper(page, request, testDetails);
     var customerDetails: any;
+
+    //TODO need to use the environment variable instead here.
+
+    
     if(TestingEnvironment.toLowerCase().trim()=="test"){
         customerDetails = BestMateMember;
+        process.env.
     }
     else{
         customerDetails = DEV_BestMateMember;

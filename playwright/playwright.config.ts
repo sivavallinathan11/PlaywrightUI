@@ -13,7 +13,7 @@ const config: PlaywrightTestConfig = {
   reporter: [['list'], ['junit', {outputFile: 'results.xml'}]],
   testDir: './tests',
   outputDir: './screenshots',
-
+  fullyParallel: true,
   workers: process.env.CI ? 2 : undefined,
 
   use: {
