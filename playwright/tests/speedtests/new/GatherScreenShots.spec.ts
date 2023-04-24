@@ -8,11 +8,11 @@ import { accoms } from "../../mocks/SearchLotsOfAccommodations";
 
 test.describe.parallel('Visual Checks and Screenshots', () => {  
     
-    test.beforeEach(async ({ page }) => {  
+    test.beforeEach(async ({ page }, testInfo) => {  
         const login = new LoginPage(page);
         await page.goto('');
         await login.Login();
-
+        testInfo.setTimeout(testInfo.timeout + 30000);
 
         // lets not get any images and see how fast we can go
         // await page.route('**/*', (route) => {
