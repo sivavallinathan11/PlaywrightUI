@@ -39,7 +39,16 @@ const config: PlaywrightTestConfig = {
         // Supported Microsoft Edge channels are: msedge, msedge-beta, msedge-dev, msedge-canary
         channel: 'msedge',
       },
-    }
+    },
+    {
+      name: 'ipad portrait',
+      use: {
+        ...devices['Desktop Chrome'],
+        // ipad portrait mode
+        viewport: { width: 810, height: 1080 }
+      },
+      
+    },
     
   ],
 
