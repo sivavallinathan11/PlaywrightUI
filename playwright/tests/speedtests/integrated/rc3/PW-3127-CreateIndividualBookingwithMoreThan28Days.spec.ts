@@ -1,19 +1,13 @@
 import test, { expect } from "@playwright/test";
 import { LoginPage } from "../../../models/LoginPageV2";
 
-test('Create and pay an individual booking with more than 28 days', async({page}) =>{
-    // Set base object.
-    
+test('Cannot book for more than 28 days', async({page}) =>{
 
-    // Set page objects.
     const login = new LoginPage(page);
   
     await page.goto('/Booking/NewReservation');
     await login.Login();
-    // await page.screenshot({ path: 'screenshots/screenshot.png', fullPage: true });
 
-    // Verify new reservation page.
-    // await booking.VerifyNewReservationPage();
     var dateWidget = "#gr-search-date-input";
     var locator = page.locator(dateWidget)
     await locator.click()
@@ -28,6 +22,5 @@ test('Create and pay an individual booking with more than 28 days', async({page}
     var textValue = await page.$eval<string, HTMLSelectElement>(dateWidget, ele => ele.value); 
     
     await expect(textValue).toBe('Cannot select more than 28 nights')
-
-
+    await page.screenshot({ path: 'screenshot/pw-3127-28dayerror.png', fullPage: true });
 });

@@ -19,57 +19,58 @@ import { confirmmembership } from "../../mocks/ConfirmMembership";
 
 
 
-test('Add Membership to Any Child Booking then force a booking failure', async({page, request}) =>{
+test('Add Membership to Any Child Booking then force a booking failure', async({page}) =>{
     // Set base object.
+
     const baseSteps = new BaseSteps();
 
-    //setup mock for search
-    await page.route('**/Booking/SearchAccommodation', route => route.fulfill({
-        status: 200,
-        body: accoms.body,
-        }));
+    // setup mock for search
+    // await page.route('**/Booking/SearchAccommodation', route => route.fulfill({
+    //     status: 200,
+    //     body: accoms.body,
+    //     }));
 
-    // setup a mock for adding a booking
-    await page.route('**/Booking/AddBooking', route => route.fulfill({
-        status: 200,
-        body: addbooking.body,
-        }));
+    // // setup a mock for adding a booking
+    // await page.route('**/Booking/AddBooking', route => route.fulfill({
+    //     status: 200,
+    //     body: addbooking.body,
+    //     }));
     
-    // setup mock for editing a booking
-    await page.route('**/Booking/EditBooking', route => route.fulfill({
-        status: 200,
-        body: editbooking.body,
-        }));
+    // // setup mock for editing a booking
+    // await page.route('**/Booking/EditBooking', route => route.fulfill({
+    //     status: 200,
+    //     body: editbooking.body,
+    //     }));
 
-    // mock for adding guest
-    await page.route('**/Booking/AddNewGuest', route => route.fulfill({
-        status: 200,
-        body: addnewguest.body,
-        }));
+    // // mock for adding guest
+    // await page.route('**/Booking/AddNewGuest', route => route.fulfill({
+    //     status: 200,
+    //     body: addnewguest.body,
+    //     }));
 
 
-    await page.route('**/Booking/OpenConfirmMembership', route => route.fulfill({
-        status: 200,
-        body: openconfirmmembership.body,
-        }));
+    // await page.route('**/Booking/OpenConfirmMembership', route => route.fulfill({
+    //     status: 200,
+    //     body: openconfirmmembership.body,
+    //     }));
 
-    await page.route('**/Booking/ConfirmMembership', route => route.fulfill({
-        status: 200,
-        body: confirmmembership.body,
-        }));   
+    // await page.route('**/Booking/ConfirmMembership', route => route.fulfill({
+    //     status: 200,
+    //     body: confirmmembership.body,
+    //     }));   
 
-    await page.route('**/Booking/ValidateRewardsProgram', route => route.fulfill({
-        status: 200,
-        body: '',
-        }));
+    // await page.route('**/Booking/ValidateRewardsProgram', route => route.fulfill({
+    //     status: 200,
+    //     body: '',
+    //     }));
 
-    await page.route('**/Booking/UpdateBookingNewReservation', route => route.fulfill({
-        status: 200,
-        body: updatebookingnewreservation.body,
-        })); 
+    // await page.route('**/Booking/UpdateBookingNewReservation', route => route.fulfill({
+    //     status: 200,
+    //     body: updatebookingnewreservation.body,
+    //     })); 
+
 
     
-
     // Initialize directory for test.
     const testDetails = await baseSteps.InitializeTestResultDirectory("PW-3408-AddMembershiptoAnyChildBookingthenForceBookingFailure");
 
@@ -78,35 +79,16 @@ test('Add Membership to Any Child Booking then force a booking failure', async({
     const booking = new BookingPage(page, testDetails);
     const bookingv2 = new BookingPageV2(page);
     const reservepay = new ReserveAndPayModal(page, testDetails);
-    const apiHelper = new APIHelper(page, request, testDetails);
+    // const apiHelper = new APIHelper(page, request, testDetails);
     const customerDetails = UpsellGuestData;
 
     await page.goto('/Booking/NewReservation', {timeout: 90000});
     await login.Login();
 
-    // Get Park Details.
-    // We don't need this we are going to mock the response
-    // var parkDetails = await apiHelper.GetParkDetails();
 
-    // Select accommodation based on numbers of booking. 
-
-    // this isn't important all we are going to do is add two bookings directly using mocks
-    // so we'll do the minimum on the calendar to call the CTA.
-    // var bookingDetails = await booking.CreateBookingReservation(customerDetails, 2, "Random", parkDetails);
     
+    await bookingv2.SearchAccommodation(1, 2, customerDetails.adults, customerDetails.child, customerDetails.infant);
     
-    var dateWidget = "#gr-search-date-input";
-    var locator = page.locator(dateWidget);
-    await locator.click();
-    await page.getByRole('cell', { name: '1', exact: true }).nth(2).click();
-    await page.getByRole('cell', { name: '2', exact: true }).nth(2).click();
-    await page.getByRole('button', { name: 'Confirm', exact: true }).click();
-
-
-    await booking.SetNumberOfGuests(customerDetails.adults, customerDetails.child, customerDetails.infant)
-
-    // rewritten the ClickSearch in POM to use playwright test features
-    await bookingv2.ClickSearch();
 
     // adding two booking by clicking the first 2 CTAs. This will load the mocked bookings
     await page.getByRole('button', { name: '+ Add Booking' }).nth(0).click();
@@ -192,6 +174,7 @@ test('Add Membership to Any Child Booking then force a booking failure', async({
 
     // update booking with membership
     await page.locator('#update-booking').click();
+    await page.screenshot({ path: 'screenshot/addMemberToBooking.png', fullPage: true });
     // await page.locator('#update-booking').click();
     // await page.getByRole('button', { name: 'Update Booking' }).click()
     
@@ -223,4 +206,5 @@ test('Add Membership to Any Child Booking then force a booking failure', async({
     // await reservepay.VerifyBookingReservationError(guestDetails);
 
     //#endregion*/
+    await context.close();
 });

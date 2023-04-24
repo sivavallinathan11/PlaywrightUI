@@ -10,7 +10,7 @@ dotenv.config({ path: path.resolve(__dirname, './env', 'test.env') });
 
 const config: PlaywrightTestConfig = {
 
-  reporter: [['list'], ['junit', {outputFile: 'results.xml'}]],
+  reporter: [['list', {printSteps: true}], ['junit', {outputFile: 'results.xml'}]],
   testDir: './tests',
   outputDir: './screenshots',
   fullyParallel: true,
@@ -24,7 +24,7 @@ const config: PlaywrightTestConfig = {
   },
 
   /* Configure projects for major browsers */
-  projects: [
+  projects: [    
     {
       name: 'chromium',
       use: {

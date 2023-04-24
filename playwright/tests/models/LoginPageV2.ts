@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 import { BDMCredentials } from "../data/users";
 
 
@@ -6,11 +6,17 @@ import { BDMCredentials } from "../data/users";
 // just make stand alone
 export class LoginPage{
     // Set page object variable.
-    page: Page;
+    readonly page: Page;
+    readonly username: Locator;
+    readonly password: Locator;
+    readonly loginButton: Locator;
     
     // Set a sub routine that will access the functions from parent and sibling class.
     constructor(page: Page){
         this.page = page;        
+        this.username = page.locator('#Username');
+        this.password = page.getByLabel('Password');
+        this.loginButton = page.getByRole('button', { name: 'Login' });
     }
    
     // This is much faster. There's no need to abstract it down further when everything you need to login is in one place.
@@ -19,9 +25,9 @@ export class LoginPage{
     async Login() {
         var email = BDMCredentials.email;
         var password = BDMCredentials.password;
-        await this.page.locator('#Username').fill(email, { timeout: 3000 })
-        await this.page.getByLabel('Password').fill(password, { timeout: 3000 })
-        await this.page.getByRole('button', { name: 'Login' }).click()
+        await this.username.fill(email);
+        await this.password.fill(password);
+        await this.loginButton.click();
 
     }
 }

@@ -2,7 +2,7 @@ import { Page, expect } from "@playwright/test";
 
 export class BookingPageV2{
     // Set object variable.
-    page: Page;
+    readonly page: Page;
     public lbl_AdultCount = "#gr-adultcount";
     public lbl_ChildCount = "#gr-childcount";
     public lbl_InfantCount = "#gr-infantcount";
@@ -15,18 +15,38 @@ export class BookingPageV2{
     public btn_LessInfant = "//div[@class='gr-select-guests-section guest-infants']/div/button/i[@class='fas fa-minus']";
     // Set a sub routine that will access the functions from parent and sibling class.
     constructor(page: Page){
-        this.page = page;        
+        this.page = page;     
+        
+
     }
 
-   
+   // Select the booking dates, guests and click search 
+   // checkin day of the month
+   // checkout day of the month
+   // guests
+    async SearchAccommodation(checkin: number, checkout: number, adult: number, child: number, infant: number){
+        await this.SelectBookingDate(checkin, checkout);
+        await this.SetNumberOfGuests(adult, child, infant);
+        await this.ClickSearch()
+    }
 
     // Step: Click Search button.
     async ClickSearch(){
         const submitSearch = this.page.getByRole('button', { name: ' Search' });      
-        await submitSearch.click()
-        
+        await submitSearch.click()   
     }
 
+    // the day of the month for the checkin and checkout
+    async SelectBookingDate(checkin: number, checkout: number) {
+        var dateWidget = "#gr-search-date-input";
+        var locator = this.page.locator(dateWidget);
+        await locator.click();
+        await this.page.getByRole('cell', { name: checkin.toString(), exact: true }).nth(2).click();
+        await this.page.getByRole('cell', { name: checkout.toString(), exact: true }).nth(2).click();
+        await this.page.getByRole('button', { name: 'Confirm', exact: true }).click();
+    }
+
+    // slightly simplified RJ algorithm
     async SetNumberOfGuests(adult: number, child: number, infant: number){
         await this.page.locator('#search-guests-text').click();
        
