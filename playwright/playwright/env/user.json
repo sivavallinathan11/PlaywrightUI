@@ -1,0 +1,145 @@
+{
+  "cookies": [
+    {
+      "name": ".AspNetCore.Antiforgery.9fXoN5jHCXs",
+      "value": "CfDJ8GfIFINt3x5KtspWVfqjMULBOnZPw5iWP_Pr0USjy4ZFM7TKSQKK-CpGjFgu06kr2xLBL01XeBCDQcrpV6Np7jnPSIAscvH7tcMMP5ZydugaORtjkGDL02D1EFWukb-ZmUNwTOI0aXxD2V3tQk0JXDQ",
+      "domain": "test-auth-gday-fd.azurefd.net",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Strict"
+    },
+    {
+      "name": ".AspNetCore.Mvc.CookieTempDataProvider",
+      "value": "CfDJ8GfIFINt3x5KtspWVfqjMUKUVgTQuWfVVqbLTIy_OQFXiurc8gi9f1nwEvYFspl5x4Fq_2WGxcdWPgGlNxgUOFhoiaCVxdLPWYVBUorL_cyLCLZvfevHbulL5IYYqSE12k50kQIGSdoxzf5gxLtmCX7OLKf0by_Q-_R2t_leXVUYWmZ9XRUSAi6utKS5IsqJWg",
+      "domain": "test-auth-gday-fd.azurefd.net",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "idsrv.session",
+      "value": "D617E6610D847F1B11E22D25BC71156C",
+      "domain": "test-auth-gday-fd.azurefd.net",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": ".AspNetCore.Identity.Application",
+      "value": "CfDJ8GfIFINt3x5KtspWVfqjMUIk0vtFj0xt3gXcopcPgto0UPVpYiLRuhWVk9vQJnjW2ZNSFSScgqjvsSnhmtUw7hYAAmyLekbKxVkDG-o6tcoT0NO4v_MWeMeSNhKSl8fzy3Gape0GkwbcW1F7Ma9tGnU7J4x1ClPL_bbfZ7j7pOX_TcSjO-8sgC0-Zxwpuz70QTUxMcl3BMBFDAo3P0-KknqebOKC4wLykVfMX3otaAWOnuDyeAN5vzphwEc3iXWGlPBOC5H4IEqK0MGbezavyuqPp8qlLmM8ckN_S9Ngbru88rrOF4YIFK4JmWRGccizbuZoCJFMLn5xRbuYzx9vf4PCluu-W1-7xeQWDSzvzwHxFfXjATiWEGF4hsi6nkj9QL6xxgf4jHKPtoQaXreQZiSHKe-_ZLVn9JvENkZog_7teZ7Zr0jSmR8w1FlFuspiOE-S-oD2mSt0rx5dNKx3QYjsLcIkE5QRbx8AX7G55bYQXa_-ZbkUO05kJxqkXJPZv81aC68x4Ujk7Rq4JpqyJ7ntQzXbyxxShV9kN0cBYNoJPBjc-GkVT83uKw9vZXXzwCiet_NJ-fef4MVpFslbrd035XYxoatR1b0y0uTeLUWMoANyub27g5dsN3frpdEjLok8ec06odx7_xvGdyqj11NKHJSOXMIcGdpDcDV047L4CSG3Qv7FnTu6_GvI77UclxbaA1KapcIUVyE4BTtbC1nnLn5OOt_hTQ2jcSI1VLICDqSGSrN-xgF0HACn2SJZutC1Rc52Kq3voeZW7kFUtOI35VSQaG_A1IiwXLLSNkQDXbWaEa5wETonB4yq9u7AIu0VkavgJgQ6mt0Pf4yneLChrhATjMFsS6BKDL4Co2QKhykPTtH1FmwgcsPOBeX6zSFaXG2cMnvVSCWYeZUrVmuo2jJWn-oUvaq3cnSz--FRjsTheH5VreIG5tVvQLdi2WVik-ua-BMzlNfOpA8ZrBrR7so92-RKrxBvVuIzeKp_fHp5uHVDCosxhZvpu0l9p1uKJcyh0T4ilphL5CnNXvwtg3v12gREgMeaivQjPxJFiHNyxH5Z4CF4UdLht9sn7YVPkGAd3MSkMJNuQhSl7vjs_KZfau9oP7bshXhDm0RW4nMYXjRIFdNLO3tVqV1528YWKVrSNPVdLNSgeKn_SKh3s2-NpKSh7v76px8EBXdPuYPZNEIWavlVmo8KcBYuxaoy-WXX7yjgNK_ZyP5uxTVvzeQdFtUmjX8Wi_YgdxGAi89QEAGNMnWTxmiozKV8wkci03v1UJ3N38XoSdJoI_VmIM0jAiUTXoKUQGoRV48gzDhkIKZhSibaIEIwiNeyURx1Qa7IEsQQ-S6Q23Tryh2Tbf_I76knAOtSa7eAh3JOLH0HetNmuOCw9fvlqoDNf46XUZcl8NtQSL7F4Qq7Uw2_Amm5hXZFN3ebxZnZoxrPXpMckpdCMnRDjHyZMRjjT205wVR3x19T-v8VZBIFSt5AEj6K_YdS-Nyr3c1SSJnScGCZHlCEbt1CALCvs2wBtTyEKXTyeUhU9-5W2-RPKAfgQy7cIPqUXNGDrfq29SKOB-tjRzimGRksUpGy8N5Uy0Hch1Z3r-4_6cI4S2ONhDuWErZqJbTZRlQOfiDit0N_AUe2ic_LAcm5pAs1d-W9RGeMlJxqA0alnyPzgrL5aXl2aKayUneBRYSoElkAuC0Y-Ov7ZuhIgTXf-rCkK-McRUmjqZkVDjAOpkEuUxLZL4XMkgaH2InsmZz2bdNXQ_bu9j-p3fOPfx2Usfs0P5s7wq5IqKjP0jiAl_L4D4dYGv7IpAH1mgrNXwc2ETFb-wsL",
+      "domain": "test-auth-gday-fd.azurefd.net",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ASP.NET_SessionId",
+      "value": "wl5wlmo00grs13xeo2sqadzv",
+      "domain": "test.gdaynetwork.com.au",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ActivePark",
+      "value": "TEST",
+      "domain": "test.gdaynetwork.com.au",
+      "path": "/",
+      "expires": 1713830591.813325,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": ".BoltIdentity",
+      "value": "VUrOabTrdGUGc2fDdo3tDmIU7rXpQZ8Ortnv6jlZktKTv7TNvba89xjt_Rv5S5RsDHLK4qXAjNF_HHJnAvr-honGBn2TLQa_PWhP-nnk8BsJAlLtfG5-EIiOmds2SzNYko9B_oNvJSh-k73sf6_Qn-SV_f6Lo3BTP1gQbzLys1_iHzOQCFJDpyM4Ei-8CbNOVr7FmPn84IogUYVOZDNMx6LgNvPMEb_6GVOrLgpqCrniFHwkNoea-R7oh27NtHn3LQDNydS94kjEY8IFetEDO0Pn0uMAIOAlglZvVRiFboPhkSiHTnW0cOJ4CwtF30S1PQlCyeJ7DX72qzvgMEpxaRZgCbIPkNlbCeMlSWYlenNIyenjPsMGNQXajSbD7jvcRstacxHjx87HM_qVtMrlGiNQRdtFpQE1lt8e6YJVlN13RpzMalGHiJan-sZDNItKM7guvmq9Eq-0rdsmvuXtVkwqwWJNVxewjvRom0gguFrzTx9Oqwc6z7y-r7R3qT5sDmK7R44OrRVdTGRiXkxIsCTWh5XPGYd1wNP3l8Gncg8BYsfaxYWp5Zu6e1CaAdCvl3h-HGN0t1B5SOxbeX6tvBIXOMCAaJ-asWpU14Kyh2-Fv7NBlGgYFBfJFpxb9XKC2syb3838kRQdMCyiT1ub_lLnvCPsGKzxOvx8SyDA3MQaO48rYiriLR2QirC9NBTtaBAZdrXQAFVvYOXaOXO39Khx2dQtfJfWjBcrGo_v6-U2entXNzmEINGUMzmNfQavybDvvhFVQdDngRNuaVCb8x4RpDEfVm0wX31tTbuV3H8xuOApcjF-0Q1bWh3k30MobyFbAM_4vaPnOZGUNwUqbg",
+      "domain": "test.gdaynetwork.com.au",
+      "path": "/",
+      "expires": 1683417791.81338,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ai_user",
+      "value": "mllw9|2023-04-23T00:03:11.361Z",
+      "domain": "test.gdaynetwork.com.au",
+      "path": "/",
+      "expires": 1713744191,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_ga",
+      "value": "GA1.3.96191624.1682208191",
+      "domain": ".gdaynetwork.com.au",
+      "path": "/",
+      "expires": 1716768191.444307,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_gid",
+      "value": "GA1.3.2042665617.1682208191",
+      "domain": ".gdaynetwork.com.au",
+      "path": "/",
+      "expires": 1682294591,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_gat_gtag_UA_154475558_1",
+      "value": "1",
+      "domain": ".gdaynetwork.com.au",
+      "path": "/",
+      "expires": 1682208251,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "CLID",
+      "value": "8e04fd41697149f1bf669c13ead14fb5.20230423.20240422",
+      "domain": "www.clarity.ms",
+      "path": "/",
+      "expires": 1713744191.540716,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ai_session",
+      "value": "lRuOm|1682208191560.3|1682208191560.3",
+      "domain": "test.gdaynetwork.com.au",
+      "path": "/",
+      "expires": 1682209991,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_clck",
+      "value": "mh8i58|1|fb0|0",
+      "domain": ".gdaynetwork.com.au",
+      "path": "/",
+      "expires": 1713744191,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": []
+}
