@@ -1,6 +1,6 @@
-import {test,  expect } from '../../../fixtures';
+import {test,  expect } from '../../fixtures/login';
 import { UpsellGuestData } from "../../data/users";
-import { APIHelper } from "../../models/APIHelper";
+import { APIHelper } from "../../models/APIHelperV2";
 import { BaseSteps } from "../../models/BaseSteps";
 import { BookingPage } from "../../models/BookingPage";
 import { BookingPageV2 } from "../../models/BookingPageV2";
@@ -41,7 +41,8 @@ export const UpsellGuestData1 = {
     isMember: false
 }
 
-test('Add Membership to Any Child Booking then force a booking failure', async({page}) =>{
+test('Add Membership to Any Child Booking then force a booking failure', async({page, request}) =>{
+    test.setTimeout(120000);
     // Set base object.
 
     // const baseSteps = new BaseSteps();
@@ -93,22 +94,20 @@ test('Add Membership to Any Child Booking then force a booking failure', async({
 
     const bookingv2 = new BookingPageV2(page);
     bookingv2.numberOfNights = 2;
-    
+    // set some booking values
     bookingv2.adults = 2;
     bookingv2.child = 1;
-    bookingv2.infant = 1;
-
-    const customerDetails = UpsellGuestData1;
-    const numberOfBookings = 2;
-
+    bookingv2.infant = 1;    
+    
     await page.goto('/Booking/NewReservation');
-
+    
     // fill out the search details    
     // checkin days from now, check out days
     await bookingv2.SearchAccommodation();
     
     // select the number of accoms to add to the booking. More than 1 is a group booking.
     // this will add the accoms first
+    const numberOfBookings = 2;
     await bookingv2.SelectAccommodations(numberOfBookings);
     
     // add a guest to each of the accomms
@@ -120,109 +119,49 @@ test('Add Membership to Any Child Booking then force a booking failure', async({
     // assign a guest and upsell them to a member
     await bookingv2.AddGuestUpgradeToMember(secondBooking);
     
+    await page.screenshot({ path: 'screenshot/PW-3408 - Group booking with member.png'});
 
-
-
-    // // Verify added accommodation.
-    // await booking.VerifyAddedAccommodationDetails(bookingDetails);
-
-    // // Verify confirm button is disabled as no guest is added.
-    // await booking.VerifyConfirmButtonIsDisabled();
-
-    // // Edit guest booking details.
-    // var guestDetails = await booking.SetCustomerDetails(customerDetails, bookingDetails, "Any");
-    // var bookingDetails = await booking.EditSelectedBookingReservation(bookingDetails, guestDetails);
-        
-    //edit the first booking on the mocked page
-    // await page.getByRole('button', { name: 'Edit' }).nth(0).click();
-    // await page.getByPlaceholder('Search or create a customer').fill('Robot Customer');
-    
-    // // create new customer and mock a successful response
-    // await page.getByRole('button', { name: '+ Create a new customer'}).click();
-
-    // // this is the new member modal
-    // await page.getByPlaceholder('John').fill('Just a Test');
-    // await page.getByPlaceholder('Discovery').fill('Just a Test');
-    // await page.getByPlaceholder('example@hotmail.com').fill('just@atest.com');
-    // await page.getByPlaceholder('0412 345 678').fill('0401217010');
-    // // Click 'Enter Manually' link.
-    // await page.getByRole('button', { name: 'Enter Manually' }).click();
-    
-    // await page.locator('#gr-street').fill('60 Light Square');
-    // await page.locator('#gr-town').fill('Adelaide');
-    // await page.locator('#gr-state-au').selectOption('SA');
-    // await page.locator('#gr-postcode').fill('5000');
-    // await page.locator('#gr-country').selectOption('Australia');
-
-    // await page.getByRole('button', { name: 'Save' }).click();
-
-    // await page.getByRole('button', { name: 'Join' }).click();
-    
-    // // staff details
-    // await page.locator('#staff-name').fill('Test Robot');
-    // await page.locator('#confirm-membership-cta').click();
-
-
-    // // update booking with membership
-    // await page.locator('#update-booking').click();
-
-    // // -----------------------------------------------------------------------------
-    // //edit the 2nd booking on the mocked page
-    // await page.getByRole('button', { name: 'Edit' }).nth(1).click();
-    // await page.getByPlaceholder('Search or create a customer').fill('Robot Customer');
-    
-    // // create new customer and mock a successful response
-    // await page.getByRole('button', { name: '+ Create a new customer'}).click();
-
-    // // this is the new member modal
-    // await page.getByPlaceholder('John').fill('Just a Test');
-    // await page.getByPlaceholder('Discovery').fill('Just a Test');
-    // await page.getByPlaceholder('example@hotmail.com').fill('just@atest.com');
-    // await page.getByPlaceholder('0412 345 678').fill('0401217010');
-    // // Click 'Enter Manually' link.
-    // await page.getByRole('button', { name: 'Enter Manually' }).click();
-    
-    // await page.locator('#gr-street').fill('60 Light Square');
-    // await page.locator('#gr-town').fill('Adelaide');
-    // await page.locator('#gr-state-au').selectOption('SA');
-    // await page.locator('#gr-postcode').fill('5000');
-    // await page.locator('#gr-country').selectOption('Australia');
-
-    // await page.getByRole('button', { name: 'Save' }).click();
-
-    // await page.getByRole('button', { name: 'Join' }).click();
-    
-    // // staff details
-    // await page.locator('#staff-name').fill('Test Robot');
-    // await page.locator('#confirm-membership-cta').click();
-
-
-    // // update booking with membership
-    // await page.locator('#update-booking').click();
-    // await page.screenshot({ path: 'screenshot/addMemberToBooking.png', fullPage: true });
-    // await page.locator('#update-booking').click();
-    // await page.getByRole('button', { name: 'Update Booking' }).click()
     
     // // Verify Updated Booking Overview.
     // await booking.VerifyUpdatedBookingOverview(guestDetails, bookingDetails);
 
     // // Get hidden reservation number.
-    // var reservationNumber = await booking.GetHiddenReservationNumber(guestDetails);
+    // this is added 
+    // var reservationNumber = await bookingv2.GetHiddenReservationNumber();
 
-    // // Click Confirm Booking button.
-    // await booking.ClickConfirmBooking();
+    // Click Confirm Booking button.
+    // save reservation numbers
+    await bookingv2.confirmBooking();
+    
 
     // // Verify Reserve and Pay Modal.
     // await reservepay.VerifyReserveAndPayModal(bookingDetails, guestDetails);
+    await page.locator('#ReservationTypeId').selectOption('07. Tourist - Group');
+    await page.locator('#BookingSourceId').selectOption('1. Walk in');
+    await page.getByPlaceholder('Start typing a note here...').fill('Just a note by the test bot');
+    await page.getByRole('checkbox').check();
+    await page.screenshot({ path: 'screenshot/PW-3408 - Verify and Pay Modal.png'});
+    
+    // Cancel Reservation.
+    const apiHelper = new APIHelper(page, request);
+    await apiHelper.CancelMultipleReservation(bookingv2.reservationNumber);
 
-    // // Cancel Reservation.
-    // await apiHelper.CancelMultipleReservation(reservationNumber);
 
+
+    
     // // Fill up Reserve and Pay Modal fields.
     // await reservepay.FillUpReserveAndPayFields(customerDetails);
 
     // // Create new pencil booking using cancelled reservation.
-    // await apiHelper.CreateNewPencilBookingfromCancelledReservation(reservationNumber);
+    await apiHelper.CreateNewPencilBookingfromCancelledReservation(bookingv2.reservationNumber);
+
+    await page.getByRole('button', {name: 'Reserve Now'}).click();
+
+    await expect(page.locator('.error-message')).toHaveText('Your bookings has not been reserved.');
+    await expect(page.locator('.error-explanation')).toContainText('The G’Day rewards memberships against the booking have been processed.');
+
+
+    await page.screenshot({ path: 'screenshot/PW-3408 - Payment Error With Memberships.png'});
 
     // // Click Reserve Now button.
     // await reservepay.ClickReserveNow();

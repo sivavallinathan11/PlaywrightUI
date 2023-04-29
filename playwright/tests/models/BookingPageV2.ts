@@ -1,4 +1,4 @@
-import { Page, expect } from "@playwright/test";
+import { Page, expect, ElementHandle } from "@playwright/test";
 import { EditBookingModal } from "../models/EditBookingModalV2";
 import { editbooking } from "../mocks/EditBooking";
 // export const UpsellGuestData1 = {
@@ -44,6 +44,7 @@ export class BookingPageV2{
     public adults: number;
     public child: number;
     public infant: number;
+    public reservationNumber: any[] = [];
 
 
     // Set a sub routine that will access the functions from parent and sibling class.
@@ -85,6 +86,12 @@ export class BookingPageV2{
         await this.page.locator(".drp-calendar.right").getByRole('cell', {name: end, exact:true}).first().click();
         await this.page.getByRole('button', { name: 'Confirm', exact: true }).click();
 
+    }
+
+    async confirmBooking() {
+        //save the reservations in case we need them
+        this.GetHiddenReservationNumber();
+        await this.page.getByRole('button', {name: 'Confirm Booking'}).click();
     }
 
     // slightly simplified RJ algorithm
@@ -154,7 +161,7 @@ export class BookingPageV2{
     async SelectAccommodations(count: number) {
         // adding <count> booking by clicking the first 2 CTAs.
         for (let i = 0; i < count; i++) {
-            await this.page.getByRole('button', { name: '+ Add Booking' }).nth(i).click();            
+            await this.page.getByRole('button', { name: '+ Add Booking' }).nth(i).click();        
         }
     }
 
@@ -167,7 +174,7 @@ export class BookingPageV2{
         let edit = new EditBookingModal(this.page);
         // call the edit modal
         await edit.addGuest();
-
+        
 
     }
 
@@ -178,196 +185,23 @@ export class BookingPageV2{
         let edit = new EditBookingModal(this.page);
         // call the edit modal
         await edit.convertToMember();
-
     }
 
-    async SetGuestDetails(customer: any, upsellType: string= "All"){
-        // var firstName="", lastName="", memberId="", email="", searchText="", mobile="", street="";
-        // var town="", state="", postcode="", country="";
-        // var velocityNumber: any[] = [];
-        // var isVelocity: any[] = [];
-        // var isMember: any[] = [];
-        // var isUpsell: any[] = [];
-        // var emailExist: any[] = [];
-        // if(!customer.isMember){
-        //     for(var i = 0; i < details.BookingCount; i++){
-        //         if(i==details.BookingCount-1){
-        //             searchText = searchText + customer.searchText;
-        //             if(customer.email==""){
-        //                 email = email + await this.GenerateRandomEmail(customer.firstName, "@gmail.com", "Alphanumeric", 8);
-        //                 firstName = firstName + customer.firstName + await this.GenerateRandomString("Alphanumeric", 8);
-        //                 lastName = lastName + customer.lastName + await this.GenerateRandomString("Alphanumeric", 8);
-        //                 emailExist.push(false);
-        //             }
-        //             else{
-        //                 if(i > 0){
-        //                     email = email + await this.GenerateRandomEmail(customer.firstName, "@gmail.com", "Alphanumeric", 8);
-        //                     firstName = firstName + customer.firstName + await this.GenerateRandomString("Alphanumeric", 8);
-        //                     lastName = lastName + customer.lastName + await this.GenerateRandomString("Alphanumeric", 8);
-        //                     emailExist.push(false);
-        //                 }
-        //                 else{
-        //                     email = email + customer.email;
-        //                     firstName = firstName + customer.firstName;
-        //                     lastName = lastName + customer.lastName;
-        //                     emailExist.push(true);
-        //                 }
-        //             }
-        //             mobile = mobile + customer.mobile;
-        //             street = street + customer.street;
-        //             town = town + customer.town;
-        //             state = state + customer.state;
-        //             postcode = postcode + customer.postcode;
-        //             country = country + customer.country;
-        //             if(customer.isUpsell == false && upsellType.toLowerCase().trim()=="any" && i > 0){
-        //                 isUpsell.push(true);
-        //             }
-        //             else{
-        //                 isUpsell.push(customer.isUpsell);
-        //             }
-        //             isMember.push(customer.isMember);
-        //             isVelocity.push(false);
-        //             velocityNumber.push('');
-        //         }
-        //         else{
-        //             searchText = searchText + customer.searchText + "|";
-        //             if(customer.email==""){
-        //                 email = email + await this.GenerateRandomEmail(customer.firstName, "@gmail.com", "Alphanumeric", 8) + "|";
-        //                 firstName = firstName + customer.firstName + await this.GenerateRandomString("Alphanumeric", 8) + "|";
-        //                 lastName = lastName + customer.lastName + await this.GenerateRandomString("Alphanumeric", 8) + "|";
-        //                 emailExist.push(false);
-        //             }
-        //             else{
-        //                 if(i > 0){
-        //                     email = email + await this.GenerateRandomEmail(customer.firstName, "@gmail.com", "Alphanumeric", 8) + "|";
-        //                     firstName = firstName + customer.firstName + await this.GenerateRandomString("Alphanumeric", 8) + "|";
-        //                     lastName = lastName + customer.lastName + await this.GenerateRandomString("Alphanumeric", 8) + "|";
-        //                     emailExist.push(false);
-        //                 }
-        //                 else{
-        //                     firstName = firstName + customer.firstName + "|";
-        //                     lastName = lastName + customer.lastName + "|";
-        //                     email = email + customer.email + "|";
-        //                     emailExist.push(true);
-        //                 }
-        //             }
-        //             mobile = mobile + customer.mobile + "|";
-        //             street = street + customer.street + "|";
-        //             town = town + customer.town + "|";
-        //             state = state + customer.state + "|";
-        //             postcode = postcode + customer.postcode + "|";
-        //             country = country + customer.country + "|";
-        //             isMember.push(customer.isMember);
-        //             isUpsell.push(customer.isUpsell);
-        //             isVelocity.push(false);
-        //             velocityNumber.push('');
-        //         }
-        //     }
-        //     var customerDetails = [details.BookingCount, searchText, firstName, lastName, email, mobile, street, 
-        //         town, state, postcode, country, isMember, isUpsell, isVelocity, velocityNumber, emailExist];
-        //     return await this.dataSetup.SetCustomerData(customerDetails);
-        // }
-        // else{
-        //     for(var i = 0; i < details.BookingCount; i++){
-        //         if(i==details.BookingCount-1){
-        //             if(!customer.firstName.includes('|')){
-        //                 firstName = firstName + customer.firstName;
-        //                 lastName = lastName + customer.lastName;
-        //                 email = email + customer.email;
-        //                 mobile = mobile + customer.mobile;
-        //                 street = street + customer.street;
-        //                 town = town + customer.town;
-        //                 state = state + customer.state;
-        //                 postcode = postcode + customer.postcode;
-        //                 country = country + customer.country;
-        //                 memberId = memberId + customer.membershipNumber;
-        //             }
-        //             else{
-        //                 var fNames = customer.firstName.split('|');
-        //                 var lNames = customer.lastName.split('|');
-        //                 var emails = customer.email.split('|');
-        //                 var mobiles = customer.mobile.split('|');
-        //                 var streets = customer.street.split('|');
-        //                 var towns = customer.town.split('|');
-        //                 var states = customer.state.split('|');
-        //                 var postcodes = customer.postcode.split('|');
-        //                 var countries = customer.country.split('|');
-        //                 var memId = customer.membershipNumber.split('|');
 
-        //                 firstName = firstName + fNames[i];
-        //                 lastName = lastName + lNames[i];
-        //                 email = email + emails[i];
-        //                 mobile = mobile + mobiles[i];
-        //                 street = street + streets[i];
-        //                 town = town + towns[i];
-        //                 state = state + states[i];
-        //                 postcode = postcode + postcodes[i];
-        //                 country = country + countries[i];
-        //                 memberId = memberId + memId[i];
-        //             }
-        //             if(customer.isVelocity && i==0){
-        //                 isVelocity.push(true);
-        //                 velocityNumber.push(customer.velocityNumber);
-        //             }
-        //             else{
-        //                 isVelocity.push(false);
-        //                 velocityNumber.push('');
-        //             }
-        //             isMember.push(customer.isMember);
-        //             isUpsell.push(customer.isUpsell);
-        //         }
-        //         else{
-        //             if(!customer.firstName.includes('|')){
-        //                 firstName = firstName + customer.firstName + "|";
-        //                 lastName = lastName + customer.lastName + "|";
-        //                 email = email + customer.email + "|";
-        //                 mobile = mobile + customer.mobile + "|";
-        //                 street = street + customer.street + "|";
-        //                 town = town + customer.town + "|";
-        //                 state = state + customer.state + "|";
-        //                 postcode = postcode + customer.postcode + "|";
-        //                 country = country + customer.country + "|";
-        //                 memberId = memberId + customer.membershipNumber + "|";
-        //             }
-        //             else{
-        //                 var fNames = customer.firstName.split('|');
-        //                 var lNames = customer.lastName.split('|');
-        //                 var emails = customer.email.split('|');
-        //                 var mobiles = customer.mobile.split('|');
-        //                 var streets = customer.street.split('|');
-        //                 var towns = customer.town.split('|');
-        //                 var states = customer.state.split('|');
-        //                 var postcodes = customer.postcode.split('|');
-        //                 var countries = customer.country.split('|');
-        //                 var memId = customer.membershipNumber.split('|');
+    //This will get the hidden reservation number.
+    private async GetHiddenReservationNumber(){
+        // Get the reservation based on the number of boookings.
+        var locator = "//*[@class='nr-booking-entry']//*[@id='reservation-id']";
+        // var reservationNumber: any[] = []
+        var reservationElement = await this.page.$$(locator);
 
-        //                 firstName = firstName + fNames[i] + "|";
-        //                 lastName = lastName + lNames[i] + "|";
-        //                 email = email + emails[i] + "|";
-        //                 mobile = mobile + mobiles[i] + "|";
-        //                 street = street + streets[i] + "|";
-        //                 town = town + towns[i] + "|";
-        //                 state = state + states[i] + "|";
-        //                 postcode = postcode + postcodes[i] + "|";
-        //                 country = country + countries[i] + "|";
-        //                 memberId = memberId + memId[i] + "|";
-        //             }
-        //             if(customer.isVelocity && i==0){
-        //                 isVelocity.push(true);
-        //                 velocityNumber.push(customer.velocityNumber);
-        //             }
-        //             else{
-        //                 isVelocity.push(false);
-        //                 velocityNumber.push('');
-        //             }
-        //             isMember.push(customer.isMember);
-        //             isUpsell.push(customer.isUpsell);
-        //         }
-        //     }
-        //     var memberDetails = [details.BookingCount, memberId, firstName, lastName, email, mobile, street,
-        //         town, state, postcode, country, isMember, isUpsell, isVelocity, velocityNumber];
-        //     return await this.dataSetup.SetMemberData(memberDetails);
-        // }
+        for(var i = 0; i < reservationElement.length; i++){
+            var resElement:ElementHandle = reservationElement[i];
+            var attribute = await resElement.getAttribute("value");
+            this.reservationNumber.push(attribute);
+        }
     }
+
+    
 
 }
