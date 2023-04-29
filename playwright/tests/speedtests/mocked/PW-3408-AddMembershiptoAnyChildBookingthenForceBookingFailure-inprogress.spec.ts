@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import {test,  expect } from '../../../fixtures';
 import { UpsellGuestData } from "../../data/users";
 import { APIHelper } from "../../models/APIHelper";
 import { BaseSteps } from "../../models/BaseSteps";
@@ -17,12 +17,34 @@ import { openconfirmmembership } from "../../mocks/OpenConfirmMembership";
 import { updatebookingnewreservation } from "../../mocks/UpdateBookingNewReservation";
 import { confirmmembership } from "../../mocks/ConfirmMembership";
 
-
+export const UpsellGuestData1 = {
+    arrivalDayOfMonth: 6,
+    departureDayOfMonth: 7,
+    adults: 2,
+    child: 1,
+    infant: 1,
+    searchText: 'xyz123',
+    firstName: 'RCATSMember',
+    lastName: 'RCATSMemberTest',
+    email: '',
+    mobile: '0412345678',
+    street: 'Light Square',
+    town: 'Adelaide',
+    state: 'SA',
+    postcode: '5000',
+    country: 'Australia',
+    reserveType: '12. Staff',
+    bookingSource: '1. Walk in',
+    bookingNotes: 'Test Reservation',
+    isVelocity: false,
+    isUpsell: true,
+    isMember: false
+}
 
 test('Add Membership to Any Child Booking then force a booking failure', async({page}) =>{
     // Set base object.
 
-    const baseSteps = new BaseSteps();
+    // const baseSteps = new BaseSteps();
 
     // setup mock for search
     // await page.route('**/Booking/SearchAccommodation', route => route.fulfill({
@@ -69,32 +91,35 @@ test('Add Membership to Any Child Booking then force a booking failure', async({
     //     body: updatebookingnewreservation.body,
     //     })); 
 
-
-    
-    // Initialize directory for test.
-    const testDetails = await baseSteps.InitializeTestResultDirectory("PW-3408-AddMembershiptoAnyChildBookingthenForceBookingFailure");
-
-    // Set page objects.
-    const login = new LoginPage(page);
-    const booking = new BookingPage(page, testDetails);
     const bookingv2 = new BookingPageV2(page);
-    const reservepay = new ReserveAndPayModal(page, testDetails);
-    // const apiHelper = new APIHelper(page, request, testDetails);
-    const customerDetails = UpsellGuestData;
-
-    await page.goto('/Booking/NewReservation', {timeout: 90000});
-    await login.Login();
-
-
+    bookingv2.numberOfNights = 2;
     
-    await bookingv2.SearchAccommodation(1, 2, customerDetails.adults, customerDetails.child, customerDetails.infant);
+    bookingv2.adults = 2;
+    bookingv2.child = 1;
+    bookingv2.infant = 1;
+
+    const customerDetails = UpsellGuestData1;
+    const numberOfBookings = 2;
+
+    await page.goto('/Booking/NewReservation');
+
+    // fill out the search details    
+    // checkin days from now, check out days
+    await bookingv2.SearchAccommodation();
     
+    // select the number of accoms to add to the booking. More than 1 is a group booking.
+    // this will add the accoms first
+    await bookingv2.SelectAccommodations(numberOfBookings);
+    
+    // add a guest to each of the accomms
+    // assign a guest to the first booking
+    const firstBooking = 0;
+    const secondBooking = 1;
+    await bookingv2.AddGuest(firstBooking);
 
-    // adding two booking by clicking the first 2 CTAs. This will load the mocked bookings
-    await page.getByRole('button', { name: '+ Add Booking' }).nth(0).click();
-    await page.getByRole('button', { name: '+ Add Booking' }).nth(1).click();
-
-
+    // assign a guest and upsell them to a member
+    await bookingv2.AddGuestUpgradeToMember(secondBooking);
+    
 
 
 
@@ -109,72 +134,72 @@ test('Add Membership to Any Child Booking then force a booking failure', async({
     // var bookingDetails = await booking.EditSelectedBookingReservation(bookingDetails, guestDetails);
         
     //edit the first booking on the mocked page
-    await page.getByRole('button', { name: 'Edit' }).nth(0).click();
-    await page.getByPlaceholder('Search or create a customer').fill('Robot Customer');
+    // await page.getByRole('button', { name: 'Edit' }).nth(0).click();
+    // await page.getByPlaceholder('Search or create a customer').fill('Robot Customer');
     
-    // create new customer and mock a successful response
-    await page.getByRole('button', { name: '+ Create a new customer'}).click();
+    // // create new customer and mock a successful response
+    // await page.getByRole('button', { name: '+ Create a new customer'}).click();
 
-    // this is the new member modal
-    await page.getByPlaceholder('John').fill('Just a Test');
-    await page.getByPlaceholder('Discovery').fill('Just a Test');
-    await page.getByPlaceholder('example@hotmail.com').fill('just@atest.com');
-    await page.getByPlaceholder('0412 345 678').fill('0401217010');
-    // Click 'Enter Manually' link.
-    await page.getByRole('button', { name: 'Enter Manually' }).click();
+    // // this is the new member modal
+    // await page.getByPlaceholder('John').fill('Just a Test');
+    // await page.getByPlaceholder('Discovery').fill('Just a Test');
+    // await page.getByPlaceholder('example@hotmail.com').fill('just@atest.com');
+    // await page.getByPlaceholder('0412 345 678').fill('0401217010');
+    // // Click 'Enter Manually' link.
+    // await page.getByRole('button', { name: 'Enter Manually' }).click();
     
-    await page.locator('#gr-street').fill('60 Light Square');
-    await page.locator('#gr-town').fill('Adelaide');
-    await page.locator('#gr-state-au').selectOption('SA');
-    await page.locator('#gr-postcode').fill('5000');
-    await page.locator('#gr-country').selectOption('Australia');
+    // await page.locator('#gr-street').fill('60 Light Square');
+    // await page.locator('#gr-town').fill('Adelaide');
+    // await page.locator('#gr-state-au').selectOption('SA');
+    // await page.locator('#gr-postcode').fill('5000');
+    // await page.locator('#gr-country').selectOption('Australia');
 
-    await page.getByRole('button', { name: 'Save' }).click();
+    // await page.getByRole('button', { name: 'Save' }).click();
 
-    await page.getByRole('button', { name: 'Join' }).click();
+    // await page.getByRole('button', { name: 'Join' }).click();
     
-    // staff details
-    await page.locator('#staff-name').fill('Test Robot');
-    await page.locator('#confirm-membership-cta').click();
+    // // staff details
+    // await page.locator('#staff-name').fill('Test Robot');
+    // await page.locator('#confirm-membership-cta').click();
 
 
-    // update booking with membership
-    await page.locator('#update-booking').click();
+    // // update booking with membership
+    // await page.locator('#update-booking').click();
 
-    // -----------------------------------------------------------------------------
-    //edit the 2nd booking on the mocked page
-    await page.getByRole('button', { name: 'Edit' }).nth(1).click();
-    await page.getByPlaceholder('Search or create a customer').fill('Robot Customer');
+    // // -----------------------------------------------------------------------------
+    // //edit the 2nd booking on the mocked page
+    // await page.getByRole('button', { name: 'Edit' }).nth(1).click();
+    // await page.getByPlaceholder('Search or create a customer').fill('Robot Customer');
     
-    // create new customer and mock a successful response
-    await page.getByRole('button', { name: '+ Create a new customer'}).click();
+    // // create new customer and mock a successful response
+    // await page.getByRole('button', { name: '+ Create a new customer'}).click();
 
-    // this is the new member modal
-    await page.getByPlaceholder('John').fill('Just a Test');
-    await page.getByPlaceholder('Discovery').fill('Just a Test');
-    await page.getByPlaceholder('example@hotmail.com').fill('just@atest.com');
-    await page.getByPlaceholder('0412 345 678').fill('0401217010');
-    // Click 'Enter Manually' link.
-    await page.getByRole('button', { name: 'Enter Manually' }).click();
+    // // this is the new member modal
+    // await page.getByPlaceholder('John').fill('Just a Test');
+    // await page.getByPlaceholder('Discovery').fill('Just a Test');
+    // await page.getByPlaceholder('example@hotmail.com').fill('just@atest.com');
+    // await page.getByPlaceholder('0412 345 678').fill('0401217010');
+    // // Click 'Enter Manually' link.
+    // await page.getByRole('button', { name: 'Enter Manually' }).click();
     
-    await page.locator('#gr-street').fill('60 Light Square');
-    await page.locator('#gr-town').fill('Adelaide');
-    await page.locator('#gr-state-au').selectOption('SA');
-    await page.locator('#gr-postcode').fill('5000');
-    await page.locator('#gr-country').selectOption('Australia');
+    // await page.locator('#gr-street').fill('60 Light Square');
+    // await page.locator('#gr-town').fill('Adelaide');
+    // await page.locator('#gr-state-au').selectOption('SA');
+    // await page.locator('#gr-postcode').fill('5000');
+    // await page.locator('#gr-country').selectOption('Australia');
 
-    await page.getByRole('button', { name: 'Save' }).click();
+    // await page.getByRole('button', { name: 'Save' }).click();
 
-    await page.getByRole('button', { name: 'Join' }).click();
+    // await page.getByRole('button', { name: 'Join' }).click();
     
-    // staff details
-    await page.locator('#staff-name').fill('Test Robot');
-    await page.locator('#confirm-membership-cta').click();
+    // // staff details
+    // await page.locator('#staff-name').fill('Test Robot');
+    // await page.locator('#confirm-membership-cta').click();
 
 
-    // update booking with membership
-    await page.locator('#update-booking').click();
-    await page.screenshot({ path: 'screenshot/addMemberToBooking.png', fullPage: true });
+    // // update booking with membership
+    // await page.locator('#update-booking').click();
+    // await page.screenshot({ path: 'screenshot/addMemberToBooking.png', fullPage: true });
     // await page.locator('#update-booking').click();
     // await page.getByRole('button', { name: 'Update Booking' }).click()
     
@@ -206,5 +231,5 @@ test('Add Membership to Any Child Booking then force a booking failure', async({
     // await reservepay.VerifyBookingReservationError(guestDetails);
 
     //#endregion*/
-    await context.close();
+    // await context.close();
 });

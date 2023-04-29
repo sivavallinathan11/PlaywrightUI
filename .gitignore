@@ -1,3 +1,8 @@
 ﻿playwright/node_modules
 playwright/screenshots
 playwright/test-results-rc4
+playwright/playwright-report
+playwright/screenshot
+playwright/artifacts
+playwright/results.xml
+playwright/package-lock.json

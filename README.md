@@ -43,3 +43,10 @@ or to see the run in the browser
 ```
 npx playwright test --headed
 ```
+
+# Authentication
+Each test requires a login. This is achieved via the fixture fixture.ts
+To make use of it tests need to import the fixture rather than playwright:
+```
+import {test,  expect } from '../../../../../playwright/fixtures';
+```

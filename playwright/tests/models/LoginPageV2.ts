@@ -22,9 +22,10 @@ export class LoginPage{
     // This is much faster. There's no need to abstract it down further when everything you need to login is in one place.
     // If the login screen changes then it's much more obvious how this works
     // this is almost twice as quick as the old way
-    async Login() {
+    async Login(url: string) {
         var email = BDMCredentials.email;
         var password = BDMCredentials.password;
+        await this.page.goto(url);
         await this.username.fill(email);
         await this.password.fill(password);
         await this.loginButton.click();

@@ -763,6 +763,7 @@ export class Common{
         }
     }
 
+    
     // This generate random email
     async GenerateRandomEmail(initialName: string, domainType: string, stringType: string, stringSize: number){
         var randomString = await this.GenerateRandomString(stringType, stringSize);

@@ -1,13 +1,8 @@
-import test, { expect } from "@playwright/test";
-import { LoginPage } from "../../../models/LoginPageV2";
+import {test,  expect } from '../../../fixtures';
 
+// fixture.ts does the login
 test('Cannot book for more than 28 days', async({page}) =>{
-
-    const login = new LoginPage(page);
-  
-    await page.goto('/Booking/NewReservation');
-    await login.Login();
-
+    await page.goto('/Booking/NewReservation')
     var dateWidget = "#gr-search-date-input";
     var locator = page.locator(dateWidget)
     await locator.click()
