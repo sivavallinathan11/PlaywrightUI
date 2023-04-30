@@ -165,7 +165,7 @@ export class BookingPageV2{
 
 
     //This will get the hidden reservation number.
-    private async GetHiddenReservationNumber(){
+    public async GetHiddenReservationNumber(){
         // Get the reservation based on the number of boookings.
         var locator = "//*[@class='nr-booking-entry']//*[@id='reservation-id']";
         // var reservationNumber: any[] = []

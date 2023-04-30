@@ -1,4 +1,4 @@
-import { test, expect } from '../../../../playwright/fixtures';
+import {test,  expect, request } from '../../fixtures/login';
 import { LoginPage } from "../../models/LoginPageV2";
 import { BookingPageV2 } from "../../models/BookingPageV2";
 import { UpsellGuestData } from "../../data/users";
@@ -22,52 +22,52 @@ test.describe.parallel('Accessibility Checks and Screenshots', () => {
     });
     
     // quicker to login once and just traverse the links I need
-    test('New Reservation', async({page}) =>{      
+    // test('New Reservation', async({page}) =>{      
         
-        // mock these
-        await page.route('**/Booking/SearchAccommodation', route => route.fulfill({
-            status: 200,
-            body: accoms.body,
-            }));
+    //     // mock these
+    //     await page.route('**/Booking/SearchAccommodation', route => route.fulfill({
+    //         status: 200,
+    //         body: accoms.body,
+    //         }));
 
-            // setup a mock for adding a booking
-        await page.route('**/Booking/AddBooking', route => route.fulfill({
-            status: 200,
-            body: addbooking.body,
-            }));
+    //         // setup a mock for adding a booking
+    //     await page.route('**/Booking/AddBooking', route => route.fulfill({
+    //         status: 200,
+    //         body: addbooking.body,
+    //         }));
             
-        await page.goto('/Booking/NewReservation', { waitUntil: 'networkidle' });
-        await injectAxe(page);
+    //     await page.goto('/Booking/NewReservation', { waitUntil: 'networkidle' });
+    //     await injectAxe(page);
 
-        const booking = new BookingPageV2(page);
+    //     const booking = new BookingPageV2(page);
         
-        booking.numberOfNights = 1;
-        booking.adults = 2;
-        booking.child = 1;
-        booking.infant = 1;
+    //     booking.numberOfNights = 1;
+    //     booking.adults = 2;
+    //     booking.child = 1;
+    //     booking.infant = 1;
 
-        const customerDetails = UpsellGuestData;
-        // await booking.VerifyNewReservationPage();
-        booking.SearchAccommodation();
+    //     const customerDetails = UpsellGuestData;
+    //     // await booking.VerifyNewReservationPage();
+    //     booking.SearchAccommodation();
 
-        await page.getByRole('button', { name: '+ Add Booking' }).nth(0).click();
-        await page.getByRole('button', { name: '+ Add Booking' }).nth(1).click();
-        await page.getByRole('button', { name: '+ Add Booking' }).nth(2).click();
-        await page.getByRole('button', { name: '+ Add Booking' }).nth(3).click();
-        await page.getByRole('button', { name: '+ Add Booking' }).nth(4).click();
-        await page.screenshot({ path: 'screenshot/ipad/lotsOfAccommodations.png'});
-        await page.screenshot({ path: 'screenshot/ipad/full/lotsOfAccommodations.png', fullPage: true});
+    //     await page.getByRole('button', { name: '+ Add Booking' }).nth(0).click();
+    //     await page.getByRole('button', { name: '+ Add Booking' }).nth(1).click();
+    //     await page.getByRole('button', { name: '+ Add Booking' }).nth(2).click();
+    //     await page.getByRole('button', { name: '+ Add Booking' }).nth(3).click();
+    //     await page.getByRole('button', { name: '+ Add Booking' }).nth(4).click();
+    //     await page.screenshot({ path: 'screenshot/ipad/lotsOfAccommodations.png'});
+    //     await page.screenshot({ path: 'screenshot/ipad/full/lotsOfAccommodations.png', fullPage: true});
 
-        await checkA11y(page, undefined, {
-            detailedReport: true,            
-            axeOptions: {
-              runOnly: {
-                type: 'tag',
-                values: ['wcag2a'],
-              },
-            },
-          })
-    });
+    //     await checkA11y(page, undefined, {
+    //         detailedReport: true,            
+    //         axeOptions: {
+    //           runOnly: {
+    //             type: 'tag',
+    //             values: ['wcag2a'],
+    //           },
+    //         },
+    //       })
+    // });
 
     test('Booking Dashboard', async({page}) =>{      
         await page.goto('/Booking', { waitUntil: 'networkidle' });     

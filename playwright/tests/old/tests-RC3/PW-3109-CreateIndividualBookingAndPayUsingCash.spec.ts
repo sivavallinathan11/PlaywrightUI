@@ -7,7 +7,7 @@ import { BookingPage } from "../../models/BookingPage";
 import { LoginPage } from "../../models/LoginPage";
 import { ReserveAndPayModal } from "../../models/ReserveAndPayModal";
 
-test('Create and pay an individual booking using cash', async({page, request}) =>{
+test('Create and pay an individual booking using cash @refactored', async({page, request}) =>{
     // Set base object.
     const baseSteps = new BaseSteps();
 

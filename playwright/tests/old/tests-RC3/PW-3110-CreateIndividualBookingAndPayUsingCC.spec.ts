@@ -8,7 +8,7 @@ import { LoginPage } from "../../models/LoginPage";
 import { ReserveAndPayModal } from "../../models/ReserveAndPayModal";
 import { config } from "process";
 
-test('Create and pay an individual booking using credit card', async({page, request}) =>{
+test('Create and pay an individual booking using credit card @refactored', async({page, request}) =>{
     // Set base object.
     const baseSteps = new BaseSteps();
 
@@ -28,7 +28,6 @@ test('Create and pay an individual booking using credit card', async({page, requ
     
     if(TestingEnvironment.toLowerCase().trim()=="test"){
         customerDetails = BestMateMember;
-        process.env.
     }
     else{
         customerDetails = DEV_BestMateMember;
