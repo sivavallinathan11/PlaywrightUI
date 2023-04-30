@@ -6,3 +6,4 @@ playwright/screenshot
 playwright/artifacts
 playwright/results.xml
 playwright/package-lock.json
+.vscode

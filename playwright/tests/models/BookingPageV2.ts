@@ -1,29 +1,7 @@
 import { Page, expect, ElementHandle } from "@playwright/test";
 import { EditBookingModal } from "../models/EditBookingModalV2";
 import { editbooking } from "../mocks/EditBooking";
-// export const UpsellGuestData1 = {
-//     arrival: 87,
-//     departure: 88,
-//     adults: 2,
-//     child: 1,
-//     infant: 1,
-//     searchText: 'xyz123',
-//     firstName: 'RCATSMember',
-//     lastName: 'RCATSMemberTest',
-//     email: '',
-//     mobile: '0412345678',
-//     street: 'Light Square',
-//     town: 'Adelaide',
-//     state: 'SA',
-//     postcode: '5000',
-//     country: 'Australia',
-//     reserveType: '12. Staff',
-//     bookingSource: '1. Walk in',
-//     bookingNotes: 'Test Reservation',
-//     isVelocity: false,
-//     isUpsell: true,
-//     isMember: false
-// }
+
 
 export class BookingPageV2{
     // Set object variable.
@@ -41,9 +19,7 @@ export class BookingPageV2{
 
     // dumbed down version. 
     public numberOfNights: number;    
-    public adults: number;
-    public child: number;
-    public infant: number;
+    
     public reservationNumber: any[] = [];
 
 
@@ -56,10 +32,10 @@ export class BookingPageV2{
    // checkin day of the month
    // checkout day of the month
    // guests
-    async SearchAccommodation(){
+    async SearchAccommodation(adults: number, child: number, infant: number){
 
         await this.SelectBookingDate();
-        await this.SetNumberOfGuests(this.adults, this.child, this.infant);
+        await this.SetNumberOfGuests(adults, child, infant);
         await this.ClickSearch()
     }
 
