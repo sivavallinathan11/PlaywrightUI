@@ -21,9 +21,10 @@ export class MakePaymentModal{
     private processPayment: Locator;
     private cashTendered: Locator;
     private changeDue: Locator;
-
+    private manualPayment: Locator;
+    
     // Booking Complete
-    private bookingComplete: Locator;
+    public bookingComplete: Locator;
     
     
 
@@ -32,10 +33,11 @@ export class MakePaymentModal{
 
         this.page = page;
         // setup POM for this modal
-        this.returnButton = this.page.getByRole('button', { name: '← Return' });
+        this.returnButton = page.getByRole('button', { name: '← Return' });
         this.cardPayment = page.locator('#card-payment');
         this.albertDevice = page.locator('#card-albert-device');
 
+        this.manualPayment = page.getByRole('checkbox', {name: 'Manual Payment'});
         this.cashTendered = page.locator('#cash-amount-received');
 
         this.oneHundredPercent = page.getByRole('link', { name: '100%' });
@@ -55,8 +57,17 @@ export class MakePaymentModal{
         await this.cash.click();
         // this.page.getByRole('link', { name: '100%' });
         await this.processPayment.click();
-        await this.ValidateBookingComplete();
+
     }
+
+    async PayTotalWithCc() {   
+ 
+        await this.manualPayment.check();
+        // this.page.getByRole('link', { name: '100%' });
+        await this.processPayment.click();
+
+    }
+
 
     async ValidateInitialPaymentState() {
         await expect.soft(this.returnButton).toBeVisible();
@@ -65,8 +76,5 @@ export class MakePaymentModal{
         await this.page.screenshot({ path: 'screenshot/Make Payment Modal - Default.png'});
     }
 
-    async ValidateBookingComplete() {
-        await expect(this.bookingComplete).toBeVisible();
-        await this.page.screenshot({ path: 'screenshot/Booking Complete.png'});
-    }
+
 }

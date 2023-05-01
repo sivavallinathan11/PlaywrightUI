@@ -57,13 +57,23 @@ test.describe.parallel('Different payment methods', () => {
         // validate the pay modal
         const paymentModal = new MakePaymentModal(page);
         await paymentModal.PayTotalWithCash();
+        const bookingCompleteScreen = paymentModal.bookingComplete;
+        
+        await expect(bookingCompleteScreen).toBeVisible();
+        await page.screenshot({ path: 'screenshot/PW-3109 - Booking Complete.png'});
+        
+        
     });
 
-    test.skip('PW-3110 - Create and pay an individual booking using credit card @refactored', async({page}) =>{
+    test('PW-3110 - Create and pay an individual booking using credit card @refactored', async({page}) =>{
         test.slow();
         // validate the pay modal
         const paymentModal = new MakePaymentModal(page);
-        await paymentModal.PayTotalWithCash();
+        await paymentModal.PayTotalWithCc();
+        const bookingCompleteScreen = paymentModal.bookingComplete;
+        
+        await expect(bookingCompleteScreen).toBeVisible();
+        await page.screenshot({ path: 'screenshot/PW-3110 - Booking Complete.png'});
     })
 
     test.afterEach(async ({ page, request }) => {
