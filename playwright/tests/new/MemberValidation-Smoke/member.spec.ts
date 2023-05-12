@@ -11,7 +11,7 @@ import { addbooking } from "../../mocks/AddBooking";
 
 import { injectAxe, checkA11y, getViolations, reportViolations } from 'axe-playwright';
 
-test.describe.serial('Member Validations in ParkWeb', () => {
+test.describe.serial('Member Validations in ParkWeb @membership', () => {
     let member
 
         test('create a new member', async ({ page }) => {
@@ -23,7 +23,7 @@ test.describe.serial('Member Validations in ParkWeb', () => {
           
            });    
 
-           test('Search for a member', async ({ page }) => {
+           test('Search for a member @membership', async ({ page }) => {
             test.slow();
             await page.goto('/Membership/SearchMembers', { waitUntil: 'networkidle' });
             await page.locator('#searchText').fill(member);
@@ -32,7 +32,7 @@ test.describe.serial('Member Validations in ParkWeb', () => {
            });
 
 
-           test('Redeem a Benefit', async ({ page }) => {
+           test('Redeem a Benefit @membership', async ({ page }) => {
             test.slow();
             await page.goto('/Membership/SearchMembers', { waitUntil: 'networkidle' });
             await page.locator('#searchText').fill(member);

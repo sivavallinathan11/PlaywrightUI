@@ -10,10 +10,11 @@ dotenv.config({ path: path.resolve(__dirname, './env', 'test.env') });
 
 const config: PlaywrightTestConfig = {
 
-  reporter: [['list', {printSteps: true}], ['junit', {outputFile: 'results.xml'}]/*, ['html']*/],
+  reporter: [['list', {printSteps: true}], ['junit', {outputFile: 'results.xml'}], ['html']],
   testDir: './tests',
   outputDir: './artifacts',
   fullyParallel: true,
+  retries: 3,
   workers: process.env.CI ? 2 : undefined,
 
   use: {

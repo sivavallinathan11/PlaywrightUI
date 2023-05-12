@@ -4,7 +4,7 @@ import { BaseSteps } from "../../models/BaseSteps";
 import { BookingPage } from "../../models/BookingPage";
 import { LoginPage } from "../../models/LoginPage";
 
-test('Create and pay an individual booking with more than 28 days', async({page}) =>{
+test('Create and pay an individual booking with more than 28 days @refactored', async({page}) =>{
     // Set base object.
     const baseSteps = new BaseSteps();
 

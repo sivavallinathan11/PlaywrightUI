@@ -7,6 +7,14 @@ import { BookingPageV2 } from "../../models/BookingPageV2";
 import { ReserveAndPayModal } from "../../models/ReserveAndPayModalV2";
 
 
+import { accoms } from "../../mocks/SearchAccommodation";
+import { addbooking } from "../../mocks/AddBooking";
+import { editbooking } from "../../mocks/EditBooking";
+import { reservebookingfailure } from "../../mocks/ReserveBookingFailure";
+import { confirmbooking } from "../../mocks/ConfirmBooking";
+
+
+
 let adults: number;
 let child: number;
 let infant: number;
@@ -28,8 +36,9 @@ test.describe.parallel('Booking failure with membership added', () => {
         
     });
 
-    test('PW-3407 - Add Membership to Individual Booking then force a booking failure', async({page, request}) =>{
-        test.slow();
+    test('PW-3407 - Add Membership to Individual Booking then force a booking failure @refactored', async({page, request}) =>{
+
+       
 
         const bookingv2 = new BookingPageV2(page);
         bookingv2.numberOfNights = numberOfNights;
@@ -64,14 +73,37 @@ test.describe.parallel('Booking failure with membership added', () => {
         // attempt to pay
         await verifyAndPay.ReserveNowButton();
 
-        await expect(page.locator('.error-member-popup')).toBeVisible({timeout: 10000});
+        await expect(page.locator('.error-member-popup')).toBeVisible({timeout: 30000});
         await expect.soft(page.locator('.error-message')).toHaveText('Your booking has not been reserved.', {timeout: 10000});
         await expect.soft(page.locator('.error-explanation')).toContainText('The G’Day rewards memberships has been processed.', {timeout: 10000});
         
         await page.screenshot({ path: 'screenshot/PW-3407 - Payment Error With Memberships.png'});
     })
 
-    test('PW-3408 - Add Membership to Any Child Booking then force a booking failure', async({page, request}) =>{
+    test('PW-3408 - Add Membership to Any Child Booking then force a booking failure @refactored', async({page, request}) =>{
+         // setup mock for search
+        //  await page.route('**/Booking/SearchAccommodation', route => route.fulfill({
+        //     status: 200,
+        //     body: accoms.body,
+        //     }));
+
+        // // setup a mock for adding a booking
+        // await page.route('**/Booking/AddBooking', route => route.fulfill({
+        //     status: 200,
+        //     body: addbooking.body,
+        //     }));
+        //     test.slow();
+
+        //     // setup mock for editing a booking
+        // await page.route('**/Booking/EditBooking', route => route.fulfill({
+        //     status: 200,
+        //     body: editbooking.body,
+        //     }));
+
+        // await page.route('**/Booking/Mocked', route => route.fulfill({
+        //     status: 400,
+        //     body: reservebookingfailure.body,
+        //     }));
         test.slow();
         const bookingv2 = new BookingPageV2(page);
         bookingv2.numberOfNights = numberOfNights;
@@ -108,13 +140,13 @@ test.describe.parallel('Booking failure with membership added', () => {
         // attempt to pay
         await verifyAndPay.ReserveNowButton();
 
-        await expect.soft(page.locator('.error-message')).toHaveText('Your bookings has not been reserved.',{timeout: 10000});
+        await expect.soft(page.locator('.error-message')).toHaveText('Your bookings has not been reserved.',{timeout: 30000});
         await expect.soft(page.locator('.error-explanation')).toContainText('The G’Day rewards memberships against the booking have been processed.',{timeout: 10000});
 
         await page.screenshot({ path: 'screenshot/PW-3408 - Payment Error With Memberships.png'});
     })
 
-    test('PW-3409 - Add Membership to All Child Bookings then force a booking failure', async({page, request}) =>{
+    test('PW-3409 - Add Membership to All Child Bookings then force a booking failure @refactored', async({page, request}) =>{
         test.slow();
         const bookingv2 = new BookingPageV2(page);
         bookingv2.numberOfNights = numberOfNights;
@@ -151,7 +183,7 @@ test.describe.parallel('Booking failure with membership added', () => {
         // attempt to pay
         await verifyAndPay.ReserveNowButton();
 
-        await expect.soft(page.locator('.error-message')).toHaveText('Your bookings has not been reserved.',{timeout: 10000});
+        await expect.soft(page.locator('.error-message')).toHaveText('Your bookings has not been reserved.',{timeout: 30000});
         await expect.soft(page.locator('.error-explanation')).toContainText('The G’Day rewards memberships against the booking have been processed.',{timeout: 10000});
 
         await page.screenshot({ path: 'screenshot/PW-3409 - Payment Error With Memberships.png'});

@@ -45,21 +45,23 @@ export class BookingPageV2{
         await submitSearch.click()   
     }
 
-    private randomInt = (min, max) =>
+    private randomInt = (min: number, max: number) =>
         Math.floor(Math.random() * (max - min + 1)) + min;
+    
+    // basic calendar manipulation
     // the day of the month for the checkin and checkout
     // randomise checkin checkout
     async SelectBookingDate() {
         // random booking 5-10 days out
-        let day = this.randomInt(5, 10);
-        let end = day + this.numberOfNights;
+        let day:number = this.randomInt(5, 10);       
+        let end:number = day + this.numberOfNights;
         var dateWidget = "#gr-search-date-input";
         var locator = this.page.locator(dateWidget);
         await locator.click();
 
         // this will get the days from the right calendar which should always be available
-        await this.page.locator(".drp-calendar.right").getByRole('cell', {name: day, exact:true}).first().click();
-        await this.page.locator(".drp-calendar.right").getByRole('cell', {name: end, exact:true}).first().click();
+        await this.page.locator(".drp-calendar.right").getByRole('cell', {name: day.toString(), exact:true}).first().click();
+        await this.page.locator(".drp-calendar.right").getByRole('cell', {name: end.toString(), exact:true}).first().click();
         await this.page.getByRole('button', { name: 'Confirm', exact: true }).click();
 
     }

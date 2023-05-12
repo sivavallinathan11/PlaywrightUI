@@ -1,7 +1,7 @@
 import {test,  expect } from '../../fixtures/login';
 
 // fixture.ts does the login
-test('Cannot book for more than 28 days', async({page}) =>{
+test('Cannot book for more than 28 days @refactored', async({page}) =>{
     await page.goto('/Booking/NewReservation')
     var dateWidget = "#gr-search-date-input";
     var locator = page.locator(dateWidget)

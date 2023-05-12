@@ -1,4 +1,4 @@
-import {test,  expect, request } from '../../fixtures/login';
+import {test,  expect, request, Locator } from '../../fixtures/login';
 import { APIHelper } from "../../models/APIHelperV2";
 import { BookingPageV2 } from "../../models/BookingPageV2";
 import { ReserveAndPayModal } from "../../models/ReserveAndPayModalV2";
@@ -24,7 +24,7 @@ test.describe.parallel('Different payment methods', () => {
         numberOfNights = 1;
         const bookingv2 = new BookingPageV2(page);
         bookingv2.numberOfNights = numberOfNights;
-        // don't care about any of the booking details here, we just care about payments during the tests
+        
         // fill out the search details    
         // checkin days from now, check out days
         await bookingv2.SearchAccommodation(adults, child, infant);
@@ -52,27 +52,30 @@ test.describe.parallel('Different payment methods', () => {
         
     });
 
-    test('PW-3109 - Create and pay an individual booking using cash @refactored', async({page}) =>{
+    test('PW-3109 - Create and pay an individual booking using cash @payment @refactored', async({page}) =>{
         test.slow();
         // validate the pay modal
         const paymentModal = new MakePaymentModal(page);
         await paymentModal.PayTotalWithCash();
-        const bookingCompleteScreen = paymentModal.bookingComplete;
         
-        await expect(bookingCompleteScreen).toBeVisible();
+        // check we got the succes page
+
+        await expect(paymentModal.bookingComplete).toBeVisible();
+          
+        
         await page.screenshot({ path: 'screenshot/PW-3109 - Booking Complete.png'});
         
         
     });
 
-    test('PW-3110 - Create and pay an individual booking using credit card @refactored', async({page}) =>{
+    test('PW-3110 - Create and pay an individual booking using credit card @payment @refactored', async({page}) =>{
         test.slow();
         // validate the pay modal
         const paymentModal = new MakePaymentModal(page);
         await paymentModal.PayTotalWithCc();
-        const bookingCompleteScreen = paymentModal.bookingComplete;
         
-        await expect(bookingCompleteScreen).toBeVisible();
+        // check we got the succes page
+        await expect(paymentModal.bookingComplete).toBeVisible();
         await page.screenshot({ path: 'screenshot/PW-3110 - Booking Complete.png'});
     })
 

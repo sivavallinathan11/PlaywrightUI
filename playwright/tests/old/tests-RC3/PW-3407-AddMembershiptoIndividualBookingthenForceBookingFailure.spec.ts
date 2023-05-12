@@ -6,7 +6,7 @@ import { BookingPage } from "../../models/BookingPage";
 import { LoginPage } from "../../models/LoginPage";
 import { ReserveAndPayModal } from "../../models/ReserveAndPayModal";
 
-test('Add Membership to Individual Booking then force a booking failure', async({page, request}) =>{
+test('Add Membership to Individual Booking then force a booking failure @refactored', async({page, request}) =>{
     // Set base object.
     const baseSteps = new BaseSteps();
 

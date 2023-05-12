@@ -1,18 +1,11 @@
 import { errors, Page } from "@playwright/test";
-import { AccommodationDetails, CustomerDetails } from "../data/bookings";
-import { DataSetup } from "../data/datasetup";
-import { TestDirectory } from "../data/directory";
-import { MembershipFee, StaffName, TestingEnvironment, 
-    MembershipErrorOnGroupReservation, MembershipErrorOnIndividualReservation } from "../data/users";
-import { Common } from "./Common";
-import { DiscountModal } from "./DiscountModal";
+
+
 // import { MakePaymentModal } from "./MakePaymentModalV2";
 
 export class ReserveAndPayModal{
     // Set object variables.
     readonly page: Page;
-    readonly dir: TestDirectory;
-    public dataSetup = new DataSetup();
 
     // Set a sub routine that will access the functions from parent and sibling class.
     constructor(page: Page){
