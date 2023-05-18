@@ -10,7 +10,7 @@ dotenv.config({ path: path.resolve(__dirname, './env', 'test.env') });
 
 const config: PlaywrightTestConfig = {
 
-  reporter: [['list', {printSteps: true}], ['junit', {outputFile: 'results.xml'}], ['html']],
+  reporter: [['list', {printSteps: true}], ['junit', {outputFile: 'results.xml'}]],
   testDir: './tests',
   outputDir: './artifacts',
   fullyParallel: true,
@@ -44,9 +44,7 @@ const config: PlaywrightTestConfig = {
     {
       name: 'ipad portrait',
       use: {
-        ...devices['Desktop Chrome'],
-        // ipad portrait mode
-        viewport: { width: 810, height: 1080 }
+        ...devices['iPad Mini'],
       },
       
     },
