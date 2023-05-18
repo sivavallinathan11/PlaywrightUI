@@ -44,9 +44,7 @@ const config: PlaywrightTestConfig = {
     {
       name: 'ipad portrait',
       use: {
-        ...devices['Desktop Chrome'],
-        // ipad portrait mode
-        viewport: { width: 810, height: 1080 }
+        ...devices['iPad Mini'],
       },
       
     },
