@@ -35,9 +35,9 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
     // Perform authentication steps. Replace these actions with your own.
     await page.goto('https://test.gdaynetwork.com.au');
 
-    const username = page.locator('#Username');
-    const password = page.getByLabel('Password');
-    const loginButton = page.getByRole('button', { name: 'Login' });
+    const username = page.getByRole('textbox', { name: 'Email Address' });
+    const password = page.getByPlaceholder('Password');
+    const loginButton = page.getByRole('button', { name: '|Log In|Send Verification Code' });
     await username.fill('PHDHPAdmin@gmail.com');
     await password.fill('Discovery123!');
     await loginButton.click();
